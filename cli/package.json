@@ -1,0 +1,51 @@
+{
+    "name": "@thebcms/cli",
+    "version": "0.0.1",
+    "description": "Command line tool for the BCMS",
+    "author": "BCMS",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "dev": "vite-node --project tsconfig.json src/bin/bcms-cli.ts",
+        "build:ts:mjs": "tsc --project tsconfig.json",
+        "build:ts:cjs": "tsc --project tsconfig.commonjs.json",
+        "bundle": "npm-tool --bundle",
+        "publish": "npm-tool --publish",
+        "pack": "npm-tool --pack",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@thebcms/sdk": "file:sdk.tgz",
+        "@types/fs-extra": "^11.0.4",
+        "@types/inquirer": "^9.0.7",
+        "@types/uuid": "^8.3.0",
+        "axios": "^1.6.8",
+        "fs-extra": "^11.2.0",
+        "inquirer": "^9.2.22",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.12",
+        "@types/node": "^20.12.12",
+        "@typescript-eslint/eslint-plugin": "^7.9.0",
+        "@typescript-eslint/parser": "^7.9.0",
+        "eslint": "^8.56.0",
+        "prettier": "^3.2.5",
+        "ts-jest": "^29.1.3",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.4.5",
+        "vite-node": "^1.6.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thebcms/utils/cli"
+    },
+    "bugs": {
+        "url": "https://github.com/thebcms/utils/issues"
+    },
+    "bin": {
+        "bcms-cloud": "bin/bcms-cli.mjs"
+    },
+    "homepage": "https://github.com/becomesco/utils/cli#readme"
+}

@@ -1,0 +1,9 @@
+/node_modules
+/db
+/_db
+/uploads
+/.env
+/.idea
+/backend/_s3-dump
+
+/_cloud-types
