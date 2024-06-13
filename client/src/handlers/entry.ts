@@ -13,6 +13,7 @@ import type {
 import type { Template } from '@thebcms/client/types/_cloud/template';
 import { MemCache } from '@thebcms/client/util';
 import { Media } from '@thebcms/client/types/_cloud/media';
+import { Buffer } from 'buffer';
 
 export class EntryHandler {
     private templates: Template[] | null = null;
