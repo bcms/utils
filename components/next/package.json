@@ -32,10 +32,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/thebcms/utils/components/next"
+        "url": "git+https://github.com/bcms/utils"
     },
     "bugs": {
-        "url": "https://github.com/thebcms/utils/issues"
+        "url": "https://github.com/bcms/utils/issues"
     },
-    "homepage": "https://github.com/becomesco/utils/components/next#readme"
+    "homepage": "https://github.com/bcms/utils#readme"
 }

@@ -1,6 +1,6 @@
 {
     "name": "@thebcms/client",
-    "version": "0.0.1",
+    "version": "1.0.1",
     "description": "Make external communication with BCMS easy.",
     "author": "BCMS",
     "license": "MIT",
@@ -45,10 +45,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/thebcms/utils/client"
+        "url": "git+https://github.com/bcms/utils"
     },
     "bugs": {
-        "url": "https://github.com/thebcms/utils/issues"
+        "url": "https://github.com/bcms/utils/issues"
     },
-    "homepage": "https://github.com/becomesco/utils/client#readme"
+    "homepage": "https://github.com/bcms/utils#readme"
 }
