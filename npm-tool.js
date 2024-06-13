@@ -385,7 +385,7 @@ module.exports = createConfig({
                         await localFs.readString('package.json'),
                     );
                     packageJson.devDependencies = undefined;
-                    packageJson.scripts = undefined;
+                    packageJson.scripts = {};
                     packageJson.exports = {};
                     if (await localFs.exist(['dist', 'index.cjs'], true)) {
                         if (!packageJson.exports['.']) {
