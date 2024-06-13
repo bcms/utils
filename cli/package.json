@@ -1,9 +1,12 @@
 {
     "name": "@thebcms/cli",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Command line tool for the BCMS",
     "author": "BCMS",
     "license": "MIT",
+    "main": "./index.mjs",
+    "module": "./index.mjs",
+    "types": "./index.d.ts",
     "type": "module",
     "scripts": {
         "dev": "vite-node --project tsconfig.json src/bin/bcms-cli.ts",
@@ -15,7 +18,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "@thebcms/sdk": "file:sdk.tgz",
+        "@thebcms/sdk": "^1.0.0",
         "@types/fs-extra": "^11.0.4",
         "@types/inquirer": "^9.0.7",
         "@types/uuid": "^8.3.0",
@@ -39,13 +42,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/thebcms/utils/cli"
+        "url": "git+https://github.com/bcms/utils.git"
     },
     "bugs": {
-        "url": "https://github.com/thebcms/utils/issues"
+        "url": "https://github.com/bcms/utils/issues"
     },
     "bin": {
-        "bcms-cloud": "bin/bcms-cli.mjs"
+        "bcms": "bin/bcms-cli.mjs"
     },
-    "homepage": "https://github.com/becomesco/utils/cli#readme"
+    "homepage": "https://github.com/bcms/utils/cli#readme"
 }
