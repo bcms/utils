@@ -11,7 +11,7 @@ const { StringUtility } = require('@banez/string-utility');
 const fs = createFS({
     base: process.cwd(),
 });
-const availablePackages = ['client', 'cli', 'components/next'];
+const availablePackages = ['client', 'cli', 'components/react'];
 
 /**
  *
@@ -61,7 +61,12 @@ module.exports = createConfig({
                 stdio: 'inherit',
             });
             await ChildProcess.spawn('npm', ['i'], {
-                cwd: path.join(process.cwd(), 'plugin', 'next'),
+                cwd: path.join(process.cwd(), 'cli'),
+                env: process.env,
+                stdio: 'inherit',
+            });
+            await ChildProcess.spawn('npm', ['i'], {
+                cwd: path.join(process.cwd(), 'components', 'react'),
                 env: process.env,
                 stdio: 'inherit',
             });
@@ -88,8 +93,8 @@ module.exports = createConfig({
         '--pre-commit': async () => {
             const whatToCheck = {
                 client: false,
-                most: false,
-                pluginNext: false,
+                cli: false,
+                componentsReact: false,
             };
             let gitOutput = '';
             await ChildProcess.advancedExec('git status', {
@@ -105,10 +110,10 @@ module.exports = createConfig({
                 const p = paths[i];
                 if (p.startsWith('client/')) {
                     whatToCheck.client = true;
-                } else if (p.startsWith('most/')) {
-                    whatToCheck.most = true;
-                } else if (p.startsWith('plugin/next')) {
-                    whatToCheck.pluginNext = true;
+                } else if (p.startsWith('cli/')) {
+                    whatToCheck.cli = true;
+                } else if (p.startsWith('components/react')) {
+                    whatToCheck.componentsReact = true;
                 }
             }
             if (whatToCheck.client) {
@@ -121,23 +126,23 @@ module.exports = createConfig({
                     stdio: 'inherit',
                 });
             }
-            if (whatToCheck.most) {
+            if (whatToCheck.cli) {
                 await ChildProcess.spawn('npm', ['run', 'lint'], {
-                    cwd: path.join(process.cwd(), 'most'),
+                    cwd: path.join(process.cwd(), 'cli'),
                     stdio: 'inherit',
                 });
                 await ChildProcess.spawn('npm', ['run', 'build:noEmit'], {
-                    cwd: path.join(process.cwd(), 'most'),
+                    cwd: path.join(process.cwd(), 'cli'),
                     stdio: 'inherit',
                 });
             }
-            if (whatToCheck.pluginNext) {
+            if (whatToCheck.componentsReact) {
                 await ChildProcess.spawn('npm', ['run', 'lint'], {
-                    cwd: path.join(process.cwd(), 'plugin', 'next'),
+                    cwd: path.join(process.cwd(), 'components', 'react'),
                     stdio: 'inherit',
                 });
                 await ChildProcess.spawn('npm', ['run', 'build:noEmit'], {
-                    cwd: path.join(process.cwd(), 'plugin', 'next'),
+                    cwd: path.join(process.cwd(), 'components', 'react'),
                     stdio: 'inherit',
                 });
             }
@@ -169,22 +174,22 @@ module.exports = createConfig({
                             cwd: path.join(process.cwd(), 'client', 'dist'),
                             stdio: 'inherit',
                         });
-                        await localFs.copy(
-                            ['dist', tgzName],
-                            ['..', 'components', 'next', 'client.tgz'],
-                        );
-                        await ChildProcess.spawn(
-                            'npm',
-                            ['i', '-D', './client.tgz'],
-                            {
-                                cwd: path.join(
-                                    process.cwd(),
-                                    'components',
-                                    'next',
-                                ),
-                                stdio: 'inherit',
-                            },
-                        );
+                        // await localFs.copy(
+                        //     ['dist', tgzName],
+                        //     ['..', 'components', 'react', 'client.tgz'],
+                        // );
+                        // await ChildProcess.spawn(
+                        //     'npm',
+                        //     ['i', '-D', './client.tgz'],
+                        //     {
+                        //         cwd: path.join(
+                        //             process.cwd(),
+                        //             'components',
+                        //             'next',
+                        //         ),
+                        //         stdio: 'inherit',
+                        //     },
+                        // );
                     }
                     break;
                 default: {

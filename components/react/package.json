@@ -1,7 +1,7 @@
 {
-    "name": "@thebcms/components-next",
+    "name": "@thebcms/components-react",
     "version": "0.0.1",
-    "description": "Helper components for the NextJS",
+    "description": "Helper components for React",
     "author": "BCMS",
     "license": "MIT",
     "type": "module",
@@ -14,10 +14,11 @@
         "test": "jest"
     },
     "peerDependencies": {
-        "react": "18.x"
+        "react": "18.x",
+        "@thebcms/client": ">=1.0.1"
     },
     "devDependencies": {
-        "@thebcms/client": "file:client.tgz",
+        "@thebcms/client": "^1.0.1",
         "@types/node": "^20.12.12",
         "@types/react": "^18.3.3",
         "@typescript-eslint/eslint-plugin": "^7.9.0",
