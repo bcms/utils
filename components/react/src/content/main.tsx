@@ -3,7 +3,7 @@
 import React from 'react';
 
 import type { EntryContentParsedItem } from '@thebcms/client/types';
-import { BCMSContentItem } from '@thebcms/components-next/content/item';
+import { BCMSContentItem } from '@thebcms/components-react/content/item';
 
 export interface BCMSWidgetComponents {
     [bcmsWidgetName: string]: React.FC<{

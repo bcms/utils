@@ -19,8 +19,8 @@
         "moduleResolution": "Node",
         "verbatimModuleSyntax": true,
         "paths": {
-            "@thebcms/components-next": ["./src"],
-            "@thebcms/components-next/*": ["./src/*"]
+            "@thebcms/components-react": ["./src"],
+            "@thebcms/components-react/*": ["./src/*"]
         }
     },
     "include": ["src"]

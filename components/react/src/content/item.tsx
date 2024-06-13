@@ -3,7 +3,7 @@
 import React from 'react';
 
 import type { EntryContentParsedItem } from '@thebcms/client/types';
-import type { BCMSWidgetComponents } from '@thebcms/components-next/content/main';
+import type { BCMSWidgetComponents } from '@thebcms/components-react/content/main';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;
