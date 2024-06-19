@@ -31,6 +31,8 @@ export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
     let value: string | JSX.Element = '';
     if (props.nodeParser) {
         value = props.nodeParser(props.item);
+    } else {
+        value = props.item.value as string;
     }
     if (typeof value === 'object') {
         return <>{value}</>;
