@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import type { EntryContentParsedItem } from '@thebcms/client/types';
 import type { BCMSWidgetComponents } from '@thebcms/components-react/content/main';
@@ -28,14 +28,20 @@ export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
         }
     }
 
-    return (
-        <div
-            className={`bcms-content--primitive bcms-content--${props.item.type}`}
-            dangerouslySetInnerHTML={{
-                __html: props.nodeParser
-                    ? props.nodeParser(props.item)
-                    : (props.item.value as string),
-            }}
-        />
-    );
+    let value: string | JSX.Element = '';
+    if (props.nodeParser) {
+        value = props.nodeParser(props.item);
+    }
+    if (typeof value === 'object') {
+        return <>{value}</>;
+    } else {
+        return (
+            <div
+                className={`bcms-content--primitive bcms-content--${props.item.type}`}
+                dangerouslySetInnerHTML={{
+                    __html: value,
+                }}
+            />
+        );
+    }
 };
