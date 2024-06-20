@@ -3,12 +3,15 @@ import { type Args, argsMap, getArgs } from '@thebcms/cli/args';
 import { sdkCreate } from '@thebcms/cli/sdk';
 import { Server } from '@thebcms/cli/server/main';
 import inquirer from 'inquirer';
-import { FS } from '@thebcms/cli/util';
+import { FS, ObjectUtility, ObjectUtilityError } from '@thebcms/cli/util';
 import path from 'path';
 import { homedir } from 'os';
 import { TypeGeneratorHandler } from '@thebcms/cli/handlers';
 import { EntryHandler } from '@thebcms/cli/handlers/entry';
 import { MediaHandler } from '@thebcms/cli/handlers/media';
+import { type BCMSConfig, BCMSConfigSchema } from '@thebcms/cli/config';
+import { Client } from '@thebcms/client';
+import * as process from 'node:process';
 
 export class Cli {
     server = new Server();
@@ -23,6 +26,7 @@ export class Cli {
     constructor(
         public args: Args,
         public sdk: Sdk,
+        public client?: Client,
     ) {
         this.apiOrigin = args.apiOrigin
             ? args.apiOrigin
@@ -89,6 +93,12 @@ export class Cli {
             for (let j = 1; j < col[1].length; j++) {
                 console.log(lineIndent + col[1][j]);
             }
+        }
+    }
+
+    async loginIfRequired() {
+        if (!this.client && !(await this.sdk.isLoggedIn())) {
+            await this.login();
         }
     }
 
@@ -171,9 +181,48 @@ export class Cli {
 }
 
 export async function createCli() {
+    let config: BCMSConfig | null = null;
+    const tryConfigFiles = [
+        'bcms.config.js',
+        'bcms.config.cjs',
+        'bcms.config.mjs',
+    ];
+    for (let i = 0; i < tryConfigFiles.length; i++) {
+        try {
+            config = ((await import(`./${tryConfigFiles[i]}`)) as any).default;
+        } catch (err) {
+            // Ignore
+        }
+    }
+    let client: Client | undefined = undefined;
+    if (config) {
+        const checkConfig = ObjectUtility.compareWithSchema(
+            config,
+            BCMSConfigSchema,
+            'bcms.config',
+        );
+        if (checkConfig instanceof ObjectUtilityError) {
+            throw Error(checkConfig.message);
+        }
+        if (config.client) {
+            client = new Client(
+                config.client.origin || 'https://app.thebcms.com',
+                config.client.orgId,
+                config.client.instanceId,
+                {
+                    id: config.client.apiKey.id,
+                    secret: config.client.apiKey.secret,
+                },
+                {
+                    useMemCache: true,
+                    injectSvg: true,
+                },
+            );
+        }
+    }
     const args = getArgs();
     const sdk = await sdkCreate(
         args.apiOrigin ? args.apiOrigin : 'https://app.thebcms.com',
     );
-    return new Cli(args, sdk);
+    return new Cli(args, sdk, client);
 }

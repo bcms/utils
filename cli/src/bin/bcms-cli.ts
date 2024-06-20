@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
+import { config } from 'dotenv';
+config();
 import { Cli, createCli } from '@thebcms/cli/main';
 import type { TypeGeneratorLanguage } from '@thebcms/sdk';
 
 async function resolve(cli: Cli) {
     if (cli.args.pull) {
-        await cli.login();
         let thingsToPull = cli.args.pull.split(',');
         if (thingsToPull.includes('all')) {
             thingsToPull = ['types', 'entries', 'media'];

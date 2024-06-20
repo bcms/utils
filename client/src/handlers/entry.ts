@@ -158,7 +158,7 @@ export class EntryHandler {
         const template = await this.findTemplateByName(templateIdOrName);
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cacheParse.find(
-                (e) => e._id === entryId && e.templateId === template._id,
+                (e) => e.templateId === template._id && e._id === entryId,
             );
             if (cacheHit) {
                 return cacheHit;

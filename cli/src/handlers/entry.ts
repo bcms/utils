@@ -8,10 +8,13 @@ export class EntryHandler {
             ? outputPath.split('/')
             : ['bcms', 'entries'];
         process.stdout.write('Getting templates information ... ');
-        const templates = await this.cli.sdk.template.getAll({
-            instanceId,
-            orgId,
-        });
+        await this.cli.loginIfRequired();
+        const templates = this.cli.client
+            ? await this.cli.client.template.getAll()
+            : await this.cli.sdk.template.getAll({
+                  instanceId,
+                  orgId,
+              });
         process.stdout.write('Done\n');
         for (let i = 0; i < templates.length; i++) {
             const template = templates[i];

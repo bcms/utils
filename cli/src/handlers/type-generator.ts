@@ -18,17 +18,20 @@ export class TypeGeneratorHandler {
         language: TypeGeneratorLanguage,
         outputPath?: string,
     ) {
+        await this.cli.loginIfRequired();
         process.stdout.write(
             `Pulling types for ${prettyLangTypeName[language]} ... `,
         );
         const destPath = outputPath
             ? outputPath.split('/')
             : ['bcms', 'types', language];
-        const filesInfo = await this.cli.sdk.typeGenerator.getTypes({
-            instanceId,
-            orgId,
-            lang: language,
-        });
+        const filesInfo = this.cli.client
+            ? await this.cli.client.typeGenerator.getFiles(language)
+            : await this.cli.sdk.typeGenerator.getTypes({
+                  instanceId,
+                  orgId,
+                  lang: language,
+              });
         process.stdout.write('Done\n');
         process.stdout.write(`Saving types to ${destPath.join('/')}/* ... `);
         for (let i = 0; i < filesInfo.length; i++) {
