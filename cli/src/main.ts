@@ -5,7 +5,7 @@ import { Server } from '@thebcms/cli/server/main';
 import inquirer from 'inquirer';
 import { FS, ObjectUtility, ObjectUtilityError } from '@thebcms/cli/util';
 import path from 'path';
-import { homedir } from 'os';
+import { homedir, platform } from 'os';
 import { TypeGeneratorHandler } from '@thebcms/cli/handlers';
 import { EntryHandler } from '@thebcms/cli/handlers/entry';
 import { MediaHandler } from '@thebcms/cli/handlers/media';
@@ -191,8 +191,12 @@ export async function createCli() {
         'bcms.config.mjs',
     ];
     for (let i = 0; i < tryConfigFiles.length; i++) {
+        const configPath =
+            platform() === 'win32'
+                ? `${process.cwd().replace(/\\/g, '/').split(':')[1]}/${tryConfigFiles[i]}`
+                : `${process.cwd()}/${tryConfigFiles[i]}`;
         try {
-            config = ((await import(`${process.cwd()}/${tryConfigFiles[i]}`)) as any).default;
+            config = ((await import(configPath)) as any).default;
             break;
         } catch (err) {
             // Ignore
