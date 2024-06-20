@@ -192,7 +192,8 @@ export async function createCli() {
     ];
     for (let i = 0; i < tryConfigFiles.length; i++) {
         try {
-            config = ((await import(`./${tryConfigFiles[i]}`)) as any).default;
+            config = ((await import(`${process.cwd()}/${tryConfigFiles[i]}`)) as any).default;
+            break;
         } catch (err) {
             // Ignore
         }
