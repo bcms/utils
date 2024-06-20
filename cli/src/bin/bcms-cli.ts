@@ -11,15 +11,30 @@ async function resolve(cli: Cli) {
         if (thingsToPull.includes('all')) {
             thingsToPull = ['types', 'entries', 'media'];
         }
-        const instance = await cli.getInstance(cli.args.instanceId);
+        let instanceInfo: {
+            _id: string;
+            orgId: string;
+        };
+        if (cli.client) {
+            instanceInfo = {
+                _id: cli.client.instanceId,
+                orgId: cli.client.orgId,
+            };
+        } else {
+            const instance = await cli.getInstance(cli.args.instanceId);
+            instanceInfo = {
+                _id: instance._id,
+                orgId: instance.orgId,
+            };
+        }
         for (let i = 0; i < thingsToPull.length; i++) {
             const thingToPull = thingsToPull[i];
             switch (thingToPull) {
                 case 'entries':
                     {
                         await cli.entry.pull(
-                            instance._id,
-                            instance.orgId,
+                            instanceInfo._id,
+                            instanceInfo.orgId,
                             cli.args.output,
                         );
                     }
@@ -27,8 +42,8 @@ async function resolve(cli: Cli) {
                 case 'media':
                     {
                         await cli.media.pull(
-                            instance._id,
-                            instance.orgId,
+                            instanceInfo._id,
+                            instanceInfo.orgId,
                             cli.args.output,
                         );
                     }
@@ -46,8 +61,8 @@ async function resolve(cli: Cli) {
                         }
                         for (let j = 0; j < langsToPull.length; j++) {
                             await cli.typeGenerator.pull(
-                                instance._id,
-                                instance.orgId,
+                                instanceInfo._id,
+                                instanceInfo.orgId,
                                 langsToPull[j],
                                 cli.args.output,
                             );

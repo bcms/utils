@@ -1,4 +1,4 @@
-import { type Sdk } from '@thebcms/sdk';
+import { type Instance, type Sdk } from '@thebcms/sdk';
 import { type Args, argsMap, getArgs } from '@thebcms/cli/args';
 import { sdkCreate } from '@thebcms/cli/sdk';
 import { Server } from '@thebcms/cli/server/main';
@@ -130,7 +130,10 @@ export class Cli {
         }
     }
 
-    async getInstance(instanceId?: string, promptMessage?: string) {
+    async getInstance(
+        instanceId?: string,
+        promptMessage?: string,
+    ): Promise<Instance> {
         if (await this.localFs.exist(['bcms', 'active-instance.json'], true)) {
             return await JSON.parse(
                 await this.localFs.readString(['bcms', 'active-instance.json']),
