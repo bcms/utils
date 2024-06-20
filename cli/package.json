@@ -18,11 +18,13 @@
         "test": "jest"
     },
     "dependencies": {
+        "@thebcms/client": "^1.0.2",
         "@thebcms/sdk": "^1.0.0",
         "@types/fs-extra": "^11.0.4",
         "@types/inquirer": "^9.0.7",
         "@types/uuid": "^8.3.0",
         "axios": "^1.6.8",
+        "dotenv": "^16.4.5",
         "fs-extra": "^11.2.0",
         "inquirer": "^9.2.22",
         "uuid": "^9.0.1"
