@@ -1,13 +1,11 @@
 import { Client } from '@thebcms/client/main';
-import {
+import { MemCache } from '@thebcms/client/util';
+import type { Group } from '@thebcms/client/types/_cloud/group/models/main';
+import type { GroupWhereIsItUsedResult } from '@thebcms/client/types/_cloud/group/models/controller';
+import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util';
-import {
-    Group,
-    GroupWhereIsItUsedResult,
-} from '@thebcms/client/types/_cloud/group';
-import { MemCache } from '@thebcms/client/util';
+} from '@thebcms/client/types/_cloud/util/controller';
 
 export class GroupHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/group`;

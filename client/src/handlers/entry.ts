@@ -2,18 +2,20 @@ import { Client } from '@thebcms/client/main';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util';
+} from '@thebcms/client/types/_cloud/util/controller';
+import { MemCache } from '@thebcms/client/util';
+import { Buffer } from 'buffer';
+import type { Template } from '@thebcms/client/types/_cloud/template/models/main';
 import type {
     Entry,
-    EntryCreateBody,
     EntryLite,
     EntryParsed,
+} from '@thebcms/client/types/_cloud/entry/models/main';
+import type {
+    EntryCreateBody,
     EntryUpdateBody,
-} from '@thebcms/client/types/_cloud/entry';
-import type { Template } from '@thebcms/client/types/_cloud/template';
-import { MemCache } from '@thebcms/client/util';
-import { Media } from '@thebcms/client/types/_cloud/media';
-import { Buffer } from 'buffer';
+} from '@thebcms/client/types/_cloud/entry/models/controller';
+import type { Media } from '@thebcms/client/types/_cloud/media/models/main';
 
 export class EntryHandler {
     private templates: Template[] | null = null;

@@ -214,7 +214,6 @@ export async function createCli() {
         }
         if (config.client) {
             client = new Client(
-                config.client.origin || 'https://app.thebcms.com',
                 config.client.orgId,
                 config.client.instanceId,
                 {
@@ -222,6 +221,8 @@ export async function createCli() {
                     secret: config.client.apiKey.secret,
                 },
                 {
+                    cmsOrigin:
+                        config.client.origin || 'https://app.thebcms.com',
                     useMemCache: true,
                     injectSvg: true,
                 },

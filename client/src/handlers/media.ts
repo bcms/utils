@@ -1,15 +1,15 @@
 import { Client } from '@thebcms/client/main';
-import {
-    ControllerItemResponse,
-    ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util';
-import {
-    Media,
-    MediaGetBinBody,
-    MediaGetBinBodyImage,
-} from '@thebcms/client/types/_cloud/media';
 import { MemCache } from '@thebcms/client/util';
 import { Buffer } from 'buffer';
+import type { Media } from '@thebcms/client/types/_cloud/media/models/main';
+import type {
+    MediaGetBinBody,
+    MediaGetBinBodyImage,
+} from '@thebcms/client/types/_cloud/media/models/controller';
+import type {
+    ControllerItemResponse,
+    ControllerItemsResponse,
+} from '@thebcms/client/types/_cloud/util/controller';
 
 export interface MediaExtended extends Media {
     svg?: string;

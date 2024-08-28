@@ -2,7 +2,7 @@
 
 import { config } from 'dotenv';
 config();
-import { Cli, createCli } from '@thebcms/cli/main';
+import { type Cli, createCli } from '@thebcms/cli/main';
 import type { TypeGeneratorLanguage } from '@thebcms/sdk';
 
 async function resolve(cli: Cli) {

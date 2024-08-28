@@ -1,9 +1,9 @@
 import { Client } from '@thebcms/client/main';
-import {
+import type {
     TypeGeneratorFile,
     TypeGeneratorLanguage,
-} from '@thebcms/client/types/_cloud/type-generator';
-import { ControllerItemsResponse } from '@thebcms/client/types/_cloud/util';
+} from '@thebcms/client/types/_cloud/type-generator/generator/main';
+import type { ControllerItemsResponse } from '@thebcms/client/types/_cloud/util/controller';
 
 export class TypeGeneratorHandler {
     private baseUri = '/api/v3/org/:orgId/instance/:instanceId/type-generator';

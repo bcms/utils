@@ -15,6 +15,7 @@ export interface ClientApiKey {
 }
 
 export class Client {
+    cmsOrigin = 'https://app.thebcms.com';
     useMemCache = false;
     debug = false;
     enableSocket = false;
@@ -31,11 +32,11 @@ export class Client {
     socket: SocketHandler = new SocketHandler(this);
 
     constructor(
-        public cmsOrigin: string,
         public orgId: string,
         public instanceId: string,
         public apiKeyInfo: ClientApiKey,
         options?: {
+            cmsOrigin?: string;
             useMemCache?: boolean;
             debug?: boolean;
             enableSocket?: boolean;
@@ -43,6 +44,9 @@ export class Client {
         },
     ) {
         if (options) {
+            if (options.cmsOrigin) {
+                this.cmsOrigin = options.cmsOrigin;
+            }
             if (options.useMemCache) {
                 this.useMemCache = options.useMemCache;
             }

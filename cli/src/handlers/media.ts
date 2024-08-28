@@ -1,4 +1,5 @@
 import type { Cli } from '@thebcms/cli/main';
+import type { Media } from '@thebcms/sdk';
 
 export class MediaHandler {
     constructor(private cli: Cli) {}
@@ -16,7 +17,7 @@ export class MediaHandler {
         process.stdout.write('Done\n');
         for (let i = 0; i < allMedia.length; i++) {
             const media = allMedia[i];
-            const mediaPath = this.cli.sdk.media.resolvePath(media, allMedia);
+            const mediaPath = this.cli.sdk.media.resolvePath(media as Media, allMedia as Media[]);
             process.stdout.write(
                 `[${i + 1}/${allMedia.length}] Pulling media to path: ${mediaPath} ... `,
             );
@@ -27,7 +28,7 @@ export class MediaHandler {
                           media.name,
                       )
                     : await this.cli.sdk.media.bin({
-                          media,
+                          media: media as Media,
                           orgId,
                           instanceId,
                           data: {

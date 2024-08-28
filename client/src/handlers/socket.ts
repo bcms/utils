@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
+import { createQueue, QueueError } from '@thebcms/client/util';
+import { Client } from '@thebcms/client';
+import WebSocket from 'isomorphic-ws';
+import type {
     SocketEventData,
     SocketEventDataConnection,
     SocketEventName,
     SocketEventNamesAndTypes,
-} from '@thebcms/client/types/_cloud/socket';
-import { createQueue, QueueError } from '@thebcms/client/util';
-import { Client } from '@thebcms/client';
-import WebSocket from 'isomorphic-ws';
+} from '@thebcms/client/types/_cloud/socket/events/main';
 
 export interface SocketEventHandler<
     Name extends SocketEventName,

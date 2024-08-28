@@ -40,15 +40,6 @@ export class ObjectUtilityError {
     ) {}
 }
 
-export interface ObjectUtility {
-    compareWithSchema(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        object: any,
-        schema: ObjectSchema,
-        level?: string,
-    ): void | ObjectUtilityError;
-}
-
 export class ObjectUtility {
     static compareWithSchema(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

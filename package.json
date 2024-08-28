@@ -1,29 +1,26 @@
 {
-  "name": "@thebcms/utils",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "main": "index.js",
-  "scripts": {
-    "postinstall": "npm-tool --postinstall",
-    "setup": "npm-tool --setup",
-    "pre:commit": "npm-tool --pre-commit",
-    "prepare": "husky install",
-    "bundle:package": "npm-tool --bundle-package",
-    "pack:package": "npm-tool --pack-package",
-    "npm-tool": "npm-tool"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@banez/child_process": "^1.0.3",
-    "@banez/fs": "^1.0.3",
-    "@banez/npm-tool": "^1.1.1",
-    "@banez/string-utility": "^1.0.1",
-    "dotenv": "^16.3.1",
-    "husky": "^8.0.3",
-    "prettier": "^3.2.5",
-    "typescript": "^5.3.3"
-  }
+    "name": "@thebcms/utils",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "main": "index.js",
+    "scripts": {
+        "postinstall": "node _scripts/main.js postinstall",
+        "setup": "node _scripts/main.js setup",
+        "pre:commit": "node _scripts/main.js pre-commit",
+        "bundle:package": "node _scripts/main.js bundle-package",
+        "pack:package": "node _scripts/main.js pack-package",
+        "prepare": "husky install"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "dotenv": "^16.3.1",
+        "fs-extra": "^11.2.0",
+        "husky": "^8.0.3",
+        "prettier": "^3.2.5",
+        "typescript": "^5.3.3"
+    }
 }

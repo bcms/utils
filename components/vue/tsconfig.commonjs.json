@@ -1,0 +1,26 @@
+{
+//    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "declaration": false,
+        "declarationMap": false,
+        "sourceMap": false,
+        "removeComments": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "strict": true,
+        "target": "ES2020",
+        "outDir": "./dist/cjs",
+        "baseUrl": "./",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "moduleResolution": "Node",
+        "paths": {
+            "@thebcms/components-vue": ["./src"],
+            "@thebcms/components-vue/*": ["./src/*"]
+        }
+    },
+    "include": ["src"]
+}

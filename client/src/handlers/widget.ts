@@ -1,13 +1,11 @@
 import { Client } from '@thebcms/client/main';
-import {
+import { MemCache } from '@thebcms/client/util';
+import type { Widget } from '@thebcms/client/types/_cloud/widget/models/main';
+import type { WidgetWhereIsItUsedResult } from '@thebcms/client/types/_cloud/widget/models/controller';
+import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util';
-import {
-    Widget,
-    WidgetWhereIsItUsedResult,
-} from '@thebcms/client/types/_cloud/widget';
-import { MemCache } from '@thebcms/client/util';
+} from '@thebcms/client/types/_cloud/util/controller';
 
 export class WidgetHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/widget`;

@@ -1,8 +1,11 @@
 import type { Client } from '@thebcms/client/main';
 import type { MediaExtended } from '@thebcms/client/handlers';
-import type { Media, MediaType } from '@thebcms/client/types/_cloud/media';
 import { Buffer } from 'buffer';
-import { PropMediaDataParsed } from '@thebcms/client/types/_cloud/prop';
+import type {
+    Media,
+    MediaType,
+} from '@thebcms/client/types/_cloud/media/models/main';
+import type { PropMediaDataParsed } from '@thebcms/client/types/_cloud/prop/models/media';
 
 export interface ImageHandlerOptionSize {
     width: number;
