@@ -14,6 +14,17 @@ export interface ClientApiKey {
     secret: string;
 }
 
+export interface ClientConfig {
+    orgId: string;
+    instanceId: string;
+    apiKey: ClientApiKey;
+    cmsOrigin: string;
+    useMemCache: boolean;
+    debug: boolean;
+    enableSocket: boolean;
+    injectSvg: boolean;
+}
+
 export class Client {
     cmsOrigin = 'https://app.thebcms.com';
     useMemCache = false;
@@ -63,6 +74,19 @@ export class Client {
                 this.injectSvg = options.injectSvg;
             }
         }
+    }
+
+    getConfig(): ClientConfig {
+        return {
+            apiKey: this.apiKeyInfo,
+            cmsOrigin: this.cmsOrigin,
+            debug: this.debug,
+            enableSocket: this.enableSocket,
+            injectSvg: this.injectSvg,
+            instanceId: this.instanceId,
+            orgId: this.orgId,
+            useMemCache: this.useMemCache,
+        };
     }
 
     async send<Data = unknown>(config: AxiosRequestConfig): Promise<Data> {

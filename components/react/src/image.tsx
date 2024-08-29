@@ -8,6 +8,7 @@ import {
 } from '@thebcms/client/types';
 import {
     Client,
+    type ClientConfig,
     ImageHandler,
     type ImageHandlerOptions,
     type MediaExtended,
@@ -18,7 +19,7 @@ export interface BCMSImageProps {
     className?: string;
     style?: React.CSSProperties;
     media: Media | MediaExtended | PropMediaDataParsed;
-    client: Client;
+    clientConfig: ClientConfig;
     options?: ImageHandlerOptions;
     altText?: string;
 }
@@ -26,10 +27,22 @@ export interface BCMSImageProps {
 const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG'];
 
 export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
+    const client = new Client(
+        props.clientConfig.orgId,
+        props.clientConfig.instanceId,
+        props.clientConfig.apiKey,
+        {
+            cmsOrigin: props.clientConfig.cmsOrigin,
+            useMemCache: props.clientConfig.useMemCache,
+            injectSvg: props.clientConfig.injectSvg,
+            debug: props.clientConfig.debug,
+            enableSocket: props.clientConfig.enableSocket,
+        },
+    );
     const imageElement = React.useRef<HTMLImageElement | null>(null);
     const imageHandler = React.useMemo(
-        () => new ImageHandler(props.client, props.media, props.options),
-        [props.media, props.options, props.client],
+        () => new ImageHandler(client, props.media, props.options),
+        [props.media, props.options, client],
     );
     const [srcSet, setSrcSet] = React.useState(
         /**
@@ -79,7 +92,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
         };
     }, [props.media, props.options, imageHandler]);
 
-    if (props.client.injectSvg && mediaExtended.svg) {
+    if (client.injectSvg && mediaExtended.svg) {
         return (
             <div
                 id={props.id}
@@ -99,7 +112,6 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
 
     if (!imageHandler.parsable) {
         return (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
                 id={props.id}
                 style={props.style}
