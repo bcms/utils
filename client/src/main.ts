@@ -32,15 +32,15 @@ export class Client {
     enableSocket = false;
     injectSvg = false;
 
-    template = new TemplateHandler(this);
-    typeGenerator = new TypeGeneratorHandler(this);
-    entry = new EntryHandler(this);
-    entryStatus = new EntryStatusHandler(this);
-    group = new GroupHandler(this);
-    language = new LanguageHandler(this);
-    media = new MediaHandler(this);
-    widget = new WidgetHandler(this);
-    socket: SocketHandler = new SocketHandler(this);
+    template: TemplateHandler;
+    typeGenerator: TypeGeneratorHandler;
+    entry: EntryHandler;
+    entryStatus: EntryStatusHandler;
+    group: GroupHandler;
+    language: LanguageHandler;
+    media: MediaHandler;
+    widget: WidgetHandler;
+    socket: SocketHandler;
 
     constructor(
         public orgId: string,
@@ -66,14 +66,20 @@ export class Client {
             }
             if (options.enableSocket) {
                 this.enableSocket = options.enableSocket;
-                this.socket.connect().catch((err) => {
-                    console.error(err);
-                });
             }
             if (options.injectSvg) {
                 this.injectSvg = options.injectSvg;
             }
         }
+        this.template = new TemplateHandler(this);
+        this.typeGenerator = new TypeGeneratorHandler(this);
+        this.entry = new EntryHandler(this);
+        this.entryStatus = new EntryStatusHandler(this);
+        this.group = new GroupHandler(this);
+        this.language = new LanguageHandler(this);
+        this.media = new MediaHandler(this);
+        this.widget = new WidgetHandler(this);
+        this.socket = new SocketHandler(this);
     }
 
     getConfig(): ClientConfig {
