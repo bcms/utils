@@ -71,6 +71,7 @@ export class Client {
                 this.injectSvg = options.injectSvg;
             }
         }
+        this.socket = new SocketHandler(this);
         this.template = new TemplateHandler(this);
         this.typeGenerator = new TypeGeneratorHandler(this);
         this.entry = new EntryHandler(this);
@@ -79,7 +80,6 @@ export class Client {
         this.language = new LanguageHandler(this);
         this.media = new MediaHandler(this);
         this.widget = new WidgetHandler(this);
-        this.socket = new SocketHandler(this);
     }
 
     getConfig(): ClientConfig {
