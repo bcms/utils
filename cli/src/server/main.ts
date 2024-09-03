@@ -7,7 +7,7 @@ export class Server {
         | ((data: { otp: string; userId: string }, err?: string) => void)
         | null = null;
 
-    port: number = 0;
+    port = 0;
     html = new Html();
 
     constructor() {
@@ -89,7 +89,7 @@ export class Server {
 
     async start() {
         await new Promise<void>((resolve) => {
-            this.server = this.server.listen(8080, () => {
+            this.server = this.server.listen(() => {
                 const address = this.server.address();
                 if (address && typeof address === 'object') {
                     this.port = address.port;
