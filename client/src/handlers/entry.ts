@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
@@ -197,13 +197,11 @@ export class EntryHandler {
                 return cacheHit;
             }
         }
-        const res = await this.client.send<ControllerItemResponse<EntryParsed>>(
-            {
-                url: `${this.baseUri(template._id)}/${entryId}`,
-            },
-        );
+        const res = await this.client.send<ControllerItemResponse<Entry>>({
+            url: `${this.baseUri(template._id)}/${entryId}`,
+        });
         if (this.client.useMemCache) {
-            this.cacheParse.set(res.item);
+            this.cacheRaw.set(res.item);
         }
         return res.item;
     }

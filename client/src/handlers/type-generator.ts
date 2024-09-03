@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import type {
     TypeGeneratorFile,
     TypeGeneratorLanguage,

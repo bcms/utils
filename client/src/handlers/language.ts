@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import type { Language } from '@thebcms/client/types/_cloud/language/models/main';
 import type {

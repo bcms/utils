@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import type { Group } from '@thebcms/client/types/_cloud/group/models/main';
 import type { GroupWhereIsItUsedResult } from '@thebcms/client/types/_cloud/group/models/controller';

@@ -84,6 +84,7 @@ export const BCMSImage = defineComponent({
 
         onMounted(() => {
             window.addEventListener('resize', resizeHandler);
+            resizeHandler();
         });
 
         onBeforeUnmount(() => {

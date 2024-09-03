@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import type { Widget } from '@thebcms/client/types/_cloud/widget/models/main';
 import type { WidgetWhereIsItUsedResult } from '@thebcms/client/types/_cloud/widget/models/controller';

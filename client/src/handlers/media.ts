@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import { Buffer } from 'buffer';
 import type { Media } from '@thebcms/client/types/_cloud/media/models/main';

@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createQueue, QueueError } from '@thebcms/client/util';
-import { Client } from '@thebcms/client';
+import type { Client } from '@thebcms/client';
 import WebSocket from 'isomorphic-ws';
 import type {
     SocketEventData,

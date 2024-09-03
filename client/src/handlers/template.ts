@@ -1,11 +1,11 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import type { Template } from '@thebcms/client/types/_cloud/template/models/main';
-import {
+import type {
     TemplateUpdateBody,
     TemplateWhereIsItUsedResult,
 } from '@thebcms/client/types/_cloud/template/models/controller';
-import {
+import type {
     ControllerItemResponse,
     ControllerItemsResponse,
 } from '@thebcms/client/types/_cloud/util/controller';

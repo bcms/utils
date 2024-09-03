@@ -1,4 +1,4 @@
-import { Client } from '@thebcms/client/main';
+import type { Client } from '@thebcms/client/main';
 import { MemCache } from '@thebcms/client/util';
 import type { EntryStatus } from '@thebcms/client/types/_cloud/entry-status/models/main';
 import type {
