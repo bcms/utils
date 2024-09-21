@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import React from 'react';
 
-import type { EntryContentParsedItem } from '@thebcms/client/types';
 import { BCMSContentItem } from '@thebcms/components-react/content/item';
+import type { EntryContentParsedItem } from '@thebcms/types';
 
 export interface BCMSWidgetComponents {
     [bcmsWidgetName: string]: React.FC<{

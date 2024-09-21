@@ -7,8 +7,8 @@ module.exports = {
         orgId: '66c487b33c3b7970de67d042',
         instanceId: '66c487df3c3b7970de67d044',
         apiKey: {
-            id: '66c7395f29bbcccad3d83a62',
-            secret: '8e58a9dd60bd8ca284417a18acf47b2250fe96f4c2bdcf701731508e1c9555c0'
+            id: '66d7107bf9b2b5370dada74b',
+            secret: 'a767da7bb28fd07ad5c5835904f09ea005cd0251489280c2d0d030705f86cead'
         }
     }
 }

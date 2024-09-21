@@ -7,17 +7,8 @@ import {
     type PropType,
     ref,
 } from 'vue';
-import type {
-    Media,
-    MediaType,
-    PropMediaDataParsed,
-} from '@thebcms/client/types';
-import {
-    type Client,
-    ImageHandler,
-    type ImageHandlerOptions,
-    type MediaExtended,
-} from '@thebcms/client';
+import type { Media, MediaType, PropMediaDataParsed } from '@thebcms/types';
+import { type Client, ImageHandler, type MediaExtended } from '@thebcms/client';
 
 export interface BCMSImageProps {
     id?: string;
@@ -25,7 +16,6 @@ export interface BCMSImageProps {
     style?: string;
     media: Media | MediaExtended | PropMediaDataParsed;
     client: Client;
-    options?: ImageHandlerOptions;
     altText?: string;
 }
 
@@ -46,13 +36,12 @@ export const BCMSImage = defineComponent({
             type: Object as PropType<Client>,
             required: true,
         },
-        options: Object as PropType<ImageHandlerOptions>,
         altText: String,
     },
     setup(props) {
         const imageElement = ref<HTMLImageElement>();
         const imageHandler = computed(() => {
-            return new ImageHandler(props.client, props.media, props.options);
+            return new ImageHandler(props.client, props.media);
         });
         const mediaExtended = computed(() => props.media as MediaExtended);
         const srcSet = ref(

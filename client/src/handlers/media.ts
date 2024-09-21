@@ -1,20 +1,16 @@
 import type { Client } from '@thebcms/client/main';
-import { MemCache } from '@thebcms/client/util';
 import { Buffer } from 'buffer';
-import type { Media } from '@thebcms/client/types/_cloud/media/models/main';
-import type {
-    MediaGetBinBody,
-    MediaGetBinBodyImage,
-} from '@thebcms/client/types/_cloud/media/models/controller';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util/controller';
+    Media,
+} from '@thebcms/types';
+import { MemCache } from '@thebcms/utils/mem-cache';
 
 export interface MediaExtended extends Media {
     svg?: string;
-    bin(options?: MediaGetBinBodyImage): Promise<Buffer>;
-    thumbnail(options?: MediaGetBinBodyImage): Promise<Buffer>;
+    bin(options?: { webp?: boolean; sizeTransform?: string }): Promise<Buffer>;
+    thumbnail(): Promise<Buffer>;
 }
 
 export class MediaHandler {
@@ -99,31 +95,61 @@ export class MediaHandler {
     async getMediaBin(
         id: string,
         filename: string,
-        data?: MediaGetBinBody,
+        options?: {
+            thumbnail?: boolean;
+            webp?: boolean;
+            sizeTransform?: string;
+        },
     ): Promise<Buffer> {
+        const queries: string[] = [];
+        if (options) {
+            if (options.webp) {
+                queries.push('webp=t');
+            }
+            if (options.sizeTransform) {
+                queries.push(`sizeT=${options.sizeTransform}`);
+            }
+            if (options.thumbnail) {
+                queries.push(`tmb=t`);
+            }
+        }
         return await this.client.send<Buffer>({
-            url: `${this.baseUri}/${id}/bin/${filename}${data ? `?data=${Buffer.from(JSON.stringify(data)).toString('hex')}` : ''}`,
+            url: `${this.baseUri}/${id}/bin2/${filename}${queries.length > 0 ? `?${queries.join('&')}` : ''}`,
             method: 'get',
             responseType: 'arraybuffer',
         });
     }
 
-    toUri(id: string, filename: string, data?: MediaGetBinBody) {
-        const query: string[] = [];
-        if (data) {
-            query.push(
-                `data=${Buffer.from(JSON.stringify(data)).toString('hex')}`,
-            );
+    toUri(
+        id: string,
+        filename: string,
+        options?: {
+            thumbnail?: boolean;
+            webp?: boolean;
+            sizeTransform?: string;
+        },
+    ) {
+        const queries: string[] = [];
+        if (options) {
+            if (options.webp) {
+                queries.push('webp=t');
+            }
+            if (options.sizeTransform) {
+                queries.push(`sizeT=${options.sizeTransform}`);
+            }
+            if (options.thumbnail) {
+                queries.push(`tmb=t`);
+            }
         }
-        query.push(
+        queries.push(
             `apiKey=${this.client.apiKeyInfo.id}.${this.client.apiKeyInfo.secret}`,
         );
         let uri = this.baseUri
             .replace(':instanceId', this.client.instanceId)
             .replace(':orgId', this.client.orgId);
-        uri += `/${id}/bin/${filename}`;
-        if (query.length > 0) {
-            uri += '?' + query.join('&');
+        uri += `/${id}/bin2/${filename}`;
+        if (queries.length > 0) {
+            uri += '?' + queries.join('&');
         }
         return uri;
     }
@@ -132,15 +158,11 @@ export class MediaHandler {
         return {
             ...media,
             bin: async (options) => {
-                return this.getMediaBin(media._id, media.name, {
-                    thumbnail: false,
-                    image: options,
-                });
+                return this.getMediaBin(media._id, media.name, options);
             },
-            thumbnail: async (options) => {
+            thumbnail: async () => {
                 return this.getMediaBin(media._id, media.name, {
                     thumbnail: true,
-                    image: options,
                 });
             },
         };

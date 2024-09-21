@@ -1,10 +1,10 @@
 import type { Client } from '@thebcms/client/main';
-import { MemCache } from '@thebcms/client/util';
-import type { Language } from '@thebcms/client/types/_cloud/language/models/main';
+import { MemCache } from '@thebcms/utils/mem-cache';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util/controller';
+    Language,
+} from '@thebcms/types';
 
 export class LanguageHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/language`;

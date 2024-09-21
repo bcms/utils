@@ -1,21 +1,7 @@
 import type { Client } from '@thebcms/client/main';
 import type { MediaExtended } from '@thebcms/client/handlers';
 import { Buffer } from 'buffer';
-import type {
-    Media,
-    MediaType,
-} from '@thebcms/client/types/_cloud/media/models/main';
-import type { PropMediaDataParsed } from '@thebcms/client/types/_cloud/prop/models/media';
-
-export interface ImageHandlerOptionSize {
-    width: number;
-    height?: number;
-    quality?: number;
-}
-
-export interface ImageHandlerOptions {
-    sizes: ImageHandlerOptionSize[];
-}
+import type { Media, PropMediaDataParsed } from '@thebcms/types';
 
 export interface ImageHandlerPictureSrcSetResult {
     original: string;
@@ -25,11 +11,7 @@ export interface ImageHandlerPictureSrcSetResult {
     height: number;
 }
 
-const parsableMediaTypes: (keyof typeof MediaType)[] = ['IMG'];
-
 export class ImageHandler {
-    private options: ImageHandlerOptions;
-
     parsable: boolean;
     fileName: string;
     fileExtension: string;
@@ -37,55 +19,25 @@ export class ImageHandler {
     constructor(
         private client: Client,
         private media: MediaExtended | Media | PropMediaDataParsed,
-        options?: ImageHandlerOptions,
     ) {
-        this.parsable = parsableMediaTypes.includes(media.type);
-        if (options) {
-            this.options = options;
-        } else {
-            const defaultQuality = 75;
-            this.options = {
-                sizes: [
-                    {
-                        width: 350,
-                        quality: defaultQuality,
-                    },
-                    {
-                        width: 650,
-                        quality: defaultQuality,
-                    },
-                    {
-                        width: 900,
-                        quality: defaultQuality,
-                    },
-                    {
-                        width: 1200,
-                        quality: defaultQuality,
-                    },
-                    {
-                        width: 1600,
-                        quality: defaultQuality,
-                    },
-                    {
-                        width: 1920,
-                        quality: defaultQuality,
-                    },
-                ],
-            };
-        }
+        this.parsable = !!media.sizeTransforms;
         const nameParts = this.media.name.split('.');
         this.fileName = nameParts.slice(0, nameParts.length - 1).join('.');
         this.fileExtension = nameParts[nameParts.length - 1];
     }
 
-    private closestSize(elementWidth: number): ImageHandlerOptionSize {
+    private closestSize(elementWidth: number): string | undefined {
+        if (!this.media.sizeTransforms) {
+            return undefined;
+        }
         const dpr = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
         const containerWidth = elementWidth * dpr;
         let delta = 1000000;
         let bestOptionIndex = 0;
-        for (let i = 0; i < this.options.sizes.length; i++) {
-            const size = this.options.sizes[i];
-            let widthDelta = containerWidth - size.width;
+        for (let i = 0; i < this.media.sizeTransforms.length; i++) {
+            const [widthStr] = this.media.sizeTransforms[i].split('x');
+            const width = parseInt(widthStr, 10);
+            let widthDelta = containerWidth - width;
             if (widthDelta < 0) {
                 widthDelta = -widthDelta;
             }
@@ -94,7 +46,7 @@ export class ImageHandler {
                 bestOptionIndex = i;
             }
         }
-        return this.options.sizes[bestOptionIndex];
+        return this.media.sizeTransforms[bestOptionIndex];
     }
 
     async getSvgContent(): Promise<string> {
@@ -113,35 +65,39 @@ export class ImageHandler {
 
     getPictureSrcSet(elementWidth: number): ImageHandlerPictureSrcSetResult {
         const closestSize = this.closestSize(elementWidth);
+        let width = this.media.width;
+        let height = this.media.height;
+        if (closestSize) {
+            const [widthStr, heightStr] = closestSize.split('x');
+            width = parseInt(widthStr, 10);
+            height = parseInt(heightStr, 10);
+        }
         return {
             original: `${this.client.cmsOrigin}${this.client.media.toUri(this.media._id, this.media.name)}`,
             src1: `${this.client.cmsOrigin}${this.client.media.toUri(
                 this.media._id,
                 this.fileName + '.webp',
-                {
-                    image: {
-                        quality: closestSize.quality,
-                        width: closestSize.width,
-                        height: closestSize.height,
-                        webp: true,
-                    },
-                },
+                closestSize
+                    ? {
+                          webp: true,
+                          sizeTransform: closestSize,
+                      }
+                    : undefined,
             )}`,
             src2: `${this.client.cmsOrigin}${this.client.media.toUri(
                 this.media._id,
                 this.media.name,
-                {
-                    image: {
-                        quality: closestSize.quality,
-                        width: closestSize.width,
-                        height: closestSize.height,
-                    },
-                },
+                closestSize
+                    ? {
+                          sizeTransform: closestSize,
+                      }
+                    : undefined,
             )}`,
-            width: closestSize.width,
+            width,
             height:
-                closestSize.height ||
-                closestSize.width / (this.media.width / this.media.height),
+                height !== -1
+                    ? height
+                    : width / (this.media.width / this.media.height),
         };
     }
 }

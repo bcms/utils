@@ -2,8 +2,8 @@
 
 import React, { type JSX } from 'react';
 
-import type { EntryContentParsedItem } from '@thebcms/client/types';
 import type { BCMSWidgetComponents } from '@thebcms/components-react/content/main';
+import type { EntryContentParsedItem } from '@thebcms/types';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;

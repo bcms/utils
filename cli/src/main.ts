@@ -1,17 +1,22 @@
-import { type Instance, type Sdk } from '@thebcms/sdk';
 import { type Args, argsMap, getArgs } from '@thebcms/cli/args';
 import { sdkCreate } from '@thebcms/cli/sdk';
 import { Server } from '@thebcms/cli/server/main';
 import inquirer from 'inquirer';
-import { FS, ObjectUtility, ObjectUtilityError } from '@thebcms/cli/util';
 import path from 'path';
 import { homedir, platform } from 'os';
 import { TypeGeneratorHandler } from '@thebcms/cli/handlers';
 import { EntryHandler } from '@thebcms/cli/handlers/entry';
 import { MediaHandler } from '@thebcms/cli/handlers/media';
 import { type BCMSConfig, BCMSConfigSchema } from '@thebcms/cli/config';
-import { Client } from '@thebcms/client';
 import * as process from 'node:process';
+import { FS } from '@thebcms/utils/fs';
+import type { Sdk } from '@thebcms/sdk';
+import { Client } from '@thebcms/client';
+import type { Instance } from '@thebcms/types';
+import {
+    ObjectUtility,
+    ObjectUtilityError,
+} from '@thebcms/utils/object-utility';
 
 export class Cli {
     server = new Server();
@@ -62,7 +67,7 @@ export class Cli {
             if (col1MaxWidth < col1.length) {
                 col1MaxWidth = col1.length;
             }
-            let col2Lines: string[] = [''];
+            const col2Lines: string[] = [''];
             let col2LineIdx = 0;
             if (argInfo.description) {
                 const descParts = argInfo.description.split(' ');

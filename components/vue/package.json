@@ -7,6 +7,13 @@
     "main": "./index.mjs",
     "module": "./index.mjs",
     "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "require": "./index.cjs",
+            "import": "./index.mjs",
+            "types": "./index.d.ts"
+        }
+    },
     "scripts": {
         "build:ts:mjs": "tsc --project tsconfig.json",
         "build:ts:cjs": "tsc --project tsconfig.commonjs.json",
@@ -16,11 +23,11 @@
         "test": "jest"
     },
     "peerDependencies": {
-        "@thebcms/client": ">=1.0.1",
+        "@thebcms/types": "^1.0.0",
         "vue": "3.x"
     },
     "devDependencies": {
-        "@thebcms/client": "^1.0.1",
+        "@thebcms/types": "^1.0.0",
         "@types/node": "^20.12.12",
         "@types/react": "^18.3.3",
         "@typescript-eslint/eslint-plugin": "^7.9.0",

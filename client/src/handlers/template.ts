@@ -1,14 +1,12 @@
 import type { Client } from '@thebcms/client/main';
-import { MemCache } from '@thebcms/client/util';
-import type { Template } from '@thebcms/client/types/_cloud/template/models/main';
-import type {
-    TemplateUpdateBody,
-    TemplateWhereIsItUsedResult,
-} from '@thebcms/client/types/_cloud/template/models/controller';
+import { MemCache } from '@thebcms/utils/mem-cache';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util/controller';
+    Template,
+    TemplateUpdateBody,
+    TemplateWhereIsItUsedResult,
+} from '@thebcms/types';
 
 export class TemplateHandler {
     private baseUri = '/api/v3/org/:orgId/instance/:instanceId/template';

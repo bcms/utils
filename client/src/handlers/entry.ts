@@ -1,21 +1,17 @@
 import type { Client } from '@thebcms/client/main';
+import { Buffer } from 'buffer';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
-} from '@thebcms/client/types/_cloud/util/controller';
-import { MemCache } from '@thebcms/client/util';
-import { Buffer } from 'buffer';
-import type { Template } from '@thebcms/client/types/_cloud/template/models/main';
-import type {
     Entry,
+    EntryCreateBody,
     EntryLite,
     EntryParsed,
-} from '@thebcms/client/types/_cloud/entry/models/main';
-import type {
-    EntryCreateBody,
     EntryUpdateBody,
-} from '@thebcms/client/types/_cloud/entry/models/controller';
-import type { Media } from '@thebcms/client/types/_cloud/media/models/main';
+    Media,
+    Template,
+} from '@thebcms/types';
+import { MemCache } from '@thebcms/utils/mem-cache';
 
 export class EntryHandler {
     private templates: Template[] | null = null;

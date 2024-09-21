@@ -20,7 +20,9 @@
         "verbatimModuleSyntax": true,
         "paths": {
             "@thebcms/components-react": ["./src"],
-            "@thebcms/components-react/*": ["./src/*"]
+            "@thebcms/components-react/*": ["./src/*"],
+            "@thebcms/client": ["../../client/src"],
+            "@thebcms/client/*": ["../../client/src/*"]
         }
     },
     "include": ["src"]

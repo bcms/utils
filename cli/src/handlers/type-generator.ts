@@ -1,4 +1,4 @@
-import type { TypeGeneratorLanguage } from '@thebcms/sdk';
+import type { TypeGeneratorLanguage } from '@thebcms/types';
 import type { Cli } from '@thebcms/cli/main';
 import inquirer from 'inquirer';
 

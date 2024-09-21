@@ -1,35 +1,38 @@
 import { v4 as uuidv4 } from 'uuid';
 import { homedir } from 'os';
 import path from 'path';
+import type {
+    AdditionalFile,
+    ApiKey,
+    Dependency,
+    Entry,
+    EntryLite,
+    EntryStatus,
+    Event,
+    Fn,
+    Group,
+    Instance,
+    InstanceEnv,
+    InvitationProtected,
+    Job,
+    Language,
+    Media,
+    Org,
+    Tag,
+    Template,
+    UserProtected,
+    UserPublic,
+    Widget,
+} from '@thebcms/types';
 import {
-    type AdditionalFile,
-    type ApiKey,
-    createSdk,
-    type Dependency,
-    type Entry,
-    type EntryLite,
-    type EntryStatus,
-    type Event,
-    type Fn,
-    type Group,
-    type Instance,
-    type InstanceEnv,
-    type InvitationProtected,
-    type Job,
-    type Language,
-    type Media,
-    type Org,
-    type Sdk,
     type SdkStore,
-    type Storage,
     type StorageSubscriptionHandler,
-    type Tag,
-    type Template,
-    type UserProtected,
-    type UserPublic,
-    type Widget,
+    type Storage,
+    type Sdk,
+    createSdk,
 } from '@thebcms/sdk';
-import { createArrayStore, FS } from '@thebcms/cli/util';
+import { createArrayStore } from '@thebcms/cli/util/array-store';
+import { FS } from '@thebcms/utils/fs';
 
 let me: UserProtected | null = null;
 

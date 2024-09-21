@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { createQueue, QueueError } from '@thebcms/client/util';
 import type { Client } from '@thebcms/client';
 import WebSocket from 'isomorphic-ws';
 import type {
@@ -7,7 +6,8 @@ import type {
     SocketEventDataConnection,
     SocketEventName,
     SocketEventNamesAndTypes,
-} from '@thebcms/client/types/_cloud/socket/events/main';
+} from '@thebcms/types';
+import { createQueue, QueueError } from '@thebcms/utils/queue';
 
 export interface SocketEventHandler<
     Name extends SocketEventName,

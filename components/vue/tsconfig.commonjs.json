@@ -1,5 +1,5 @@
 {
-//    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    //    "extends": "@vue/tsconfig/tsconfig.dom.json",
     "compilerOptions": {
         "module": "commonjs",
         "declaration": false,
@@ -19,7 +19,9 @@
         "moduleResolution": "Node",
         "paths": {
             "@thebcms/components-vue": ["./src"],
-            "@thebcms/components-vue/*": ["./src/*"]
+            "@thebcms/components-vue/*": ["./src/*"],
+            "@thebcms/client": ["../../client/src"],
+            "@thebcms/client/*": ["../../client/src/*"]
         }
     },
     "include": ["src"]

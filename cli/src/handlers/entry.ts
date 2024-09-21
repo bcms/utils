@@ -21,11 +21,13 @@ export class EntryHandler {
             process.stdout.write(
                 `[${i + 1}/${templates.length}] Pulling entries for ${template.name} ... `,
             );
-            const entries = await this.cli.sdk.entry.getAllParsed({
-                instanceId,
-                orgId,
-                templateId: template._id,
-            });
+            const entries = this.cli.client
+                ? await this.cli.client.entry.getAll(template._id)
+                : await this.cli.sdk.entry.getAllParsed({
+                      instanceId,
+                      orgId,
+                      templateId: template._id,
+                  });
             await this.cli.localFs.save(
                 [...destPath, template.name + '.json'],
                 JSON.stringify(entries, null, 4),

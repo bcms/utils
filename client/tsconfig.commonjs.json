@@ -19,8 +19,8 @@
         "paths": {
             "@thebcms/client": ["./src"],
             "@thebcms/client/*": ["./src/*"],
-            "@thebcms/client/types/_cloud": ["../_cloud-types"],
-            "@thebcms/client/types/_cloud/*": ["../_cloud-types/*"]
+            "/_cloud": ["../_cloud-types"],
+            "/_cloud/*": ["../_cloud-types/*"]
         }
     },
     "include": ["src"]

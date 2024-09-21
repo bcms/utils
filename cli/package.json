@@ -8,17 +8,24 @@
     "module": "./index.mjs",
     "types": "./index.d.ts",
     "type": "module",
+    "exports": {
+        ".": {
+            "import": "./index.mjs",
+            "types": "./index.d.ts"
+        }
+    },
     "scripts": {
         "dev": "vite-node --project tsconfig.json src/bin/bcms-cli.ts",
         "build:ts:mjs": "tsc --project tsconfig.json",
-        "build:ts:cjs": "tsc --project tsconfig.commonjs.json",
         "bundle": "npm-tool --bundle",
         "publish": "npm-tool --publish",
         "pack": "npm-tool --pack",
         "test": "jest"
     },
     "dependencies": {
-        "@thebcms/sdk": "^1.0.0",
+        "@thebcms/sdk": "^1.1.0",
+        "@thebcms/types": "^1.0.0",
+        "@thebcms/utils": "^1.0.0",
         "@types/fs-extra": "^11.0.4",
         "@types/inquirer": "^9.0.7",
         "@types/uuid": "^8.3.0",
@@ -29,7 +36,6 @@
         "uuid": "^9.0.1"
     },
     "devDependencies": {
-        "@thebcms/client": "^1.1.0",
         "@types/jest": "^29.5.12",
         "@types/node": "^20.12.12",
         "@typescript-eslint/eslint-plugin": "^7.9.0",

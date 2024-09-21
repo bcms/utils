@@ -8,9 +8,19 @@
         "postinstall": "node _scripts/main.js postinstall",
         "setup": "node _scripts/main.js setup",
         "pre:commit": "node _scripts/main.js pre-commit",
-        "bundle:package": "node _scripts/main.js bundle-package",
-        "pack:package": "node _scripts/main.js pack-package",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "build:cli": "node _scripts/main.js build-cli",
+        "package:cli": "node _scripts/main.js package-cli",
+        "publish:cli": "node _scripts/main.js publish-cli",
+        "build:client": "node _scripts/main.js build-client",
+        "package:client": "node _scripts/main.js package-client",
+        "publish:client": "node _scripts/main.js publish-client",
+        "build:components:react": "node _scripts/main.js build-components-react",
+        "package:components:react": "node _scripts/main.js package-components-react",
+        "publish:components:react": "node _scripts/main.js publish-components-reactt",
+        "build:components:vue": "node _scripts/main.js build-components-vue",
+        "package:components:vue": "node _scripts/main.js package-components-vue",
+        "publish:components:vue": "node _scripts/main.js publish-components-vuet"
     },
     "keywords": [],
     "author": "",
@@ -21,6 +31,6 @@
         "fs-extra": "^11.2.0",
         "husky": "^8.0.3",
         "prettier": "^3.2.5",
-        "typescript": "^5.3.3"
+        "typescript": "^5.6.2"
     }
 }

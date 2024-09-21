@@ -5,7 +5,7 @@ export function createArrayStore<ItemType, Methods = unknown>(
     initItems?: ItemType[],
     methods?: StoreMethods<ItemType, Methods>,
 ) {
-    const store: ItemType[] = initItems || [];
+    let store: ItemType[] = initItems || [];
 
     const self: ArrayStore<ItemType, Methods> = {
         items() {
@@ -42,6 +42,10 @@ export function createArrayStore<ItemType, Methods = unknown>(
             return store.filter((e) =>
                 ids.includes(e[idKey as never]),
             ) as ItemType[];
+        },
+
+        setItems(items) {
+            store = items;
         },
 
         set(inputItems) {

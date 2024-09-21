@@ -4,9 +4,9 @@ import {
     h,
     type PropType,
 } from 'vue';
-import type { EntryContentParsedItem } from '@thebcms/client/types';
 import type { BCMSWidgetComponents } from '@thebcms/components-vue/content/main';
 import type { JSX } from 'vue/jsx-runtime';
+import type { EntryContentParsedItem } from '@thebcms/types';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;

@@ -19,7 +19,9 @@
         "verbatimModuleSyntax": true,
         "paths": {
             "@thebcms/components-vue": ["./src"],
-            "@thebcms/components-vue/*": ["./src/*"]
+            "@thebcms/components-vue/*": ["./src/*"],
+            "@thebcms/client": ["../../client/src"],
+            "@thebcms/client/*": ["../../client/src/*"]
         }
     },
     "include": ["src"]

@@ -1,4 +1,3 @@
-import type { EntryContentParsedItem } from '@thebcms/client/types';
 import { BCMSContentItem } from '@thebcms/components-vue/content/item';
 import {
     defineComponent,
@@ -7,6 +6,7 @@ import {
     type PropType,
 } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
+import type { EntryContentParsedItem } from '@thebcms/types';
 
 export interface BCMSWidgetComponents {
     [bcmsWidgetName: string]: DefineSetupFnComponent<

@@ -3,7 +3,7 @@
 import { config } from 'dotenv';
 config();
 import { type Cli, createCli } from '@thebcms/cli/main';
-import type { TypeGeneratorLanguage } from '@thebcms/sdk';
+import type { TypeGeneratorLanguage } from '@thebcms/types';
 
 async function resolve(cli: Cli) {
     if (cli.args.pull) {

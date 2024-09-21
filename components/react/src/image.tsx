@@ -2,17 +2,12 @@
 
 import React from 'react';
 import {
-    type Media,
-    type MediaType,
-    type PropMediaDataParsed,
-} from '@thebcms/client/types';
-import {
     Client,
     type ClientConfig,
     ImageHandler,
-    type ImageHandlerOptions,
     type MediaExtended,
 } from '@thebcms/client';
+import type { Media, MediaType, PropMediaDataParsed } from '@thebcms/types';
 
 export interface BCMSImageProps {
     id?: string;
@@ -20,7 +15,6 @@ export interface BCMSImageProps {
     style?: React.CSSProperties;
     media: Media | MediaExtended | PropMediaDataParsed;
     clientConfig: ClientConfig;
-    options?: ImageHandlerOptions;
     altText?: string;
 }
 
@@ -41,8 +35,8 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
     );
     const imageElement = React.useRef<HTMLImageElement | null>(null);
     const imageHandler = React.useMemo(
-        () => new ImageHandler(client, props.media, props.options),
-        [props.media, props.options, client],
+        () => new ImageHandler(client, props.media),
+        [props.media, client],
     );
     const [srcSet, setSrcSet] = React.useState(
         /**
@@ -90,7 +84,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
                 window.removeEventListener('resize', resizeHandler);
             }
         };
-    }, [props.media, props.options, imageHandler]);
+    }, [props.media, imageHandler]);
 
     if (client.injectSvg && mediaExtended.svg) {
         return (

@@ -1,8 +1,8 @@
-import { FS } from '@thebcms/cli/util';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { FS } from '@thebcms/utils/fs';
 
-const thisDir = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const thisDir = path.dirname(fileURLToPath(import.meta.url));
 
 export class Html {
     private fs = new FS(path.join(thisDir, 'html'));

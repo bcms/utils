@@ -1,4 +1,4 @@
-import type { ObjectSchema } from '@thebcms/cli/util';
+import type { ObjectSchema } from '@thebcms/utils/object-utility';
 
 export interface BCMSConfig {
     client?: {
