@@ -17,10 +17,10 @@
         "publish:client": "node _scripts/main.js publish-client",
         "build:components:react": "node _scripts/main.js build-components-react",
         "package:components:react": "node _scripts/main.js package-components-react",
-        "publish:components:react": "node _scripts/main.js publish-components-reactt",
+        "publish:components:react": "node _scripts/main.js publish-components-react",
         "build:components:vue": "node _scripts/main.js build-components-vue",
         "package:components:vue": "node _scripts/main.js package-components-vue",
-        "publish:components:vue": "node _scripts/main.js publish-components-vuet"
+        "publish:components:vue": "node _scripts/main.js publish-components-vue"
     },
     "keywords": [],
     "author": "",
