@@ -6,11 +6,9 @@ const { ChildProcess } = require('./child-process');
  * @return {Promise<void>}
  */
 async function publish(basePath) {
-    await ChildProcess.advancedExec('npm publish', {
+    await ChildProcess.spawn('npm', ['publish', '--access', 'public'], {
         cwd: path.join(process.cwd(), ...basePath),
-        onChunk(type, chunk) {
-            process[type].write(chunk);
-        },
-    }).awaiter;
+        stdio: 'inherit',
+    });
 }
 exports.publish = publish;
