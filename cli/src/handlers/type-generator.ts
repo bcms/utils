@@ -34,6 +34,9 @@ export class TypeGeneratorHandler {
               });
         process.stdout.write('Done\n');
         process.stdout.write(`Saving types to ${destPath.join('/')}/* ... `);
+        if (await this.cli.localFs.exist(destPath)) {
+            await this.cli.localFs.deleteDir(destPath);
+        }
         for (let i = 0; i < filesInfo.length; i++) {
             const fileInfo = filesInfo[i];
             await this.cli.localFs.save(
