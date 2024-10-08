@@ -3,12 +3,14 @@ import inquirer from 'inquirer';
 import { getStartersInfo } from '@thebcms/cli/starters-info';
 import { FS } from '@thebcms/utils/fs';
 import { ChildProcess } from '@thebcms/utils/child-process';
+import type { InstanceStarters } from '@thebcms/types';
 
 export async function createHandler(cli: Cli): Promise<void> {
     await cli.loginIfRequired();
     let projectName = cli.args.projectName || '';
     let framework = typeof cli.args.create === 'string' ? cli.args.create : '';
-    let starter = cli.args.starter || '';
+    let starter: InstanceStarters =
+        (cli.args.starter as InstanceStarters) || '';
     if (!projectName) {
         let answer = { name: '' };
         while (!answer.name) {
@@ -27,7 +29,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         starter &&
         !startersInfo.saas.starters.find((e) => e.slug === starter)
     ) {
-        starter = '';
+        starter = '' as never;
     }
     if (!framework) {
         let answer = { name: '' };
@@ -71,9 +73,9 @@ export async function createHandler(cli: Cli): Promise<void> {
                     },
                 ]);
             }
-            starter = answer.name;
+            starter = answer.name as InstanceStarters;
         } else {
-            starter = starters[0].slug;
+            starter = starters[0].slug as InstanceStarters;
         }
     }
     console.log('\nGetting organization information ...\n');
@@ -103,7 +105,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         name: projectName,
         orgId: targetOrg._id,
         starter,
-    } as any);
+    });
     console.log('\n Setting up API Key for the project ...\n');
     const templates = await cli.sdk.template.getAll({
         orgId: instance.orgId,
