@@ -9,6 +9,12 @@ import { createHandler } from '@thebcms/cli/handlers/create';
 async function resolve(cli: Cli) {
     if (cli.args.help) {
         await cli.help();
+    } else if (cli.args.login) {
+        await cli.login();
+    } else if (cli.args.logout) {
+        if (await cli.sdk.isLoggedIn()) {
+            await cli.sdk.clearAndLogout();
+        }
     } else if (cli.args.pull) {
         let thingsToPull = cli.args.pull.split(',');
         if (thingsToPull.includes('all')) {
