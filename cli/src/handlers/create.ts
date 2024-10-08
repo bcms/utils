@@ -41,7 +41,7 @@ export async function createHandler(cli: Cli): Promise<void> {
                     type: 'list',
                     choices: startersInfo.saas.frameworks.map((frame) => {
                         return {
-                            name: frame.title,
+                            name: `${frame.title}${frame.available ? '' : ` (Coming soon)`}`,
                             value: frame.id,
                             disabled: !frame.available,
                         };
@@ -65,7 +65,7 @@ export async function createHandler(cli: Cli): Promise<void> {
                         type: 'list',
                         choices: starters.map((start) => {
                             return {
-                                name: start.title,
+                                name: `${start.title}${start.available ? '' : ` (Coming soon)`}`,
                                 value: start.slug,
                                 disabled: !start.available,
                             };
