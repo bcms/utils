@@ -104,6 +104,12 @@ export class Cli {
     async loginIfRequired() {
         if (!this.client && !(await this.sdk.isLoggedIn())) {
             await this.login();
+        } else {
+            try {
+                await this.sdk.org.getAll();
+            } catch (err) {
+                await this.login();
+            }
         }
     }
 

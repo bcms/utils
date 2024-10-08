@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 config();
 import { type Cli, createCli } from '@thebcms/cli/main';
 import type { TypeGeneratorLanguage } from '@thebcms/types';
+import { createHandler } from '@thebcms/cli/handlers/create';
 
 async function resolve(cli: Cli) {
     if (cli.args.pull) {
@@ -76,6 +77,8 @@ async function resolve(cli: Cli) {
                 }
             }
         }
+    } else if (cli.args.create) {
+        await createHandler(cli);
     } else {
         await cli.help();
     }

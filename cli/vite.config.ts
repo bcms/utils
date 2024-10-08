@@ -7,6 +7,9 @@ export default defineConfig({
     resolve: {
         alias: {
             '@thebcms/cli': fileURLToPath(new URL('./src', import.meta.url)),
+            '@thebcms/client': fileURLToPath(
+                new URL('../client/src', import.meta.url),
+            ),
         },
     },
 });
