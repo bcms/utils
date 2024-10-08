@@ -7,7 +7,9 @@ import type { TypeGeneratorLanguage } from '@thebcms/types';
 import { createHandler } from '@thebcms/cli/handlers/create';
 
 async function resolve(cli: Cli) {
-    if (cli.args.pull) {
+    if (cli.args.help) {
+        await cli.help();
+    } else if (cli.args.pull) {
         let thingsToPull = cli.args.pull.split(',');
         if (thingsToPull.includes('all')) {
             thingsToPull = ['types', 'entries', 'media'];
@@ -80,7 +82,7 @@ async function resolve(cli: Cli) {
     } else if (cli.args.create) {
         await createHandler(cli);
     } else {
-        await cli.help();
+        throw Error('Unknown command or combination of arguments');
     }
 }
 

@@ -1,4 +1,5 @@
 export interface Args {
+    help?: string;
     login?: boolean;
     logout?: boolean;
     create?: string | boolean;
@@ -26,6 +27,14 @@ export interface ArgInfo {
 export const argsMap: {
     [key: string]: ArgInfo;
 } = {
+    help: {
+        flags: ['--help', 'help'],
+        description: 'Print all available commands',
+        type: 'boolean',
+        parse() {
+            return true;
+        },
+    },
     login: {
         flags: ['--login', 'login'],
         description: 'Login to the BCMS via magic link',

@@ -53,7 +53,7 @@ export class TypeGeneratorHandler {
         }>([
             {
                 message: 'Select language for which to pull' + ' types: ',
-                type: 'checkbox',
+                type: 'list',
                 name: 'language',
                 choices: [
                     {
@@ -61,16 +61,18 @@ export class TypeGeneratorHandler {
                         value: 'ts',
                     },
                     {
-                        name: 'Rust',
-                        value: 'rust',
-                    },
-                    {
-                        name: 'Go Lang',
-                        value: 'golang',
-                    },
-                    {
                         name: 'GraphQL',
                         value: 'gql',
+                    },
+                    {
+                        name: 'Rust (Coming soon)',
+                        value: 'rust',
+                        disabled: true,
+                    },
+                    {
+                        name: 'Go Lang (Coming soon)',
+                        value: 'golang',
+                        disabled: true,
                     },
                 ],
             },
