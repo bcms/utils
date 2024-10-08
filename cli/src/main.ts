@@ -129,8 +129,8 @@ export class Cli {
             console.log('You are now logged in');
         } else {
             console.log(
-                'Open the URL in your browser to login:' +
-                    `${this.apiOrigin}?cb=cli&host=http://localhost:${this.server.port}/login-callback`,
+                'Open the URL in your browser to login: ' +
+                    `${this.apiOrigin}?cb=cli&host=${encodeURIComponent(`http://localhost:${this.server.port}/login-callback`)}`,
             );
             const data = await this.server.awaitForLoginCallback();
             await this.sdk.auth.loginOtp({
