@@ -36,6 +36,7 @@ async function buildCli() {
         ['dist', 'package.json'],
         JSON.stringify(packageJson, null, 4),
     );
+    await localFs.copy(['src', 'server', 'html'], ['dist', 'server', 'html']);
 }
 
 exports.buildCli = buildCli;
