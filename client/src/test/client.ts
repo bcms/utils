@@ -1,14 +1,16 @@
 import { Client } from '@thebcms/client/main';
 
 export const client = new Client(
-    '620528baca65b6578d29868d',
-    '620532ae4c704d5f29a22dfd',
+    '670533a6c2fa01de1fbd4ee7',
+    '6705360c7272c161f4193ade',
     {
-        id: '6645ea865de3c39b7aabf568',
-        secret: '68a96f495727d64d4488f39957eaa82bf706106a6f08a17ab8a8e9b151547d1b',
+        id: '6706353ddd00f6509f552013',
+        secret: '8ee31b13bae1a5c328d33cb32f073b0bc319249d477508d12c411ba09fa7c935',
     },
     {
         cmsOrigin: 'http://localhost:8081',
         injectSvg: true,
+        useMemCache: true,
+        enableSocket: true
     },
 );

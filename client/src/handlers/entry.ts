@@ -76,10 +76,12 @@ export class EntryHandler {
     }
 
     async getAllLite(templateIdOrName: string, skipCache?: boolean) {
-        const cacheKey = `all_lite_${templateIdOrName}`;
         const template = await this.findTemplateByName(templateIdOrName);
+        const cacheKey = `all_lite_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
-            return this.cacheLite.items;
+            return this.cacheLite.items.filter(
+                (e) => e.templateId === template._id,
+            );
         }
         const res = await this.client.send<ControllerItemsResponse<EntryLite>>({
             url: `${this.baseUri(template._id)}/all/lite`,
@@ -93,9 +95,11 @@ export class EntryHandler {
 
     async getAll(templateIdOrName: string, skipCache?: boolean) {
         const template = await this.findTemplateByName(templateIdOrName);
-        const cacheKey = `all_parse_${templateIdOrName}`;
+        const cacheKey = `all_parse_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
-            return this.cacheParse.items;
+            return this.cacheParse.items.filter(
+                (e) => e.templateId === template._id,
+            );
         }
         const res = await this.client.send<
             ControllerItemsResponse<EntryParsed>
@@ -114,9 +118,11 @@ export class EntryHandler {
 
     async getAllRaw(templateIdOrName: string, skipCache?: boolean) {
         const template = await this.findTemplateByName(templateIdOrName);
-        const cacheKey = `all_raw_${templateIdOrName}`;
+        const cacheKey = `all_raw_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
-            return this.cacheRaw.items;
+            return this.cacheRaw.items.filter(
+                (e) => e.templateId === template._id,
+            );
         }
         const res = await this.client.send<ControllerItemsResponse<Entry>>({
             url: `${this.baseUri(template._id)}/all`,
@@ -168,6 +174,38 @@ export class EntryHandler {
         const res = await this.client.send<ControllerItemResponse<EntryParsed>>(
             {
                 url: `${this.baseUri(template._id)}/${entryId}/parse`,
+            },
+        );
+        if (this.client.injectSvg) {
+            await this.injectMediaSvg([res.item]);
+        }
+        if (this.client.useMemCache) {
+            this.cacheParse.set(res.item);
+        }
+        return res.item;
+    }
+
+    async getBySlug(
+        entrySlug: string,
+        templateIdOrName: string,
+        skipCache?: boolean,
+    ) {
+        const template = await this.findTemplateByName(templateIdOrName);
+        if (!skipCache && this.client.useMemCache) {
+            const cacheHit = this.cacheParse.find(
+                (entry) =>
+                    entry.templateId === template._id &&
+                    Object.keys(entry.meta).find((key) => {
+                        return entry.meta[key].slug === entrySlug;
+                    }),
+            );
+            if (cacheHit) {
+                return cacheHit;
+            }
+        }
+        const res = await this.client.send<ControllerItemResponse<EntryParsed>>(
+            {
+                url: `${this.baseUri(template._id)}/${entrySlug}/parse`,
             },
         );
         if (this.client.injectSvg) {
