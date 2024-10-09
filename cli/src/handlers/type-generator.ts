@@ -18,7 +18,9 @@ export class TypeGeneratorHandler {
         language: TypeGeneratorLanguage,
         outputPath?: string,
     ) {
-        await this.cli.loginIfRequired();
+        if (!this.cli.client) {
+            await this.cli.loginIfRequired();
+        }
         process.stdout.write(
             `Pulling types for ${prettyLangTypeName[language]} ... `,
         );
