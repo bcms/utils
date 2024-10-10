@@ -154,8 +154,11 @@ export async function createHandler(cli: Cli): Promise<void> {
             `BCMS_API_KEY_SECRET=${apiKey.secret}`,
         ].join('\n'),
     );
-    console.log(`\nAll steps completed successfully. Happy coding!\n`);
-    console.log(`    cd ${projectName}`);
-    console.log(`    npm install`);
-    console.log(`    npm run dev`);
+    console.log(
+        `\n\nYour BCMS project is available at https://app.thebcms.com/d/o/${targetOrg.slug}/i/${instance.slug}/bcms`,
+    );
+    console.log(`\nHappy coding!\n`);
+    console.log(`cd ${projectName}`);
+    console.log(`npm install`);
+    console.log(`npm run dev`);
 }
