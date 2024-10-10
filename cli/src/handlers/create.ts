@@ -94,7 +94,13 @@ export async function createHandler(cli: Cli): Promise<void> {
     const fs = new FS(process.cwd());
     await ChildProcess.spawn(
         `git`,
-        ['clone', 'https://github.com/bcms/starters.git', `${projectName}-tmp`],
+        [
+            'clone',
+            'https://github.com/bcms/starters.git',
+            '--depth',
+            '1',
+            `${projectName}-tmp`,
+        ],
         { stdio: 'inherit' },
     );
     console.log(`\nCopying project files ...\n`);
