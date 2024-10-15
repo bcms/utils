@@ -18,7 +18,7 @@ export interface BCMSImageProps {
     altText?: string;
 }
 
-const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG'];
+const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG', 'GIF'];
 
 export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
     const client = new Client(
