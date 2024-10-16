@@ -1,0 +1,53 @@
+{
+    "name": "@thebcms/components-svelte",
+    "version": "1.0.0",
+    "description": "Helper components for Svelte",
+    "author": "BCMS",
+    "license": "MIT",
+    "main": "./index.js",
+    "svelte": "./index.js",
+    "types": "./index.d.ts",
+    "type": "module",
+    "peerDependencies": {
+        "@thebcms/types": "^1.0.0",
+        "svelte": "^4.2.19"
+    },
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "svelte": "./index.js"
+        },
+        "./image.svelte": {
+            "types": "./image.svelte.d.ts",
+            "svelte": "./image.svelte"
+        },
+        "./content/item.svelte": {
+            "types": "./content/item.svelte.d.ts",
+            "svelte": "./content/item.svelte"
+        },
+        "./content/main.svelte": {
+            "types": "./content/main.svelte.d.ts",
+            "svelte": "./content/main.svelte"
+        }
+    },
+    "devDependencies": {
+        "@thebcms/types": "^1.0.0",
+        "@types/node": "^20.12.12",
+        "@typescript-eslint/eslint-plugin": "^7.9.0",
+        "@typescript-eslint/parser": "^7.9.0",
+        "eslint": "^8.56.0",
+        "prettier": "^3.2.5",
+        "svelte": "^4.2.19",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.4.5",
+        "vite-node": "^1.6.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bcms/utils"
+    },
+    "bugs": {
+        "url": "https://github.com/bcms/utils/issues"
+    },
+    "homepage": "https://github.com/bcms/utils#readme"
+}

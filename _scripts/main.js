@@ -7,6 +7,7 @@ const { publish } = require('./utils/publish');
 const { buildClient } = require('./client');
 const { buildComponentsReact } = require('./components-react');
 const { buildComponentsVue } = require('./components-vue');
+const { buildComponentsSvelte } = require('./components-svelte');
 
 async function main() {
     const command = process.argv[2];
@@ -59,6 +60,16 @@ async function main() {
         }
         case 'publish-components-vue': {
             return await publish(['components', 'vue', 'dist']);
+        }
+
+        case 'build-components-svelte': {
+            return await buildComponentsSvelte();
+        }
+        case 'package-components-svelte': {
+            return await createPackage(['components', 'svelte', 'dist']);
+        }
+        case 'publish-components-svelte': {
+            return await publish(['components', 'svelte', 'dist']);
         }
     }
     throw Error(`Unknown command: ${command}`);
