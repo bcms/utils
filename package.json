@@ -23,7 +23,7 @@
         "publish:components:vue": "node _scripts/main.js publish-components-vue",
         "build:components:svelte": "node _scripts/main.js build-components-svelte",
         "package:components:svelte": "node _scripts/main.js package-components-svelte",
-        "publish:components:svelte": "node _scripts/main.js publish-components-sveltee"
+        "publish:components:svelte": "node _scripts/main.js publish-components-svelte"
     },
     "keywords": [],
     "author": "",
