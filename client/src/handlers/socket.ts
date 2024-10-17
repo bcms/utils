@@ -87,6 +87,9 @@ export class SocketHandler {
                                           ? 'ws'
                                           : 'wss'
                                   }://${window.location.host}/api/v3/socket?token=apikey_${this.client.apiKeyInfo.id}.${this.client.apiKeyInfo.secret}`,
+                            {
+                                timeout: 10000,
+                            },
                         );
                         this.socket.addEventListener('open', async () => {
                             this.tryReconnectIn = 1000;

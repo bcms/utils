@@ -103,6 +103,9 @@ export class Client {
         config.url = `${this.cmsOrigin}${config.url}`
             .replace(':instanceId', this.instanceId)
             .replace(':orgId', this.orgId);
+        if (!config.timeout) {
+            config.timeout = 10000;
+        }
         const res = await axios(config);
         return res.data;
     }
