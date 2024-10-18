@@ -54,7 +54,7 @@ export const argsMap: {
     create: {
         flags: ['--create', 'create'],
         description: 'Create project of specified type',
-        values: ['next', 'nuxt', 'gatsby'],
+        values: ['next', 'nuxt', 'gatsby', 'svelte', 'astro'],
         type: 'string',
         parse(argv, idx, self) {
             const values = self.values as string[];
