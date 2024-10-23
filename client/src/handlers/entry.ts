@@ -29,34 +29,13 @@ export class EntryHandler {
         if (this.client.enableSocket) {
             this.client.socket.register('entry', async (data) => {
                 if (data.type === 'update') {
-                    const cacheHitParse = this.cacheParse.findById(
-                        data.entryId,
-                    );
-                    const parsedCacheKey = `all_parse_${data.templateId}`;
-                    if (
-                        cacheHitParse ||
-                        (this.client.useMemCache && this.latch[parsedCacheKey])
-                    ) {
+                    if (this.client.useMemCache) {
                         await this.getById(data.entryId, data.templateId, true);
-                    }
-                    const liteCacheKey = `all_lite_${data.templateId}`;
-                    const cacheHitLite = this.cacheLite.findById(data.entryId);
-                    if (
-                        cacheHitLite ||
-                        (this.client.useMemCache && this.latch[liteCacheKey])
-                    ) {
                         await this.getByIdLite(
                             data.entryId,
                             data.templateId,
                             true,
                         );
-                    }
-                    const cacheHitRaw = this.cacheRaw.findById(data.entryId);
-                    const rawCacheKey = `all_raw_${data.templateId}`;
-                    if (
-                        cacheHitRaw ||
-                        (this.client.useMemCache && this.latch[rawCacheKey])
-                    ) {
                         await this.getByIdRaw(
                             data.entryId,
                             data.templateId,
