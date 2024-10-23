@@ -32,11 +32,19 @@ export class EntryHandler {
                     const cacheHitParse = this.cacheParse.findById(
                         data.entryId,
                     );
-                    if (cacheHitParse) {
+                    const parsedCacheKey = `all_parse_${data.templateId}`;
+                    if (
+                        cacheHitParse ||
+                        (this.client.useMemCache && this.latch[parsedCacheKey])
+                    ) {
                         await this.getById(data.entryId, data.templateId, true);
                     }
+                    const liteCacheKey = `all_lite_${data.templateId}`;
                     const cacheHitLite = this.cacheLite.findById(data.entryId);
-                    if (cacheHitLite) {
+                    if (
+                        cacheHitLite ||
+                        (this.client.useMemCache && this.latch[liteCacheKey])
+                    ) {
                         await this.getByIdLite(
                             data.entryId,
                             data.templateId,
@@ -44,7 +52,11 @@ export class EntryHandler {
                         );
                     }
                     const cacheHitRaw = this.cacheRaw.findById(data.entryId);
-                    if (cacheHitRaw) {
+                    const rawCacheKey = `all_raw_${data.templateId}`;
+                    if (
+                        cacheHitRaw ||
+                        (this.client.useMemCache && this.latch[rawCacheKey])
+                    ) {
                         await this.getByIdRaw(
                             data.entryId,
                             data.templateId,
