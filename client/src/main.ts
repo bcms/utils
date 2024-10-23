@@ -104,7 +104,7 @@ export class Client {
             .replace(':instanceId', this.instanceId)
             .replace(':orgId', this.orgId);
         if (!config.timeout) {
-            config.timeout = 10000;
+            config.timeout = 60000;
         }
         const res = await axios(config);
         return res.data;
