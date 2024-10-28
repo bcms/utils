@@ -81,12 +81,9 @@ export const BCMSImage = defineComponent({
 
         function resizeHandler() {
             if (imageElement.value && imageHandler.value.parsable) {
-                const parent = imageElement.value.parentElement;
-                if (parent) {
-                    srcSet.value = imageHandler.value.getPictureSrcSet(
-                        parent.offsetWidth,
-                    );
-                }
+                srcSet.value = imageHandler.value.getPictureSrcSet(
+                    imageElement.value.offsetWidth,
+                );
             }
         }
 

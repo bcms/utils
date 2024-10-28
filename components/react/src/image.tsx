@@ -65,12 +65,11 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
             clearTimeout(debounce);
             debounce = setTimeout(() => {
                 if (imageElement.current) {
-                    const parent = imageElement.current.parentElement;
-                    if (parent) {
-                        setSrcSet(
-                            imageHandler.getPictureSrcSet(parent.offsetWidth),
-                        );
-                    }
+                    setSrcSet(
+                        imageHandler.getPictureSrcSet(
+                            imageElement.current.offsetWidth,
+                        ),
+                    );
                 }
             });
         }
@@ -84,7 +83,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
                 window.removeEventListener('resize', resizeHandler);
             }
         };
-    }, [props.media, imageHandler]);
+    }, [props.media]);
 
     if (client.injectSvg && mediaExtended.svg) {
         return (
