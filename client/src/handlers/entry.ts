@@ -7,11 +7,57 @@ import type {
     EntryCreateBody,
     EntryLite,
     EntryParsed,
+    EntryStatusValue,
     EntryUpdateBody,
     Media,
     Template,
 } from '@thebcms/types';
 import { MemCache } from '@thebcms/utils/mem-cache';
+import type { EntryContentNode } from '@thebcms/types/entry/models/content';
+import { parsedPropsToRawProps } from '@thebcms/client/util/entry';
+
+export type EntryParsedDataPropTypes =
+    | string
+    | number
+    | boolean
+    | { mediaId: string; altText?: string; caption?: string }
+    | { entryId: string; templateId: string }
+    | EntryParsedDataProps
+    | { timestamp: number; timezoneOffet: number }
+    | { nodes: EntryContentNode[] }
+    | Array<
+          | string
+          | number
+          | boolean
+          | { mediaId: string; altText?: string; caption?: string }
+          | { entryId: string; templateId: string }
+          | EntryParsedDataProps
+          | { timestamp: number; timezoneOffet: number }
+          | { nodes: EntryContentNode[] }
+      >;
+
+export interface EntryParsedDataProps {
+    [key: string]: EntryParsedDataPropTypes;
+}
+
+export interface EntryParsedUpdateData {
+    lng: string;
+    status?: string;
+    meta: EntryParsedDataProps;
+    content: EntryContentNode[];
+}
+
+export interface EntryParsedCreateData {
+    statuses: EntryStatusValue[];
+    meta: Array<{
+        lng: string;
+        data: EntryParsedDataProps;
+    }>;
+    content: Array<{
+        lng: string;
+        nodes: EntryContentNode[];
+    }>;
+}
 
 export class EntryHandler {
     private templates: Template[] | null = null;
@@ -231,7 +277,56 @@ export class EntryHandler {
         return res.item;
     }
 
-    async create(templateIdOrName: string, data: EntryCreateBody) {
+    async create(
+        templateIdOrName: string,
+        entryParsedData: EntryParsedCreateData,
+    ) {
+        const data: EntryCreateBody = {
+            meta: [],
+            content: entryParsedData.content.map((content) => {
+                return {
+                    lng: content.lng,
+                    nodes: content.nodes,
+                    plainText: '',
+                };
+            }),
+            statuses: entryParsedData.statuses.map((status) => {
+                return {
+                    lng: status.lng,
+                    id: status.id,
+                };
+            }),
+        };
+        const template = await this.findTemplateByName(templateIdOrName);
+        const groups = await this.client.group.getAll();
+        for (let i = 0; i < entryParsedData.meta.length; i++) {
+            const meta = entryParsedData.meta[i];
+            data.meta.push({
+                lng: meta.lng,
+                props: parsedPropsToRawProps(
+                    meta.data,
+                    template.props,
+                    [],
+                    groups,
+                    'entry',
+                ),
+            });
+        }
+        const res = await this.client.send<ControllerItemResponse<Entry>>({
+            url: `${this.baseUri(template._id)}/create`,
+            method: 'POST',
+            data,
+        });
+        if (this.client.useMemCache) {
+            this.cacheRaw.set(res.item);
+            this.cacheParse.set(
+                await this.getById(res.item._id, res.item.templateId, true),
+            );
+        }
+        return res.item;
+    }
+
+    async createRaw(templateIdOrName: string, data: EntryCreateBody) {
         const template = await this.findTemplateByName(templateIdOrName);
         const res = await this.client.send<ControllerItemResponse<Entry>>({
             url: `${this.baseUri(template._id)}/create`,
@@ -247,10 +342,55 @@ export class EntryHandler {
         return res.item;
     }
 
-    async update(templateIdOrName: string, data: EntryUpdateBody) {
+    async update(
+        templateIdOrName: string,
+        entryId: string,
+        entryParsedData: EntryParsedUpdateData,
+    ) {
+        const data: EntryUpdateBody = {
+            status: entryParsedData.status,
+            lng: entryParsedData.lng,
+            content: {
+                nodes: entryParsedData.content,
+            },
+            meta: {
+                props: [],
+            },
+        };
+        const template = await this.findTemplateByName(templateIdOrName);
+        const entry = await this.getByIdRaw(entryId, template._id);
+        const entryMeta = entry.meta.find((e) => e.lng === entryParsedData.lng);
+        const groups = await this.client.group.getAll();
+        data.meta.props = parsedPropsToRawProps(
+            entryParsedData.meta,
+            template.props,
+            entryMeta ? entryMeta.props : [],
+            groups,
+            'entry',
+        );
+        console.log(data.meta.props);
+        // const res = await this.client.send<ControllerItemResponse<Entry>>({
+        //     url: `${this.baseUri(template._id)}/${entryId}/update`,
+        //     method: 'PUT',
+        //     data,
+        // });
+        // if (this.client.useMemCache) {
+        //     this.cacheRaw.set(res.item);
+        //     this.cacheParse.set(
+        //         await this.getById(res.item._id, res.item.templateId, true),
+        //     );
+        // }
+        // return res.item;
+    }
+
+    async updateRaw(
+        templateIdOrName: string,
+        entryId: string,
+        data: EntryUpdateBody,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const res = await this.client.send<ControllerItemResponse<Entry>>({
-            url: `${this.baseUri(template._id)}/update`,
+            url: `${this.baseUri(template._id)}/${entryId}/update`,
             method: 'PUT',
             data,
         });
