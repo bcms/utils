@@ -368,19 +368,18 @@ export class EntryHandler {
             groups,
             'entry',
         );
-        console.log(data.meta.props);
-        // const res = await this.client.send<ControllerItemResponse<Entry>>({
-        //     url: `${this.baseUri(template._id)}/${entryId}/update`,
-        //     method: 'PUT',
-        //     data,
-        // });
-        // if (this.client.useMemCache) {
-        //     this.cacheRaw.set(res.item);
-        //     this.cacheParse.set(
-        //         await this.getById(res.item._id, res.item.templateId, true),
-        //     );
-        // }
-        // return res.item;
+        const res = await this.client.send<ControllerItemResponse<Entry>>({
+            url: `${this.baseUri(template._id)}/${entryId}/update`,
+            method: 'PUT',
+            data,
+        });
+        if (this.client.useMemCache) {
+            this.cacheRaw.set(res.item);
+            this.cacheParse.set(
+                await this.getById(res.item._id, res.item.templateId, true),
+            );
+        }
+        return res.item;
     }
 
     async updateRaw(
