@@ -21,7 +21,7 @@
         "_test": "ts-node --project ./tsconfig.commonjs.json -r tsconfig-paths/register src/_test.ts"
     },
     "dependencies": {
-        "@thebcms/types": "^1.1.0",
+        "@thebcms/types": "^1.2.0",
         "@thebcms/utils": "^1.1.0",
         "@types/ws": "^8.5.10",
         "axios": "^1.7.7",
