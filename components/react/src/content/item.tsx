@@ -3,12 +3,18 @@
 import React, { type JSX } from 'react';
 
 import type { BCMSWidgetComponents } from '@thebcms/components-react/content/main';
-import type { EntryContentParsedItem } from '@thebcms/types';
+import type {
+    EntryContentParsedItem,
+    PropMediaDataParsed,
+} from '@thebcms/types';
+import { BCMSImage } from '@thebcms/components-react/image';
+import type { ClientConfig } from '@thebcms/client';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;
     components?: BCMSWidgetComponents;
     nodeParser?(item: EntryContentParsedItem): string | React.JSX.Element;
+    clientConfig?: ClientConfig;
 }
 
 export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
@@ -26,6 +32,21 @@ export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
                 </div>
             );
         }
+    } else if (props.item.type === 'media') {
+        if (!props.clientConfig) {
+            return (
+                <div style={{ display: 'none' }}>
+                    Cannot mount media because BCMS Client Config was not
+                    provided to the component
+                </div>
+            );
+        }
+        return (
+            <BCMSImage
+                media={props.item.value as PropMediaDataParsed}
+                clientConfig={props.clientConfig}
+            />
+        );
     }
 
     let value: string | JSX.Element = '';

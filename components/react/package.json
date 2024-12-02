@@ -24,11 +24,11 @@
         "test": "jest"
     },
     "peerDependencies": {
-        "@thebcms/types": "^1.0.0",
+        "@thebcms/types": "^1.2.0",
         "react": "18.x"
     },
     "devDependencies": {
-        "@thebcms/types": "^1.0.0",
+        "@thebcms/types": "^1.2.0",
         "@types/node": "^20.12.12",
         "@types/react": "^18.3.3",
         "@typescript-eslint/eslint-plugin": "^7.9.0",
