@@ -63,6 +63,7 @@ export const BCMSContentItem = defineComponent({
                     );
                 }
                 return h(BCMSImage, {
+                    class: 'media',
                     media: props.item.value as PropMediaDataParsed,
                     client: props.client,
                 });
