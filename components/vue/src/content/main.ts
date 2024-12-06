@@ -54,13 +54,13 @@ export const BCMSContentManager = defineComponent({
                     id: props.id,
                     style: props.style,
                     class: `bcms-content ${props.class || ''}`,
-                    client: props.client,
                 },
                 props.items.map((item) => {
                     return h(BCMSContentItem, {
                         item,
                         components: props.widgetComponents,
                         nodeParser: props.nodeParser,
+                        client: props.client,
                     });
                 }),
             );
