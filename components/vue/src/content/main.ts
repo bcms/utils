@@ -7,6 +7,7 @@ import {
 } from 'vue';
 import type { JSX } from 'vue/jsx-runtime';
 import type { EntryContentParsedItem } from '@thebcms/types';
+import type { Client, ClientConfig } from '@thebcms/client';
 
 export interface BCMSWidgetComponents {
     [bcmsWidgetName: string]: DefineSetupFnComponent<
@@ -27,6 +28,7 @@ export interface BCMSContentManagerProps {
     items: EntryContentParsedItem[];
     widgetComponents?: BCMSWidgetComponents;
     nodeParser?(item: EntryContentParsedItem): string | React.JSX.Element;
+    client?: Client | ClientConfig;
 }
 
 export const BCMSContentManager = defineComponent({
@@ -42,6 +44,7 @@ export const BCMSContentManager = defineComponent({
         nodeParser: Function as PropType<
             (item: EntryContentParsedItem) => string | JSX.Element
         >,
+        client: Object as PropType<Client | ClientConfig>,
     },
     setup(props) {
         return () => {
@@ -51,6 +54,7 @@ export const BCMSContentManager = defineComponent({
                     id: props.id,
                     style: props.style,
                     class: `bcms-content ${props.class || ''}`,
+                    client: props.client,
                 },
                 props.items.map((item) => {
                     return h(BCMSContentItem, {
