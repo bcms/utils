@@ -103,11 +103,16 @@ export class ImageHandler {
                       }
                     : undefined,
             )}`,
-            width,
+            width: parseInt(width.toFixed(0)),
             height:
                 height !== -1
-                    ? height
-                    : width / (this.media.width / this.media.height),
+                    ? parseInt(height.toFixed(0))
+                    : parseInt(
+                          (
+                              width /
+                              (this.media.width / this.media.height)
+                          ).toFixed(0),
+                      ),
         };
     }
 }
