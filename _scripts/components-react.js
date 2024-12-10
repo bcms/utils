@@ -2,6 +2,7 @@ const path = require('path');
 const { createFS } = require('./utils/fs');
 const { buildCjs, buildMjs } = require('./utils/build');
 const { packageJsonExport } = require('./utils/package-json');
+const { getClientVersion } = require('./utils/version');
 
 async function buildComponentsReact() {
     const basePath = path.join(process.cwd(), 'components', 'react');
@@ -62,6 +63,8 @@ async function buildComponentsReact() {
     const packageJson = JSON.parse(await localFs.readString('package.json'));
     packageJson.devDependencies = undefined;
     packageJson.scripts = undefined;
+    const [_clientName, clientVersion] = await getClientVersion();
+    packageJson.peerDependencies['@thebcms/client'] = `^${clientVersion}`;
     let files = await localFs.fileTree(['dist'], '');
     packageJsonExport(files, packageJson);
     await localFs.save(
