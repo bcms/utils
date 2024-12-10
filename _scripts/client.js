@@ -20,5 +20,17 @@ async function buildClient() {
         ['dist', 'package.json'],
         JSON.stringify(packageJson, null, 4),
     );
+    if (await localFs.exist(['dist', 'test'])) {
+        await localFs.deleteDir(['dist', 'test']);
+    }
+    /**
+     * @type {string[][]}
+     */
+    const filesToDelete = [['_test.cjs'], ['_test.mjs'], ['_test.d.ts']];
+    for (let i = 0; i < filesToDelete.length; i++) {
+        if (await localFs.exist(['dist', ...filesToDelete[i]], true)) {
+            await localFs.deleteFile(['dist', ...filesToDelete[i]]);
+        }
+    }
 }
 exports.buildClient = buildClient;
