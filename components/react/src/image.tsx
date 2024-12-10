@@ -16,6 +16,7 @@ export interface BCMSImageProps {
     media: Media | MediaExtended | PropMediaDataParsed;
     clientConfig: ClientConfig;
     altText?: string;
+    sizeTransform?: string[];
 }
 
 const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG', 'GIF'];
@@ -35,8 +36,8 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
     );
     const imageElement = React.useRef<HTMLImageElement | null>(null);
     const imageHandler = React.useMemo(
-        () => new ImageHandler(client, props.media),
-        [props.media, client],
+        () => new ImageHandler(client, props.media, props.sizeTransform),
+        [props.media, client, props.sizeTransform],
     );
     const [srcSet, setSrcSet] = React.useState(
         /**

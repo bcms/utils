@@ -147,7 +147,7 @@ export class MediaHandler {
         let uri = this.baseUri
             .replace(':instanceId', this.client.instanceId)
             .replace(':orgId', this.client.orgId);
-        uri += `/${id}/bin2/${filename}`;
+        uri += `/${id}/bin2/${encodeURIComponent(filename)}`;
         if (queries.length > 0) {
             uri += '?' + queries.join('&');
         }

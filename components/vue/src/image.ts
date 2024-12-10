@@ -41,6 +41,7 @@ export const BCMSImage = defineComponent({
             type: Object as PropType<Client | ClientConfig>,
             required: true,
         },
+        sizeTransform: Array as PropType<string[]>,
         altText: String,
     },
     setup(props) {
@@ -60,7 +61,7 @@ export const BCMSImage = defineComponent({
                   );
         const imageElement = ref<HTMLImageElement>();
         const imageHandler = computed(() => {
-            return new ImageHandler(client, props.media);
+            return new ImageHandler(client, props.media, props.sizeTransform);
         });
         const mediaExtended = computed(() => props.media as MediaExtended);
         const srcSet = ref(

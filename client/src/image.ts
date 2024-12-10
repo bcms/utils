@@ -19,23 +19,30 @@ export class ImageHandler {
     constructor(
         private client: Client,
         private media: MediaExtended | Media | PropMediaDataParsed,
+        private sizeTransform?: string[],
     ) {
         this.parsable = !!media.sizeTransforms;
         const nameParts = this.media.name.split('.');
-        this.fileName = nameParts.slice(0, nameParts.length - 1).join('.');
-        this.fileExtension = nameParts[nameParts.length - 1];
+        this.fileName = encodeURIComponent(
+            nameParts.slice(0, nameParts.length - 1).join('.'),
+        );
+        this.fileExtension = encodeURIComponent(
+            nameParts[nameParts.length - 1],
+        );
     }
 
     private closestSize(elementWidth: number): string | undefined {
-        if (!this.media.sizeTransforms) {
+        if (!this.media.sizeTransforms && !this.sizeTransform) {
             return undefined;
         }
         const dpr = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
         const containerWidth = elementWidth * dpr;
         let delta = 1000000;
         let bestOptionIndex = 0;
-        for (let i = 0; i < this.media.sizeTransforms.length; i++) {
-            const [widthStr] = this.media.sizeTransforms[i].split('x');
+        const sizeTransforms = (this.sizeTransform ||
+            this.media.sizeTransforms) as string[];
+        for (let i = 0; i < sizeTransforms.length; i++) {
+            const [widthStr] = sizeTransforms[i].split('x');
             const width = parseInt(widthStr, 10);
             let widthDelta = containerWidth - width;
             if (widthDelta < 0) {
@@ -46,7 +53,7 @@ export class ImageHandler {
                 bestOptionIndex = i;
             }
         }
-        return this.media.sizeTransforms[bestOptionIndex];
+        return sizeTransforms[bestOptionIndex];
     }
 
     async getSvgContent(): Promise<string> {
@@ -55,6 +62,9 @@ export class ImageHandler {
                 'Provided media is not of type SVG -> ' +
                     JSON.stringify(this.media, null, 2),
             );
+        }
+        if ((this.media as MediaExtended).svg) {
+            return (this.media as MediaExtended).svg as string;
         }
         const bin = await this.client.media.getMediaBin(
             this.media._id,
@@ -86,7 +96,7 @@ export class ImageHandler {
             )}`,
             src2: `${this.client.cmsOrigin}${this.client.media.toUri(
                 this.media._id,
-                this.media.name,
+                this.fileName + '.' + this.fileExtension,
                 closestSize
                     ? {
                           sizeTransform: closestSize,
