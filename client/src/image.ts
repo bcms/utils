@@ -82,9 +82,15 @@ export class ImageHandler {
             width = parseInt(widthStr, 10);
             height = parseInt(heightStr, 10);
         }
+        let cmsOrigin: string;
+        if (this.client.cmsOrigin.startsWith('https://app.thebcms.com')) {
+            cmsOrigin = `https://cdn.thebcms.com`;
+        } else {
+            cmsOrigin = this.client.cmsOrigin;
+        }
         return {
-            original: `${this.client.cmsOrigin}${this.client.media.toUri(this.media._id, this.media.name)}`,
-            src1: `${this.client.cmsOrigin}${this.client.media.toUri(
+            original: `${cmsOrigin}${this.client.media.toUri(this.media._id, this.media.name)}`,
+            src1: `${cmsOrigin}${this.client.media.toUri(
                 this.media._id,
                 this.fileName + '.webp',
                 closestSize
@@ -94,7 +100,7 @@ export class ImageHandler {
                       }
                     : undefined,
             )}`,
-            src2: `${this.client.cmsOrigin}${this.client.media.toUri(
+            src2: `${cmsOrigin}${this.client.media.toUri(
                 this.media._id,
                 this.fileName + '.' + this.fileExtension,
                 closestSize
