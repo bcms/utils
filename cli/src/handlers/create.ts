@@ -25,11 +25,9 @@ export async function createHandler(cli: Cli): Promise<void> {
         projectName = answer.name;
     }
     const startersInfo = await getStartersInfo();
-    if (
-        starter &&
-        !startersInfo.saas.starters.find((e) => e.slug === starter)
-    ) {
-        starter = '' as never;
+    if (framework && !startersInfo.saas.frameworks.find(e => e.id === framework)) {
+        console.log(`Framework "${framework}" is not supported. Please select a framework from the list bellow.`)
+        framework = '';
     }
     if (!framework) {
         let answer = { name: '' };
@@ -50,6 +48,13 @@ export async function createHandler(cli: Cli): Promise<void> {
             ]);
         }
         framework = answer.name;
+    }
+    if (
+        starter &&
+        !startersInfo.saas.starters.find((e) => e.slug === starter)
+    ) {
+        console.log(`Starter "${starter}" is not available. Please select a framework from the list bellow.`)
+        starter = '' as never;
     }
     if (!starter) {
         const starters = startersInfo.saas.starters.filter((e) =>
