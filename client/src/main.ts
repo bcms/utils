@@ -100,9 +100,10 @@ export class Client {
             config.headers = {};
         }
         config.headers.Authorization = `ApiKey ${this.apiKeyInfo.id}.${this.apiKeyInfo.secret}`;
-        config.url = `${this.cmsOrigin}${config.url}`
-            .replace(':instanceId', this.instanceId)
-            .replace(':orgId', this.orgId);
+        config.url =
+            `${config.url && config.url.startsWith('http') ? '' : this.cmsOrigin}${config.url}`
+                .replace(':instanceId', this.instanceId)
+                .replace(':orgId', this.orgId);
         if (!config.timeout) {
             config.timeout = 60000;
         }
