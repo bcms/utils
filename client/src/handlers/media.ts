@@ -113,8 +113,14 @@ export class MediaHandler {
                 queries.push(`tmb=t`);
             }
         }
+        let origin: string;
+        if (this.client.cmsOrigin.startsWith('https://app.thebcms.com')) {
+            origin = `https://cdn.thebcms.com`;
+        } else {
+            origin = this.client.cmsOrigin;
+        }
         return await this.client.send<Buffer>({
-            url: `${this.baseUri}/${id}/bin2/${filename}${queries.length > 0 ? `?${queries.join('&')}` : ''}`,
+            url: `${origin}${this.baseUri}/${id}/bin2/${filename}${queries.length > 0 ? `?${queries.join('&')}` : ''}`,
             method: 'get',
             responseType: 'arraybuffer',
         });
