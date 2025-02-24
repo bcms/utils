@@ -8,7 +8,9 @@ export class EntryHandler {
             ? outputPath.split('/')
             : ['bcms', 'entries'];
         process.stdout.write('Getting templates information ... ');
-        await this.cli.loginIfRequired();
+        if (!this.cli.client) {
+            await this.cli.loginIfRequired();
+        }
         const templates = this.cli.client
             ? await this.cli.client.template.getAll()
             : await this.cli.sdk.template.getAll({

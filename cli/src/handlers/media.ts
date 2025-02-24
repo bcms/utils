@@ -6,7 +6,9 @@ export class MediaHandler {
 
     async pull(instanceId: string, orgId: string, outputPath?: string) {
         const destPath = outputPath ? outputPath.split('/') : ['bcms', 'media'];
-        await this.cli.loginIfRequired();
+        if (!this.cli.client) {
+            await this.cli.loginIfRequired();
+        }
         process.stdout.write('Get media information ... ');
         const allMedia = this.cli.client
             ? await this.cli.client.media.getAll()
