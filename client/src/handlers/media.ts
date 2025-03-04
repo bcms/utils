@@ -13,6 +13,9 @@ export interface MediaExtended extends Media {
     thumbnail(): Promise<Buffer>;
 }
 
+/**
+ * Utility class for working with BCMS Media.
+ */
 export class MediaHandler {
     private cache = new MemCache<MediaExtended>('_id');
     private latch: {
@@ -36,7 +39,19 @@ export class MediaHandler {
         }
     }
 
-    resolvePath(media: Media, allMedia: Media[]): string {
+    /**
+     * Resolve path to media (ex. /dir1/dir1/file.txt)
+     */
+    resolvePath(
+        /**
+         * Media for which to resolve path
+         */
+        media: Media,
+        /**
+         * All Media objects. Can be obtained by calling `getAll(...)`
+         */
+        allMedia: Media[],
+    ): string {
         if (media.parentId) {
             const parent = allMedia.find((e) => e._id === media.parentId);
             if (parent) {
@@ -46,7 +61,15 @@ export class MediaHandler {
         return '/' + media.name;
     }
 
-    async getAll(skipCache?: boolean): Promise<MediaExtended[]> {
+    /**
+     * Get all Media items.
+     */
+    async getAll(
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ): Promise<MediaExtended[]> {
         if (!skipCache && this.client.useMemCache && this.latch.all) {
             return this.cache.items;
         }
@@ -70,7 +93,21 @@ export class MediaHandler {
         return items;
     }
 
-    async getById(id: string, skipCache?: boolean): Promise<MediaExtended> {
+    /**
+     * Get Media by ID
+     * @param id
+     * @param skipCache
+     */
+    async getById(
+        /**
+         * Media ID
+         */
+        id: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ): Promise<MediaExtended> {
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cache.findById(id);
             if (cacheHit) {
@@ -92,12 +129,31 @@ export class MediaHandler {
         return item;
     }
 
+    /**
+     * Get binary data for specified media
+     */
     async getMediaBin(
+        /**
+         * Media ID
+         */
         id: string,
+        /**
+         * Name of the file. You can use any name or `media.name`.
+         */
         filename: string,
         options?: {
+            /**
+             * Get thumbnail binary data if available
+             */
             thumbnail?: boolean;
+            /**
+             * Get WEBP binary data if available
+             */
             webp?: boolean;
+            /**
+             * Use specified size transform. It must be one of values
+             * form `media.sizeTransforms`
+             */
             sizeTransform?: string;
         },
     ): Promise<Buffer> {
@@ -126,12 +182,32 @@ export class MediaHandler {
         });
     }
 
+    /**
+     * Resolve Media ID to URI. This can be useful for get path to a
+     * Media file on the BCMS Backend (API endpoint URI)
+     */
     toUri(
+        /**
+         * Media ID
+         */
         id: string,
+        /**
+         * Name of the file. You can use any name or `media.name`.
+         */
         filename: string,
         options?: {
+            /**
+             * Get thumbnail binary data if available
+             */
             thumbnail?: boolean;
+            /**
+             * Get WEBP binary data if available
+             */
             webp?: boolean;
+            /**
+             * Use specified size transform. It must be one of values
+             * form `media.sizeTransforms`
+             */
             sizeTransform?: string;
         },
     ) {
@@ -160,7 +236,15 @@ export class MediaHandler {
         return uri;
     }
 
-    private toMediaExtended(media: Media): MediaExtended {
+    /**
+     * Convert Media object to MediaExtended object
+     */
+    private toMediaExtended(
+        /**
+         * Media to be extended
+         */
+        media: Media,
+    ): MediaExtended {
         return {
             ...media,
             bin: async (options) => {

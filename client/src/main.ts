@@ -15,21 +15,60 @@ export interface ClientApiKey {
 }
 
 export interface ClientConfig {
+    /**
+     * Organization ID
+     */
     orgId: string;
+    /**
+     * Instance/Project ID
+     */
     instanceId: string;
+    /**
+     * API Key information
+     */
     apiKey: ClientApiKey;
+    /**
+     * URL of the active CMS
+     */
     cmsOrigin: string;
+    /**
+     * Is memory caching active
+     */
     useMemCache: boolean;
+    /**
+     * Is in debug mode
+     */
     debug: boolean;
+    /**
+     * Is web socket enabled
+     */
     enableSocket: boolean;
+    /**
+     * Should SVG data be injected info media object
+     */
     injectSvg: boolean;
 }
 
 export class Client {
+    /**
+     * URL of the active CMS
+     */
     cmsOrigin = 'https://app.thebcms.com';
+    /**
+     * Is memory caching active
+     */
     useMemCache = false;
+    /**
+     * Is in debug mode
+     */
     debug = false;
+    /**
+     * Is web socket enabled
+     */
     enableSocket = false;
+    /**
+     * Should SVG data be injected info media object
+     */
     injectSvg = false;
 
     template: TemplateHandler;
@@ -43,14 +82,38 @@ export class Client {
     socket: SocketHandler;
 
     constructor(
+        /**
+         * Organization ID
+         */
         public orgId: string,
+        /**
+         * Instance/Project ID
+         */
         public instanceId: string,
+        /**
+         * API Key information
+         */
         public apiKeyInfo: ClientApiKey,
         options?: {
+            /**
+             * URL of the active CMS
+             */
             cmsOrigin?: string;
+            /**
+             * Is memory caching active
+             */
             useMemCache?: boolean;
+            /**
+             * Is in debug mode
+             */
             debug?: boolean;
+            /**
+             * Is web socket enabled
+             */
             enableSocket?: boolean;
+            /**
+             * Should SVG data be injected info media object
+             */
             injectSvg?: boolean;
         },
     ) {
@@ -82,6 +145,9 @@ export class Client {
         this.widget = new WidgetHandler(this);
     }
 
+    /**
+     * Get configuration of the current Client
+     */
     getConfig(): ClientConfig {
         return {
             apiKey: this.apiKeyInfo,
@@ -95,6 +161,9 @@ export class Client {
         };
     }
 
+    /**
+     * Send request to the CMS backend
+     */
     async send<Data = unknown>(config: AxiosRequestConfig): Promise<Data> {
         if (!config.headers) {
             config.headers = {};

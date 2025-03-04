@@ -7,6 +7,9 @@ import type {
     WidgetWhereIsItUsedResult,
 } from '@thebcms/types';
 
+/**
+ * Utility class for working with BCMS Widgets.
+ */
 export class WidgetHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/widget`;
     private cache = new MemCache<Widget>('_id');
@@ -29,13 +32,29 @@ export class WidgetHandler {
         }
     }
 
-    async whereIsItUsed(id: string) {
+    /**
+     * Returns pointers where specified Widget has been used.
+     */
+    async whereIsItUsed(
+        /**
+         * Widget ID for which to do search
+         */
+        id: string,
+    ) {
         return await this.client.send<WidgetWhereIsItUsedResult>({
             url: `${this.baseUri}/${id}/where-is-it-used`,
         });
     }
 
-    async getAll(skipCache?: boolean) {
+    /**
+     * Get all Widgets
+     */
+    async getAll(
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache && this.latch.all) {
             return this.cache.items;
         }
@@ -49,7 +68,19 @@ export class WidgetHandler {
         return res.items;
     }
 
-    async getById(id: string, skipCache?: boolean) {
+    /**
+     * Get Widget by ID
+     */
+    async getById(
+        /**
+         * Widget ID
+         */
+        id: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cache.findById(id);
             if (cacheHit) {

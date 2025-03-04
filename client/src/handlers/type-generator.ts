@@ -5,12 +5,23 @@ import type {
     TypeGeneratorLanguage,
 } from '@thebcms/types';
 
+/**
+ * Utility class for working with BCMS Type Generator.
+ */
 export class TypeGeneratorHandler {
     private baseUri = '/api/v3/org/:orgId/instance/:instanceId/type-generator';
 
     constructor(private client: Client) {}
 
-    async getFiles(lang: TypeGeneratorLanguage) {
+    /**
+     * Get type files for specified language
+     */
+    async getFiles(
+        /**
+         * Language for which to return types
+         */
+        lang: TypeGeneratorLanguage,
+    ) {
         const res = await this.client.send<
             ControllerItemsResponse<TypeGeneratorFile>
         >({

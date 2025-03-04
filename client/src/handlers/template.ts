@@ -8,6 +8,9 @@ import type {
     TemplateWhereIsItUsedResult,
 } from '@thebcms/types';
 
+/**
+ * Utility class for working with BCMS Templates.
+ */
 export class TemplateHandler {
     private baseUri = '/api/v3/org/:orgId/instance/:instanceId/template';
     private latch: {
@@ -30,13 +33,29 @@ export class TemplateHandler {
         }
     }
 
-    async whereIsItUsed(templateId: string) {
+    /**
+     * Returns pointers where specified Template has been used.
+     */
+    async whereIsItUsed(
+        /**
+         * Template ID for which to do search
+         */
+        templateId: string,
+    ) {
         return await this.client.send<TemplateWhereIsItUsedResult>({
             url: `${this.baseUri}/${templateId}`,
         });
     }
 
-    async getAll(skipCache?: boolean) {
+    /**
+     * Get all Templates
+     */
+    async getAll(
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache && this.latch.all) {
             return this.cache.items;
         }
@@ -50,7 +69,19 @@ export class TemplateHandler {
         return res.items;
     }
 
-    async getById(templateId: string, skipCache?: boolean) {
+    /**
+     * Get Template by ID
+     */
+    async getById(
+        /**
+         * Template ID
+         */
+        templateId: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cache.findById(templateId);
             if (cacheHit) {
@@ -66,7 +97,22 @@ export class TemplateHandler {
         return res.item;
     }
 
-    async update(templateId: string, data: TemplateUpdateBody) {
+    /**
+     * Update existing Template by ID.
+     *
+     * Warning: this action will change a Template schema which
+     * will have effect on all Entries which are using specified template.
+     */
+    async update(
+        /**
+         * ID of a Template which will be updated
+         */
+        templateId: string,
+        /**
+         * Template update data
+         */
+        data: TemplateUpdateBody,
+    ) {
         const res = await this.client.send<ControllerItemResponse<Template>>({
             url: `${this.baseUri}/${templateId}/update`,
             method: 'PUT',
@@ -78,7 +124,18 @@ export class TemplateHandler {
         return res.item;
     }
 
-    async deleteById(templateId: string) {
+    /**
+     * Delete a Template by ID
+     *
+     * Waring: All Entries which are using specified Template will
+     * be deleted as fell.
+     */
+    async deleteById(
+        /**
+         * ID of a Template to be deleted
+         */
+        templateId: string,
+    ) {
         const res = await this.client.send<ControllerItemResponse<Template>>({
             url: `${this.baseUri}/${templateId}`,
             method: 'DELETE',

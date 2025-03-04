@@ -4,21 +4,58 @@ import { Buffer } from 'buffer';
 import type { Media, PropMediaDataParsed } from '@thebcms/types';
 
 export interface ImageHandlerPictureSrcSetResult {
+    /**
+     * URL of the original image
+     */
     original: string;
+    /**
+     * WEBP transformed variant of an image
+     */
     src1: string;
+    /**
+     * Original transformed variant of an image
+     */
     src2: string;
+    /**
+     * Width of transformed image
+     */
     width: number;
+    /**
+     * Height of transformed image
+     */
     height: number;
 }
 
+/**
+ * Utility class for media of type IMG.
+ */
 export class ImageHandler {
+    /**
+     * Can media be parsed
+     */
     parsable: boolean;
+    /**
+     * Name of the file passed to the constructor
+     */
     fileName: string;
+    /**
+     * Extension of the file passed to the constructor
+     */
     fileExtension: string;
 
     constructor(
+        /**
+         * Instance of the BCMS Client
+         */
         private client: Client,
+        /**
+         * Media for which to create handler
+         */
         private media: MediaExtended | Media | PropMediaDataParsed,
+        /**
+         * Use only specified size transformations. This array
+         * must be a subset of `media.sizeTransforms`
+         */
         private sizeTransform?: string[],
     ) {
         this.parsable = !!media.sizeTransforms;
@@ -31,6 +68,10 @@ export class ImageHandler {
         );
     }
 
+    /**
+     * Get size transformation options which is the best fit for
+     * provided element width;
+     */
     private closestSize(elementWidth: number): string | undefined {
         if (!this.media.sizeTransforms && !this.sizeTransform) {
             return undefined;
@@ -56,6 +97,10 @@ export class ImageHandler {
         return sizeTransforms[bestOptionIndex];
     }
 
+    /**
+     * Get SVG content for provided media file. If media file is
+     * not of type SVG, this function will throw an error.
+     */
     async getSvgContent(): Promise<string> {
         if (this.media.type !== 'SVG') {
             throw Error(
@@ -73,6 +118,10 @@ export class ImageHandler {
         return Buffer.from(bin).toString();
     }
 
+    /**
+     * Returns a source set for provided media image. If media is not of type
+     * IMG, this method will throw an error.
+     */
     getPictureSrcSet(elementWidth: number): ImageHandlerPictureSrcSetResult {
         const closestSize = this.closestSize(elementWidth);
         let width = this.media.width;

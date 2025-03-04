@@ -23,7 +23,7 @@ export type EntryParsedDataPropTypes =
     | { mediaId: string; altText?: string; caption?: string }
     | { entryId: string; templateId: string }
     | EntryParsedDataProps
-    | { timestamp: number; timezoneOffet: number }
+    | { timestamp: number; timezoneOffset: number }
     | { nodes: EntryContentNode[] }
     | Array<
           | string
@@ -32,7 +32,7 @@ export type EntryParsedDataPropTypes =
           | { mediaId: string; altText?: string; caption?: string }
           | { entryId: string; templateId: string }
           | EntryParsedDataProps
-          | { timestamp: number; timezoneOffet: number }
+          | { timestamp: number; timezoneOffset: number }
           | { nodes: EntryContentNode[] }
       >;
 
@@ -59,6 +59,9 @@ export interface EntryParsedCreateData {
     }>;
 }
 
+/**
+ * Utility class for working with BCMS Entries.
+ */
 export class EntryHandler {
     private templates: Template[] | null = null;
     private baseUri(templateId: string) {
@@ -97,7 +100,16 @@ export class EntryHandler {
         }
     }
 
-    private async findTemplateByName(idOrName: string) {
+    /**
+     * Resolve a Template name or ID to the Template object. If a Template
+     * with provided name or ID does not exist, method will throw an error.
+     */
+    private async findTemplateByName(
+        /**
+         * ID or Name of a Template to find
+         */
+        idOrName: string,
+    ) {
         if (this.client.useMemCache) {
             this.templates = await this.client.template.getAll();
         } else if (!this.templates) {
@@ -112,7 +124,19 @@ export class EntryHandler {
         return template;
     }
 
-    async getAllLite(templateIdOrName: string, skipCache?: boolean) {
+    /**
+     * Get all Entries lite models for specified Template
+     */
+    async getAllLite(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const cacheKey = `all_lite_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
@@ -130,7 +154,19 @@ export class EntryHandler {
         return res.items;
     }
 
-    async getAll(templateIdOrName: string, skipCache?: boolean) {
+    /**
+     * Get all parsed Entries for specified Template
+     */
+    async getAll(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const cacheKey = `all_parse_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
@@ -153,7 +189,24 @@ export class EntryHandler {
         return res.items;
     }
 
-    async getAllRaw(templateIdOrName: string, skipCache?: boolean) {
+    /**
+     * Get all Entries raw models for specified Template. Raw model of an
+     * Entry is a model that is used internally by the BCMS backend. It is
+     * hard to work with which is the reason why Entry Parsed model exists.
+     *
+     * If you do not need to work with Raw model, it is suggested to use
+     * `getAll(...)` method instead.
+     */
+    async getAllRaw(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const cacheKey = `all_raw_${template._id}`;
         if (!skipCache && this.client.useMemCache && this.latch[cacheKey]) {
@@ -171,9 +224,22 @@ export class EntryHandler {
         return res.items;
     }
 
+    /**
+     * Get an Entry Lite model by ID
+     */
     async getByIdLite(
+        /**
+         * ID of an Entry
+         */
         entryId: string,
+        /**
+         * Template name or ID. This must be a Template for specified
+         * Entry ID
+         */
         templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
         skipCache?: boolean,
     ) {
         const template = await this.findTemplateByName(templateIdOrName);
@@ -194,9 +260,22 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Get an Entry Parsed model by ID
+     */
     async getById(
+        /**
+         * ID of an Entry
+         */
         entryId: string,
+        /**
+         * Template name or ID. This must be a Template for specified
+         * Entry ID
+         */
         templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
         skipCache?: boolean,
     ) {
         const template = await this.findTemplateByName(templateIdOrName);
@@ -222,9 +301,22 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Get an Entry Parsed model by an Entry slug
+     */
     async getBySlug(
+        /**
+         * Slug of an Entry
+         */
         entrySlug: string,
+        /**
+         * Template name or ID. This must be a Template for specified
+         * Entry slug
+         */
         templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
         skipCache?: boolean,
     ) {
         const template = await this.findTemplateByName(templateIdOrName);
@@ -254,9 +346,27 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Get an Entry Raw model by ID. Raw model of an
+     * Entry is a model that is used internally by the BCMS backend. It is
+     * hard to work with which is the reason why Entry Parsed model exists.
+     *
+     * If you do not need to work with Raw model, it is suggested to use
+     * `getById(...)` method instead.
+     */
     async getByIdRaw(
+        /**
+         * ID of an Entry
+         */
         entryId: string,
+        /**
+         * Template name or ID. This must be a Template for specified
+         * Entry ID
+         */
         templateIdOrName: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
         skipCache?: boolean,
     ) {
         const template = await this.findTemplateByName(templateIdOrName);
@@ -277,8 +387,18 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Create an Entry for specified Template. Have in mind that API Key
+     * need to have access to create Entries for specified Template.
+     */
     async create(
+        /**
+         * ID or name of a Template for which entry should be created
+         */
         templateIdOrName: string,
+        /**
+         * Data with which to create an Entry
+         */
         entryParsedData: EntryParsedCreateData,
     ) {
         const data: EntryCreateBody = {
@@ -326,7 +446,25 @@ export class EntryHandler {
         return res.item;
     }
 
-    async createRaw(templateIdOrName: string, data: EntryCreateBody) {
+    /**
+     * Create an Entry for specified Template using raw entry data.
+     * Have in mind that API Key need to have access to create Entries for
+     * specified Template.
+     *
+     * Raw Entry model is pretty complex. It is recommended to use
+     * `update(...)` if you do not have specific reasons to work with raw
+     * Entry model.
+     */
+    async createRaw(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * Raw data with which to create an Entry
+         */
+        data: EntryCreateBody,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const res = await this.client.send<ControllerItemResponse<Entry>>({
             url: `${this.baseUri(template._id)}/create`,
@@ -342,9 +480,22 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Update an Entry for specified Template. Have in mind that API Key
+     * need to have access to update Entries for specified Template.
+     */
     async update(
+        /**
+         * Template name or ID
+         */
         templateIdOrName: string,
+        /**
+         * ID of an Entry to update
+         */
         entryId: string,
+        /**
+         * Entry update data
+         */
         entryParsedData: EntryParsedUpdateData,
     ) {
         const data: EntryUpdateBody = {
@@ -382,9 +533,27 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Update an existing Entry for specified Template using raw entry data.
+     * Have in mind that API Key need to have access to update Entries for
+     * specified Template.
+     *
+     * Raw Entry model is pretty complex. It is recommended to use
+     * `update(...)` if you do not have specific reasons to work with raw
+     * Entry model.
+     */
     async updateRaw(
+        /**
+         * Template name or ID
+         */
         templateIdOrName: string,
+        /**
+         * ID of an Entry to update
+         */
         entryId: string,
+        /**
+         * Entry update data
+         */
         data: EntryUpdateBody,
     ) {
         const template = await this.findTemplateByName(templateIdOrName);
@@ -402,7 +571,20 @@ export class EntryHandler {
         return res.item;
     }
 
-    async deleteById(entryId: string, templateIdOrName: string) {
+    /**
+     * Delete Entry by ID. Have in mind that API Key needs to have access to
+     * delete Entries from specified Template.
+     */
+    async deleteById(
+        /**
+         * ID of an Entry with should be deleted
+         */
+        entryId: string,
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+    ) {
         const template = await this.findTemplateByName(templateIdOrName);
         const res = await this.client.send<ControllerItemResponse<Entry>>({
             url: `${this.baseUri(template._id)}/${entryId}`,
@@ -416,11 +598,15 @@ export class EntryHandler {
         return res.item;
     }
 
+    /**
+     * Inject SVG data to Media properties of passed Entries. This method
+     * will mutate Entries them self. This method should be called only if
+     * `injectSvg === true`
+     */
     private async injectMediaSvg(entries: EntryParsed[]): Promise<void> {
         const svgCache: {
             [mediaId: string]: string;
         } = {};
-
         const searchObject: (obj: any) => Promise<void> = async (obj: any) => {
             const med = obj as Media;
             if (
@@ -462,7 +648,6 @@ export class EntryHandler {
                 }
             }
         };
-
         for (let i = 0; i < entries.length; i++) {
             await searchObject(entries[i]);
         }

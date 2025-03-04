@@ -24,6 +24,9 @@ export interface SocketInternalEventSub {
     handler(): Promise<void>;
 }
 
+/**
+ * Utility call for connecting to BCMS Socket server
+ */
 export class SocketHandler {
     id: string | null = null;
     socket: WebSocket = null as never;
@@ -59,13 +62,18 @@ export class SocketHandler {
         });
     }
 
+    /**
+     * Close socket connection and clear data
+     */
     clear(): void {
-        // Do nothing
         if (this.socket) {
             this.socket.close();
         }
     }
 
+    /**
+     * Connect to socket server
+     */
     async connect() {
         const queue = await this.connectionQueue({
             name: 'Connection',
@@ -183,15 +191,23 @@ export class SocketHandler {
         }
     }
 
+    /**
+     * Register a listener for socket events
+     */
     register<Name extends SocketEventName>(
+        /**
+         * Name of a socket event to listen for
+         */
         eventName: Name,
+        /**
+         * Handler function which will be called when event is triggered
+         */
         handler: SocketEventHandler<Name>,
     ): () => void {
         const id = uuidv4();
         if (!this.subs[eventName]) {
             this.subs[eventName] = [];
         }
-
         this.subs[eventName].push({
             id,
             handler: async (data) => {
@@ -217,8 +233,19 @@ export class SocketHandler {
         };
     }
 
+    /**
+     * Register to internal events. It is different to `register` because it
+     * is called only on internal events like socket 'open' and 'close', while
+     * `register` is triggered on BCMS events like `entry_created` etc.
+     */
     internalEventRegister(
+        /**
+         * Event type to register to
+         */
         type: 'open' | 'close',
+        /**
+         * Handler function which will be called when event is triggered
+         */
         handler: () => Promise<void>,
     ): () => void {
         const id = uuidv4();
@@ -239,8 +266,18 @@ export class SocketHandler {
         };
     }
 
+    /**
+     * Emit event to the BCMS backend. Have in mind that only known events
+     * can be emitted.
+     */
     emit<Name extends SocketEventName>(
+        /**
+         * Name of the event
+         */
         eventName: Name,
+        /**
+         * Data for specified event
+         */
         data: SocketEventNamesAndTypes[Name],
     ) {
         if (this.socket && this.connected) {
@@ -272,6 +309,9 @@ export class SocketHandler {
         return this.client.debug;
     }
 
+    /**
+     * Disconnect from the socket server
+     */
     disconnect() {
         if (this.socket) {
             this.disconnected = true;

@@ -7,6 +7,9 @@ import type {
     GroupWhereIsItUsedResult,
 } from '@thebcms/types';
 
+/**
+ * Utility class for working with BCMS Groups.
+ */
 export class GroupHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/group`;
     private cache = new MemCache<Group>('_id');
@@ -29,13 +32,30 @@ export class GroupHandler {
         }
     }
 
-    async whereIsItUsed(id: string) {
+    /**
+     * Method which return pointers to where specified Group has been used.
+     */
+    async whereIsItUsed(
+        /**
+         * Group ID
+         */
+        id: string,
+    ) {
         return await this.client.send<GroupWhereIsItUsedResult>({
             url: `${this.baseUri}/${id}/where-is-it-used`,
         });
     }
 
-    async getAll(skipCache?: boolean) {
+    /**
+     * Get all Groups
+     * @param skipCache
+     */
+    async getAll(
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache && this.latch.all) {
             return this.cache.items;
         }
@@ -49,7 +69,19 @@ export class GroupHandler {
         return res.items;
     }
 
-    async getById(id: string, skipCache?: boolean) {
+    /**
+     * Get a Group by ID
+     */
+    async getById(
+        /**
+         * Group ID
+         */
+        id: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cache.findById(id);
             if (cacheHit) {

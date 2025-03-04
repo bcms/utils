@@ -6,6 +6,9 @@ import type {
     Language,
 } from '@thebcms/types';
 
+/**
+ * Utility class for working with BCMS Languages.
+ */
 export class LanguageHandler {
     private baseUri = `/api/v3/org/:orgId/instance/:instanceId/language`;
     private cache = new MemCache<Language>('_id');
@@ -28,7 +31,15 @@ export class LanguageHandler {
         }
     }
 
-    async getAll(skipCache?: boolean) {
+    /**
+     * Get all Languages
+     */
+    async getAll(
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache && this.latch.all) {
             return this.cache.items;
         }
@@ -41,7 +52,21 @@ export class LanguageHandler {
         return res.items;
     }
 
-    async getById(id: string, skipCache?: boolean) {
+    /**
+     * Get a Language by ID
+     * @param id
+     * @param skipCache
+     */
+    async getById(
+        /**
+         * Language ID
+         */
+        id: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
         if (!skipCache && this.client.useMemCache) {
             const cacheHit = this.cache.findById(id);
             if (cacheHit) {
