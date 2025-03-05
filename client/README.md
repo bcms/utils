@@ -1,4 +1,4 @@
-# Becomes CMS client library
+# BCMS Client library
 
 [![NPM Version][npm-image]][npm-url]
 
