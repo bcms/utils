@@ -5,7 +5,7 @@
 [npm-image]: https://img.shields.io/npm/v/@thebcms/client.svg
 [npm-url]: https://npmjs.org/package/@thebcms/client
 
-This library provides an easy access to [BCMS API](https://github.com/becomesco/cms).
+This library provides easy access to BCMS backend REST API.
 
 ## Getting started
 
