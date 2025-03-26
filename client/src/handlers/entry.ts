@@ -225,6 +225,107 @@ export class EntryHandler {
     }
 
     /**
+     * Get all parsed Entries for specified Template with specified Status
+     */
+    async getAllByStatus(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * Can be an ID or Label of an Entry Status
+         */
+        status: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
+        const template = await this.findTemplateByName(templateIdOrName);
+        const allCacheKey = `all_parse_${template._id}`;
+        const cacheKey = `all_parse_${template._id}_status_${status}`;
+        if (
+            !skipCache &&
+            this.client.useMemCache &&
+            (this.latch[cacheKey] || this.latch[allCacheKey])
+        ) {
+            return this.cacheParse.items.filter(
+                (e) =>
+                    e.templateId === template._id &&
+                    e.statuses.find(
+                        (s) => s.id === status || s.label === status,
+                    ),
+            );
+        }
+        const res = await this.client.send<
+            ControllerItemsResponse<EntryParsed>
+        >({
+            url: `${this.baseUri(template._id)}/all_by_status/${status}/parsed`,
+        });
+        if (this.client.injectSvg) {
+            await this.injectMediaSvg(res.items);
+        }
+        if (this.client.useMemCache) {
+            this.cacheParse.set(res.items);
+            this.latch[cacheKey] = true;
+        }
+        return res.items;
+    }
+
+    /**
+     * Get all Entries raw models for specified Template. Raw model of an
+     * Entry is a model that is used internally by the BCMS backend. It is
+     * hard to work with which is the reason why Entry Parsed model exists.
+     *
+     * If you do not need to work with Raw model, it is suggested to use
+     * `getAll(...)` method instead.
+     */
+    async getAllRawByStatus(
+        /**
+         * Template name or ID
+         */
+        templateIdOrName: string,
+        /**
+         * Can be an ID or Label of an Entry Status
+         */
+        status: string,
+        /**
+         * If set to `true` cache check will be skipped
+         */
+        skipCache?: boolean,
+    ) {
+        const template = await this.findTemplateByName(templateIdOrName);
+        const allCacheKey = `all_raw_${template._id}`;
+        const cacheKey = `all_raw_${template._id}_status_${status}`;
+        if (
+            !skipCache &&
+            this.client.useMemCache &&
+            (this.latch[cacheKey] || this.latch[allCacheKey])
+        ) {
+            const statuses = await this.client.entryStatus.getAll();
+            const statusData = statuses.find(
+                (e) => e._id === status || e.label === status,
+            );
+            if (!statusData) {
+                return [];
+            }
+            return this.cacheRaw.items.filter(
+                (e) =>
+                    e.templateId === template._id &&
+                    e.statuses.find((s) => s.id === statusData._id),
+            );
+        }
+        const res = await this.client.send<ControllerItemsResponse<Entry>>({
+            url: `${this.baseUri(template._id)}/all_by_status/${status}`,
+        });
+        if (this.client.useMemCache) {
+            this.cacheRaw.set(res.items);
+            this.latch[cacheKey] = true;
+        }
+        return res.items;
+    }
+
+    /**
      * Get an Entry Lite model by ID
      */
     async getByIdLite(
