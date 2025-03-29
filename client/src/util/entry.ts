@@ -131,7 +131,7 @@ export function parsedPropsToRawProps(
                         );
                     } else if (
                         typeof valueItem.timestamp !== 'number' ||
-                        typeof valueItem.timezoneOffet !== 'number'
+                        typeof valueItem.timezoneOffset !== 'number'
                     ) {
                         throw Error(
                             `[${level}.${propSchema.name}.${j}] item value "${JSON.stringify(valueItem)}" is not allowed. It must be formated: {timestamp: number, timezoneOffset: number}`,
@@ -149,7 +149,7 @@ export function parsedPropsToRawProps(
             }
             if (
                 typeof metaValue.timestamp !== 'number' ||
-                typeof metaValue.timezoneOffet !== 'number'
+                typeof metaValue.timezoneOffset !== 'number'
             ) {
                 throw Error(
                     `[${level}.${propSchema.name}] value "${JSON.stringify(metaValue)}" is not allowed. It must be formated: {timestamp: number, timezoneOffset: number}`,
