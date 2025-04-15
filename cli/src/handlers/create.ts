@@ -119,14 +119,13 @@ export async function createHandler(cli: Cli): Promise<void> {
     await fs.move([`${projectName}-tmp`, framework, starter], projectName);
     await fs.deleteDir(`${projectName}-tmp`);
     console.log(`\nCreating BCMS Project ...\n`);
-    const instance = await cli.sdk.instance.create({
+    const instance = await cli.sdk.instance.create(targetOrg._id, {
         name: projectName
             .replace(/-/g, ' ')
             .replace(/_/g, ' ')
             .split(' ')
             .map((e) => e.slice(0, 1).toUpperCase() + e.slice(1).toLowerCase())
             .join(' '),
-        orgId: targetOrg._id,
         starter,
     });
     console.log('\n Setting up API Key for the project ...\n');
