@@ -73,6 +73,7 @@ const sdkStore: SdkStore = {
     job: createArrayStore<Job>('_id', []),
     dependency: createArrayStore<Dependency>('_id', []),
     instanceEnv: createArrayStore<InstanceEnv>('_id', []),
+    entryHistory: createArrayStore('_id', []),
 };
 
 async function createStorage(): Promise<Storage> {
@@ -135,12 +136,13 @@ async function createStorage(): Promise<Storage> {
 
 let sdk: Sdk = null as never;
 
-export async function sdkCreate(apiOrigin: string) {
+export async function sdkCreate(apiOrigin: string, verbose?: boolean) {
     sdk = createSdk(sdkStore, await createStorage(), {
         apiOrigin,
         metadata() {
             return {};
         },
+        verbose,
     });
     return sdk;
 }

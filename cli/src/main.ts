@@ -243,6 +243,7 @@ export async function createCli() {
     const args = getArgs();
     const sdk = await sdkCreate(
         args.apiOrigin ? args.apiOrigin : 'https://app.thebcms.com',
+        args.verbose,
     );
     return new Cli(args, sdk, client);
 }

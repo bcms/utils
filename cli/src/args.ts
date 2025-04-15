@@ -1,5 +1,7 @@
 export interface Args {
     help?: string;
+    verbose?: boolean;
+
     login?: boolean;
     logout?: boolean;
     create?: string | boolean;
@@ -35,6 +37,15 @@ export const argsMap: {
             return true;
         },
     },
+    verbose: {
+        flags: ['--verbose', 'verbose'],
+        description: 'Print verbose error messages',
+        type: 'boolean',
+        parse() {
+            return true;
+        },
+    },
+
     login: {
         flags: ['--login', 'login'],
         description: 'Login to the BCMS via magic link',
