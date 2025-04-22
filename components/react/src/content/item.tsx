@@ -33,13 +33,31 @@ export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
             );
         }
     } else if (props.item.type === 'media') {
-        if (!props.clientConfig) {
+        if (!props.clientConfig || !props.item.value) {
             return (
                 <div style={{ display: 'none' }}>
                     Cannot mount media because BCMS Client Config was not
                     provided to the component
                 </div>
             );
+        }
+        const media = props.item.value as PropMediaDataParsed;
+        if (typeof media !== 'object') {
+            return (
+                <div style={{ display: 'none' }}>Node value is not a media</div>
+            );
+        }
+        if (media.type !== 'IMG') {
+            if (!props.nodeParser) {
+                return (
+                    <div style={{ display: 'none' }}>
+                        Media is not of type Image and cannot be handler
+                        automatically, please provide a node parser if you want
+                        to render this node
+                    </div>
+                );
+            }
+            return props.nodeParser(props.item);
         }
         return (
             <BCMSImage
