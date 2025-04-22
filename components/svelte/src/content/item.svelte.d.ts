@@ -4,7 +4,7 @@ import { SvelteComponent } from 'svelte';
 declare const __propDef: {
     props: {
         item: EntryContentParsedItem;
-        widgetComponents?: Record<string, SvelteComponent<{ data: any }>>;
+        components?: Record<string, SvelteComponent<{ data: any }>>;
         nodeParser?: (item: EntryContentParsedItem) => any;
     };
 };

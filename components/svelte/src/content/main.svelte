@@ -2,19 +2,25 @@
     import BCMSContentManagerItem
         from '@thebcms/components-svelte/content/item.svelte';
 
-    export let id = undefined;
-    export { className as class };
-    export let style = undefined;
-    export let items;
-    export let widgetComponents = {};
-    export let nodeParser = undefined;
-
-    let className = '';
+    /**
+     * @typedef {{
+     *     [widgetName: string]: SvelteComponent<{data: any}>
+     * }} BCMSWidgetComponents
+     *
+     * @type {{
+     *     id?: string,
+     *     class?: string,
+     *     style?: string,
+     *     items: import('@thebcms/types').EntryContentParsedItem[],
+     *     widgetComponents?: BCMSWidgetComponents,
+     *     nodeParser?: (item: import('@thebcms/types').EntryContentParsedItem) => any
+     */
+    let props = $props();
 </script>
 
-<div {id} class="bcms-content {className}" {style}>
-    {#each items as item}
-        <BCMSContentManagerItem {item} components={widgetComponents}
-                                {nodeParser} />
+<div id={props.id} class="bcms-content {props.class || ''}" style={props.style}>
+    {#each props.items as item}
+        <BCMSContentManagerItem {item} components={props.widgetComponents}
+                                nodeParser={props.nodeParser} />
     {/each}
 </div>

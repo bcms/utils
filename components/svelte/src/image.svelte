@@ -1,41 +1,37 @@
 <script>
     import { Client, ImageHandler } from '@thebcms/client';
-    import { beforeUpdate, onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
 
-    export let id = undefined;
-    export { className as class };
-    export let style = undefined;
-    export let media;
-    export let clientConfig;
-    export let altText = undefined;
+    /**
+     * @type {{
+     *     id?: string,
+     *     class?: string,
+     *     style?: string,
+     *     media: import('@thebcms/types').Media | import('@thebcms/types').MediaExtended | import('@thebcms/types').PropMediaDataParsed,
+     *     clientConfig: import('@thebcms/client').ClientConfig,
+     *     altText?: string,
+     * }}
+     */
+    let props = $props();
 
-    let className = '';
     const allowedMediaTypes = ['IMG', 'SVG'];
-    const client = new Client(clientConfig.orgId,
-        clientConfig.instanceId,
-        clientConfig.apiKey,
+    const client = new Client(props.clientConfig.orgId,
+        props.clientConfig.instanceId,
+        props.clientConfig.apiKey,
         {
-            cmsOrigin: clientConfig.cmsOrigin,
-            useMemCache: clientConfig.useMemCache,
-            injectSvg: clientConfig.injectSvg,
-            debug: clientConfig.debug,
-            enableSocket: clientConfig.enableSocket,
+            cmsOrigin: props.clientConfig.cmsOrigin,
+            useMemCache: props.clientConfig.useMemCache,
+            injectSvg: props.clientConfig.injectSvg,
+            debug: props.clientConfig.debug,
+            enableSocket: props.clientConfig.enableSocket,
         });
 
     let imageElement = null;
-    let imageHandler = new ImageHandler(client, media);
-    let mediaExtended = media;
+    let imageHandler = $derived(new ImageHandler(client, props.media));
+    let mediaExtended = $derived(props.media);
     let imageAlt =
-        altText || media.alt_text || media.altText || media.name;
-    let srcSet = imageHandler.getPictureSrcSet(0);
-
-    $: {
-        imageHandler = new ImageHandler(client, media);
-        mediaExtended = media;
-        imageAlt =
-            altText || media.alt_text || media.altText || media.name;
-        srcSet = imageHandler.getPictureSrcSet(0);
-    }
+        $derived(props.altText || props.media.alt_text || props.media.altText || props.media.name);
+    let srcSet = $derived(imageHandler.getPictureSrcSet(0));
 
     let resizeDebounce = undefined;
 
@@ -63,41 +59,37 @@
             window.removeEventListener('resize', onResize);
         }
     });
-
-    beforeUpdate(() => {
-        onResize();
-    });
 </script>
 
 {#if client.injectSvg && mediaExtended.svg}
-    <div {id} {style} class={className}>
+    <div id={props.id} style={props.style} class={props.class}>
         <!--eslint-disable-next-line svelte/no-at-html-tags-->
         {@html mediaExtended.svg}
     </div>
-{:else if !allowedMediaTypes.includes(media.type)}
+{:else if !allowedMediaTypes.includes(props.media.type)}
     <div
-        data-bcms-image-error="Media of type {media.type} cannot be used as image"
+        data-bcms-image-error="Media of type {props.media.type} cannot be used as image"
         style="display: none;"
-    />
+    ></div>
 {:else if !imageHandler.parsable}
     <img
-        {id}
-        {style}
-        class={className}
+        id={props.id}
+        style={props.style}
+        class={props.class}
         src={srcSet.original}
         alt={imageAlt}
-        width={media.width}
-        height={media.height}
+        width={props.media.width}
+        height={props.media.height}
     />
 {:else}
     <picture>
         <source srcset={srcSet.src1} type={'image/webp'} />
-        <source srcset={srcSet.src2} type={media.mimetype} />
+        <source srcset={srcSet.src2} type={props.media.mimetype} />
         <img
             bind:this={imageElement}
-            {id}
-            style={style ? style : className ? '' : 'width: 100%;'}
-            class={className}
+            id={props.id}
+            style={props.style ? props.style : props.class ? '' : 'width: 100%;'}
+            class={props.class}
             src={srcSet.original}
             alt={imageAlt}
             width={srcSet.width}

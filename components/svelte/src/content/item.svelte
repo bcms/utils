@@ -1,31 +1,36 @@
 <script>
-    export let item;
-    export let components = undefined;
-    export let nodeParser = undefined;
+    /**
+     * @type {{
+     *     item: import('@thebcms/types').EntryContentParsedItem,
+     *     components?: Record<string, SvelteComponent<{ data: any }>>;
+     *     nodeParser?: (item: import('@thebcms/types').EntryContentParsedItem) => any;
+     * }}
+     */
+    let props = $props();
 
-    $: WidgetComponent =
-        item.widgetName && item.type === 'widget' && components && components[item.widgetName]
-            ? components[item.widgetName]
-            : undefined;
+    const WidgetComponent = $derived(
+        props.item.widgetName && props.item.type === 'widget' && props.components && props.components[props.item.widgetName]
+            ? props.components[props.item.widgetName]
+            : undefined);
 
-    $: PrimitiveNodeValue = nodeParser ? nodeParser(item) : (item.value);
+    const PrimitiveNodeValue = $derived(props.nodeParser ? props.nodeParser(props.item) : (props.item.value));
 </script>
 
-{#if item.widgetName && item.type === 'widget'}
-    {#if components && components[item.widgetName]}
-        <svelte:component this={WidgetComponent} data={item.value} />
+{#if props.item.widgetName && props.item.type === 'widget'}
+    {#if props.components && props.components[props.item.widgetName]}
+        <WidgetComponent data={props.item.value} />
     {:else}
         <div
             style="display: none;"
-            data-bcms-widget-error="Widget {item.widgetName} is not handled"
+            data-bcms-widget-error="Widget {props.item.widgetName} is not handled"
         >
-            Widget {item.widgetName} is not handled
+            Widget {props.item.widgetName} is not handled
         </div>
     {/if}
 {:else if typeof PrimitiveNodeValue === 'object'}
-    <svelte:component this={PrimitiveNodeValue} />
+    <PrimitiveNodeValue />
 {:else}
-    <div class="bcms-content--primitive bcms-content--{item.type}">
+    <div class="bcms-content--primitive bcms-content--{props.item.type}">
         <!--eslint-disable-next-line svelte/no-at-html-tags-->
         {@html PrimitiveNodeValue}
     </div>
