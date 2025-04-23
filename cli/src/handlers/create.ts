@@ -128,24 +128,32 @@ export async function createHandler(cli: Cli): Promise<void> {
             .join(' '),
         starter,
     });
-    console.log('\n Setting up API Key for the project ...\n');
+    console.log('\n Setting up API Keys for the project ...\n');
     const templates = await cli.sdk.template.getAll({
         orgId: instance.orgId,
         instanceId: instance._id,
     });
-    let apiKey = await cli.sdk.apiKey.create({
+    let apiKeyPrivate = await cli.sdk.apiKey.create({
         instanceId: instance._id,
         orgId: instance.orgId,
         data: {
-            name: `${projectName} Auto Generated Key`,
+            name: `${projectName} Auto Generated Key - Private`,
             desc: 'Auto generated key from BCMS CLI',
         },
     });
-    apiKey = await cli.sdk.apiKey.update({
+    const apiKeyPublic = await cli.sdk.apiKey.create({
+        instanceId: instance._id,
+        orgId: instance.orgId,
+        data: {
+            name: `${projectName} Auto Generated Key - Public`,
+            desc: 'Auto generated key from BCMS CLI',
+        },
+    });
+    apiKeyPrivate = await cli.sdk.apiKey.update({
         orgId: instance.orgId,
         instanceId: instance._id,
         data: {
-            _id: apiKey._id,
+            _id: apiKeyPrivate._id,
             access: {
                 templates: templates.map((template) => {
                     return {
@@ -161,15 +169,50 @@ export async function createHandler(cli: Cli): Promise<void> {
             },
         },
     });
-    await fs.save(
-        [projectName, '.env'],
-        [
-            `BCMS_ORG_ID=${instance.orgId}`,
-            `BCMS_INSTANCE_ID=${instance._id}`,
-            `BCMS_API_KEY_ID=${apiKey._id}`,
-            `BCMS_API_KEY_SECRET=${apiKey.secret}`,
-        ].join('\n'),
-    );
+    const envs: string[] = [
+        `BCMS_ORG_ID=${instance.orgId}`,
+        `BCMS_INSTANCE_ID=${instance._id}`,
+        `BCMS_API_KEY_ID=${apiKeyPrivate._id}`,
+        `BCMS_API_KEY_SECRET=${apiKeyPrivate.secret}`,
+    ];
+    if (framework === 'next') {
+        envs.push(
+            '',
+            `# Information about this API Key will be public`,
+            `NEXT_PUBLIC_BCMS_ORG_ID=${instance.orgId}`,
+            `NEXT_PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `NEXT_PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `NEXT_PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
+        );
+    } else if (framework === 'astro') {
+        envs.push(
+            '',
+            `# Information about this API Key will be public`,
+            `PUBLIC_BCMS_ORG_ID=${instance.orgId}`,
+            `PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
+        );
+    } else if (framework === 'nuxt') {
+        envs.push(
+            '',
+            `# Information about this API Key will be public`,
+            `NUXT_PUBLIC_BCMS_ORG_ID=${instance.orgId}`,
+            `NUXT_PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `NUXT_PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `NUXT_PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
+        );
+    } else if (framework === 'svelte') {
+        envs.push(
+            '',
+            `# Information about this API Key will be public`,
+            `PUBLIC_BCMS_ORG_ID=${instance.orgId}`,
+            `PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
+        );
+    }
+    await fs.save([projectName, '.env'], envs.join('\n'));
     console.log(
         `\n\nYour BCMS project is available at https://app.thebcms.com/d/o/${targetOrg.slug}/i/${instance.slug}/bcms`,
     );
