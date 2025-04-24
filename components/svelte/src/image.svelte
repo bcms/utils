@@ -7,15 +7,16 @@
      *     id?: string,
      *     class?: string,
      *     style?: string,
-     *     media: import('@thebcms/types').Media | import('@thebcms/types').MediaExtended | import('@thebcms/types').PropMediaDataParsed,
+     *     media: import('@thebcms/types').Media | import('@thebcms/client').MediaExtended | import('@thebcms/types').PropMediaDataParsed,
      *     clientConfig: import('@thebcms/client').ClientConfig,
      *     altText?: string,
      * }}
      */
     let props = $props();
 
-    const allowedMediaTypes = ['IMG', 'SVG'];
-    const client = new Client(props.clientConfig.orgId,
+    const allowedMediaTypes = ['IMG', 'SVG' , 'GIF'];
+    const client = new Client(
+        props.clientConfig.orgId,
         props.clientConfig.instanceId,
         props.clientConfig.apiKey,
         {
@@ -24,15 +25,30 @@
             injectSvg: props.clientConfig.injectSvg,
             debug: props.clientConfig.debug,
             enableSocket: props.clientConfig.enableSocket,
-        });
+        },
+    );
 
-    let imageElement = null;
+    /**
+     * @type {HTMLElement | null}
+     */
+    let imageElement = $state(null);
     let imageHandler = $derived(new ImageHandler(client, props.media));
+    /**
+     * @type {import('@thebcms/client').MediaExtended}
+     */
     let mediaExtended = $derived(props.media);
-    let imageAlt =
-        $derived(props.altText || props.media.alt_text || props.media.altText || props.media.name);
+    let imageAlt = $derived.by(() => {
+        /**
+         * @type {any}
+         */
+        const m = props.media;
+        return props.altText || m.alt_text || m.altText || m.name;
+    });
     let srcSet = $derived(imageHandler.getPictureSrcSet(0));
 
+    /**
+     * @type {NodeJS.Timeout | undefined}
+     */
     let resizeDebounce = undefined;
 
     function onResize() {
@@ -77,7 +93,7 @@
         style={props.style}
         class={props.class}
         src={srcSet.original}
-        alt={imageAlt}
+        alt={imageAlt()}
         width={props.media.width}
         height={props.media.height}
     />

@@ -1,19 +1,19 @@
 import type { EntryContentParsedItem } from '@thebcms/types';
-import { SvelteComponent } from 'svelte';
+import { type Component, SvelteComponent } from 'svelte';
 
-export type BCMSWidgetComponents = Record<
-    string,
-    SvelteComponent<{ data: any }>
->;
+export type BCMSWidgetComponents = Record<string, Component<{ data: any }>>;
 
 declare const __propDef: {
     props: {
         id?: string;
-        style?: string;
         class?: string;
+        style?: string;
         items: EntryContentParsedItem[];
-        widgetComponents?: BCMSWidgetComponents;
+        widgetComponents?: {
+            [widgetName: string]: Component<{ data: any }>;
+        };
         nodeParser?: (item: EntryContentParsedItem) => any;
+        clientConfig?: ClientConfig;
     };
 };
 type Props_ = typeof __propDef.props;
