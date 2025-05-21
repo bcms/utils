@@ -3,6 +3,7 @@ import {
     defineComponent,
     h,
     onBeforeUnmount,
+    onBeforeUpdate,
     onMounted,
     type PropType,
     ref,
@@ -59,6 +60,7 @@ export const BCMSImage = defineComponent({
                           injectSvg: props.client.injectSvg,
                       },
                   );
+        let idBuffer = '';
         const imageElement = ref<HTMLImageElement>();
         const imageHandler = computed(() => {
             return new ImageHandler(client, props.media, props.sizeTransform);
@@ -89,12 +91,21 @@ export const BCMSImage = defineComponent({
         }
 
         onMounted(() => {
+            idBuffer = props.media._id;
             window.addEventListener('resize', resizeHandler);
             resizeHandler();
         });
 
         onBeforeUnmount(() => {
             window.removeEventListener('resize', resizeHandler);
+        });
+
+        onBeforeUpdate(() => {
+            if (idBuffer === props.media._id) {
+                return;
+            }
+            idBuffer = props.media._id;
+            resizeHandler();
         });
 
         return () => {
