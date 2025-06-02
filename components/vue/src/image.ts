@@ -110,11 +110,18 @@ export const BCMSImage = defineComponent({
 
         return () => {
             if (props.client.injectSvg && mediaExtended.value.svg) {
+                let svg = mediaExtended.value.svg;
+                if (props.class) {
+                    svg = svg.replace(/<svg /, `<svg class="${props.class}" `);
+                }
+                if (props.style) {
+                    svg = svg.replace(/<svg /, `<svg style="${props.style}" `);
+                }
                 return h('div', {
                     id: props.id,
-                    style: props.style,
-                    class: props.class,
-                    innerHTML: mediaExtended.value.svg,
+                    // style: props.style,
+                    // class: props.class,
+                    innerHTML: svg,
                 });
             } else if (!allowedMediaTypes.includes(props.media.type)) {
                 return h('div', {
