@@ -23,6 +23,7 @@ export interface BCMSImageProps {
     media: Media | MediaExtended | PropMediaDataParsed;
     client: Client | ClientConfig;
     altText?: string;
+    useOriginal?: boolean;
 }
 
 const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG'];
@@ -43,6 +44,7 @@ export const BCMSImage = defineComponent({
             required: true,
         },
         sizeTransform: Array as PropType<string[]>,
+        useOriginal: Boolean,
         altText: String,
     },
     setup(props) {
@@ -109,7 +111,42 @@ export const BCMSImage = defineComponent({
         });
 
         return () => {
-            if (props.client.injectSvg && mediaExtended.value.svg) {
+            if (props.useOriginal) {
+                const original =
+                    client.getConfig().cmsOrigin +
+                    client.media.toUri(props.media._id, props.media.name);
+                const webp =
+                    client.getConfig().cmsOrigin +
+                    client.media.toUri(props.media._id, props.media.name, {
+                        webp: true,
+                    });
+                return h('picture', {}, [
+                    h('source', {
+                        srcset: webp,
+                        type: 'image/webp',
+                    }),
+                    h('img', {
+                        ref: imageElement,
+                        id: props.id,
+                        style: props.style
+                            ? props.style
+                            : props.class
+                              ? {}
+                              : {
+                                    width: '100%',
+                                },
+                        class: props.class,
+                        src: original,
+                        alt:
+                            props.altText ||
+                            (props.media as PropMediaDataParsed).alt_text ||
+                            (props.media as Media).altText ||
+                            props.media.name,
+                        width: props.media.width,
+                        height: props.media.height,
+                    }),
+                ]);
+            } else if (props.client.injectSvg && mediaExtended.value.svg) {
                 let svg = mediaExtended.value.svg;
                 if (props.class) {
                     svg = svg.replace(/<svg /, `<svg class="${props.class}" `);
