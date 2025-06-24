@@ -82,7 +82,10 @@ export class ImageHandler {
         let bestOptionIndex = 0;
         const sizeTransforms = (this.sizeTransform ||
             this.media.sizeTransforms) as string[];
-        for (let i = 0; i < sizeTransforms.length; i++) {
+        if (sizeTransforms.length < 2) {
+            return sizeTransforms[0];
+        }
+        for (let i = 0; i < sizeTransforms.length - 1; i++) {
             const [widthStr] = sizeTransforms[i].split('x');
             const width = parseInt(widthStr, 10);
             let widthDelta = containerWidth - width;
@@ -92,6 +95,13 @@ export class ImageHandler {
             if (widthDelta < delta) {
                 delta = widthDelta;
                 bestOptionIndex = i;
+            }
+        }
+        if (sizeTransforms[bestOptionIndex + 1]) {
+            const [currWidthStr] = sizeTransforms[bestOptionIndex].split('x');
+            const currWidth = parseInt(currWidthStr, 10);
+            if (currWidth < containerWidth) {
+                bestOptionIndex++;
             }
         }
         return sizeTransforms[bestOptionIndex];
