@@ -23,7 +23,10 @@
         "publish:components:vue": "node _scripts/main.js publish-components-vue",
         "build:components:svelte": "node _scripts/main.js build-components-svelte",
         "package:components:svelte": "node _scripts/main.js package-components-svelte",
-        "publish:components:svelte": "node _scripts/main.js publish-components-svelte"
+        "publish:components:svelte": "node _scripts/main.js publish-components-svelte",
+        "build:components:astro": "node _scripts/main.js build-components-astro",
+        "package:components:astro": "node _scripts/main.js package-components-astro",
+        "publish:components:astro": "node _scripts/main.js publish-components-astro"
     },
     "keywords": [],
     "author": "",

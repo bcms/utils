@@ -1,0 +1,37 @@
+---
+import type { EntryContentParsedItem } from '@thebcms/types';
+import type { BCMSWidgetComponents } from './index';
+import type { ClientConfig } from '@thebcms/client';
+import BCMSContentItem from './item.astro';
+
+interface Props {
+    id?: string;
+    class?: string;
+    style?: string;
+    items: EntryContentParsedItem[];
+    widgetComponents?: BCMSWidgetComponents;
+    nodeParser?(item: EntryContentParsedItem): string;
+    clientConfig?: ClientConfig;
+}
+
+const props = Astro.props;
+---
+
+<div
+    id={props.id}
+    class={`bcms-content ${props.class || ''}`}
+    style={props.style}
+>
+    {
+        props.items.map((item) => {
+            return (
+                <BCMSContentItem
+                    item={item}
+                    components={props.widgetComponents}
+                    nodeParser={props.nodeParser}
+                    clientConfig={props.clientConfig}
+                />
+            );
+        })
+    }
+</div>

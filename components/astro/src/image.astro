@@ -1,0 +1,132 @@
+---
+import {
+    Client,
+    type ClientConfig,
+    ImageHandler,
+    type MediaExtended,
+} from '@thebcms/client';
+import type { Media, MediaType, PropMediaDataParsed } from '@thebcms/types';
+import { v4 as uuid } from 'uuid';
+
+interface Props {
+    id?: string;
+    class?: string;
+    style?: string;
+    media: Media | MediaExtended | PropMediaDataParsed;
+    clientConfig: ClientConfig;
+    altText?: string;
+    useOriginal?: boolean;
+    sizeTransform?: string[];
+}
+
+const props = Astro.props;
+const elementId = props.id || uuid();
+const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG', 'GIF'];
+if (!props.media) {
+    throw new Error(
+        'Missing prop "media". Media object is required to be able to fetch and render BCMS image.',
+    );
+}
+if (!props.clientConfig) {
+    throw new Error(
+        'Missing prop "clientConfig". BCMS client configuration is required to be able to make an API call for BCMS image',
+    );
+}
+const client = new Client(
+    props.clientConfig.orgId,
+    props.clientConfig.instanceId,
+    props.clientConfig.apiKey,
+    {
+        cmsOrigin: props.clientConfig.cmsOrigin,
+        useMemCache: props.clientConfig.useMemCache,
+        injectSvg: props.clientConfig.injectSvg,
+        debug: props.clientConfig.debug,
+        enableSocket: props.clientConfig.enableSocket,
+    },
+);
+const imageHandler = new ImageHandler(client, props.media, props.sizeTransform);
+const srcSet = imageHandler.getPictureSrcSet(0);
+/**
+ * Have in mind that media does not have to be of type MediaExtended
+ */
+const mediaExtended = props.media as MediaExtended;
+---
+
+{
+    (() => {
+        if (client.injectSvg && mediaExtended.svg) {
+            return (
+                <div
+                    id={elementId}
+                    class={props.class}
+                    style={props.style}
+                    set:html={mediaExtended.svg}
+                />
+            );
+        }
+        if (!allowedMediaTypes.includes(props.media.type)) {
+            return (
+                <div
+                    data-bcms-image-error={`Media of type ${props.media.type} cannot be used as image`}
+                    style={{ display: 'none' }}
+                />
+            );
+        }
+        if (!imageHandler.parsable) {
+            return (
+                <img
+                    id={elementId}
+                    style={props.style}
+                    class={props.class}
+                    src={srcSet.original}
+                    alt={
+                        props.altText ||
+                        (props.media as PropMediaDataParsed).alt_text ||
+                        (props.media as Media).altText ||
+                        props.media.name
+                    }
+                    width={props.media.width}
+                    height={props.media.height}
+                />
+            );
+        }
+        return (
+            <bcms-image
+                data-element-id={elementId}
+                data-client-config={JSON.stringify(props.clientConfig)}
+                data-media={JSON.stringify(props.media)}
+                data-alt-text={props.altText}
+                data-use-original={props.useOriginal}
+            >
+                <picture>
+                    <source srcset={srcSet.src1} type={'image/webp'} />
+                    <source srcset={srcSet.src2} type={props.media.mimetype} />
+                    <img
+                        id={elementId}
+                        style={
+                            props.style
+                                ? props.style
+                                : props.class
+                                  ? {}
+                                  : {
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }
+                        }
+                        class={props.class}
+                        src={srcSet.original}
+                        alt={
+                            props.altText ||
+                            (props.media as PropMediaDataParsed).alt_text ||
+                            (props.media as Media).altText ||
+                            props.media.name
+                        }
+                        width={srcSet.width}
+                        height={srcSet.height}
+                    />
+                </picture>
+            </bcms-image>
+        );
+    })()
+}
