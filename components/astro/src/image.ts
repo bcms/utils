@@ -5,7 +5,6 @@ class BcmsImageComponent extends HTMLElement {
     resize: () => void = () => {};
 
     connectedCallback() {
-        console.log('monted');
         const clientConfig: ClientConfig = JSON.parse(
             this.dataset.clientConfig as string,
         );
@@ -34,7 +33,6 @@ class BcmsImageComponent extends HTMLElement {
                 if (!imageElement) {
                     return;
                 }
-                console.log('resize');
                 const srcSet = imageHandler.getPictureSrcSet(
                     imageElement.offsetWidth,
                 );
@@ -63,7 +61,6 @@ class BcmsImageComponent extends HTMLElement {
 
     disconnectedCallback() {
         window.removeEventListener('resize', this.resize);
-        console.log('disconnected');
     }
 }
 
