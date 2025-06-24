@@ -8,6 +8,7 @@ import { LanguageHandler } from '@thebcms/client/handlers/language';
 import { MediaHandler } from '@thebcms/client/handlers/media';
 import { WidgetHandler } from '@thebcms/client/handlers/widget';
 import { SocketHandler } from '@thebcms/client/handlers/socket';
+import { AIHandler } from '@thebcms/client/handlers/ai';
 
 export interface ClientApiKey {
     id: string;
@@ -79,6 +80,7 @@ export class Client {
     language: LanguageHandler;
     media: MediaHandler;
     widget: WidgetHandler;
+    ai: AIHandler;
     socket: SocketHandler;
 
     constructor(
@@ -143,6 +145,7 @@ export class Client {
         this.language = new LanguageHandler(this);
         this.media = new MediaHandler(this);
         this.widget = new WidgetHandler(this);
+        this.ai = new AIHandler(this);
     }
 
     /**
