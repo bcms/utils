@@ -77,24 +77,23 @@ export class EntryHandler {
     constructor(private client: Client) {
         if (this.client.enableSocket) {
             this.client.socket.register('entry', async (data) => {
-                if (data.type === 'update') {
-                    if (this.client.useMemCache) {
-                        await this.getById(data.entryId, data.templateId, true);
-                        await this.getByIdLite(
-                            data.entryId,
-                            data.templateId,
-                            true,
+                if (this.client.useMemCache) {
+                    if (data.type === 'update') {
+                        this.latch = {};
+                        this.cacheParse.remove(
+                            this.cacheParse.items.map((e) => e._id),
                         );
-                        await this.getByIdRaw(
-                            data.entryId,
-                            data.templateId,
-                            true,
+                        this.cacheRaw.remove(
+                            this.cacheRaw.items.map((e) => e._id),
                         );
+                        this.cacheLite.remove(
+                            this.cacheLite.items.map((e) => e._id),
+                        );
+                    } else {
+                        this.cacheLite.remove(data.entryId);
+                        this.cacheParse.remove(data.entryId);
+                        this.cacheRaw.remove(data.entryId);
                     }
-                } else {
-                    this.cacheLite.remove(data.entryId);
-                    this.cacheParse.remove(data.entryId);
-                    this.cacheRaw.remove(data.entryId);
                 }
             });
         }
