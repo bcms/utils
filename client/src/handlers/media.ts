@@ -4,8 +4,14 @@ import type {
     ControllerItemResponse,
     ControllerItemsResponse,
     Media,
+    MediaCreateDirBody,
+    MediaDeleteBody,
+    MediaRequestUploadTokenResult,
+    MediaUpdateBody,
 } from '@thebcms/types';
 import { MemCache } from '@thebcms/utils/mem-cache';
+import type { AxiosProgressEvent } from 'axios';
+import FormData from 'form-data';
 
 export interface MediaExtended extends Media {
     svg?: string;
@@ -40,7 +46,7 @@ export class MediaHandler {
     }
 
     /**
-     * Resolve path to media (ex. /dir1/dir1/file.txt)
+     * Resolve path to media (ex. /dir1/dir2/file.txt)
      */
     resolvePath(
         /**
@@ -95,8 +101,6 @@ export class MediaHandler {
 
     /**
      * Get Media by ID
-     * @param id
-     * @param skipCache
      */
     async getById(
         /**
@@ -127,6 +131,127 @@ export class MediaHandler {
             this.cache.set(item);
         }
         return item;
+    }
+
+    /**
+     * Request upload token. This token can be used for upload Media
+     * to BCMS.
+     *
+     * You can call this endpoint only if API Key has a
+     * permission to mutate Media.
+     *
+     * Upload token is valid for only 1 use and valid for 15 minutes.
+     */
+    async requestUploadToken() {
+        const result = await this.client.send<MediaRequestUploadTokenResult>({
+            url: `${this.baseUri}/request/upload-token`,
+        });
+        return result.token;
+    }
+
+    /**
+     * Create directory
+     *
+     * You can call this endpoint only if API Key has a
+     * permission to mutate Media.
+     *
+     * Upload token is valid for only 1 use and valid for 15 minutes.
+     */
+    async createDir(data: MediaCreateDirBody) {
+        const result = await this.client.send<ControllerItemResponse<Media>>({
+            url: `${this.baseUri}/create/dir`,
+            method: 'POST',
+            data: data,
+        });
+        const media = result.item;
+        const item = this.toMediaExtended(media);
+        if (media.type === 'SVG' && this.client.injectSvg) {
+            const svgBuffer = await this.getMediaBin(media._id, media.name);
+            item.svg = Buffer.from(svgBuffer).toString();
+        }
+        if (this.client.useMemCache) {
+            this.cache.set(item);
+        }
+        return item;
+    }
+
+    /**
+     * Create a Media file. This endpoint requires an upload token
+     * which can be obtained by calling `requestUploadToken()`.
+     *
+     * You can call this endpoint only if API Key has a
+     * permission to mutate Media.
+     */
+    async createFile(data: {
+        parentId?: string;
+        uploadToken: string;
+        file: File;
+        name: string;
+        onUploadProgress?: (event: AxiosProgressEvent) => void;
+    }) {
+        const fd = new FormData();
+        fd.append('file', data.file, data.name);
+        const query = [`token=${data.uploadToken}`];
+        if (data.parentId) {
+            query.push(`parentId=${data.parentId}`);
+        }
+        const result = await this.client.send<ControllerItemResponse<Media>>({
+            url: `${this.baseUri}/create/file?${query.join('&')}`,
+            method: 'POST',
+            data: fd,
+            onUploadProgress: data.onUploadProgress,
+        });
+        const media = result.item;
+        const item = this.toMediaExtended(media);
+        if (media.type === 'SVG' && this.client.injectSvg) {
+            const svgBuffer = await this.getMediaBin(media._id, media.name);
+            item.svg = Buffer.from(svgBuffer).toString();
+        }
+        if (this.client.useMemCache) {
+            this.cache.set(item);
+        }
+        return item;
+    }
+
+    /**
+     * Update existing Media file
+     *
+     * You can call this endpoint only if API Key has
+     * permission to mutate Media.
+     */
+    async update(data: MediaUpdateBody) {
+        const result = await this.client.send<ControllerItemResponse<Media>>({
+            url: `${this.baseUri}/update`,
+            method: 'PUT',
+            data: data,
+        });
+        const media = result.item;
+        const item = this.toMediaExtended(media);
+        if (media.type === 'SVG' && this.client.injectSvg) {
+            const svgBuffer = await this.getMediaBin(media._id, media.name);
+            item.svg = Buffer.from(svgBuffer).toString();
+        }
+        if (this.client.useMemCache) {
+            this.cache.set(item);
+        }
+        return item;
+    }
+
+    /**
+     * Delete Media files
+     *
+     * You can call this endpoint only if API Key has
+     * permission to mutate Media.
+     */
+    async deleteById(data: MediaDeleteBody) {
+        await this.client.send({
+            url: `${this.baseUri}/delete`,
+            method: 'DELETE',
+            data: data,
+        });
+        if (this.client.useMemCache) {
+            this.cache.remove(data.mediaIds);
+        }
     }
 
     /**
