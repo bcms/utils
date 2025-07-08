@@ -23,6 +23,7 @@ async function buildClient() {
     if (await localFs.exist(['dist', 'test'])) {
         await localFs.deleteDir(['dist', 'test']);
     }
+    await localFs.copy('README.md', ['dist', 'README.md']);
     /**
      * @type {string[][]}
      */
