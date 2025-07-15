@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "my-module-playground",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate"
+  },
+  "dependencies": {
+    "@thebcms/client": "^1.5.4",
+    "@thebcms/types": "^1.3.0",
+    "@thebcms/utils": "^1.1.0",
+    "nuxt": "^3.17.6"
+  }
+}
