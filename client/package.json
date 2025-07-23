@@ -9,8 +9,8 @@
     "types": "./index.d.ts",
     "exports": {
         ".": {
-            "require": "./index.cjs",
             "import": "./index.mjs",
+            "require": "./index.cjs",
             "types": "./index.d.ts"
         }
     },
@@ -26,8 +26,6 @@
         "@thebcms/utils": "^1.1.0",
         "@types/ws": "^8.5.10",
         "axios": "^1.7.7",
-        "buffer": "^6.0.3",
-        "form-data": "^4.0.3",
         "isomorphic-ws": "^5.0.0",
         "uuid": "^9.0.1",
         "ws": "^8.18.0"
