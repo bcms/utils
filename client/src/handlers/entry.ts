@@ -1,5 +1,4 @@
 import type { Client } from '@thebcms/client/main';
-import { Buffer } from 'buffer';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
@@ -724,7 +723,7 @@ export class EntryHandler {
                         med._id,
                         med.name,
                     );
-                    obj.svg = Buffer.from(svgBuffer).toString();
+                    obj.svg = new TextDecoder().decode(svgBuffer);
                     svgCache[med._id] = obj.svg;
                 }
             } else {

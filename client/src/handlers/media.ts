@@ -1,5 +1,4 @@
 import type { Client } from '@thebcms/client/main';
-import { Buffer } from 'buffer';
 import type {
     ControllerItemResponse,
     ControllerItemsResponse,
@@ -11,12 +10,14 @@ import type {
 } from '@thebcms/types';
 import { MemCache } from '@thebcms/utils/mem-cache';
 import type { AxiosProgressEvent } from 'axios';
-import FormData from 'form-data';
 
 export interface MediaExtended extends Media {
     svg?: string;
-    bin(options?: { webp?: boolean; sizeTransform?: string }): Promise<Buffer>;
-    thumbnail(): Promise<Buffer>;
+    bin(options?: {
+        webp?: boolean;
+        sizeTransform?: string;
+    }): Promise<ArrayBuffer>;
+    thumbnail(): Promise<ArrayBuffer>;
 }
 
 /**
@@ -88,7 +89,7 @@ export class MediaHandler {
             const item: MediaExtended = this.toMediaExtended(media);
             if (media.type === 'SVG' && this.client.injectSvg) {
                 const svgBuffer = await this.getMediaBin(media._id, media.name);
-                item.svg = Buffer.from(svgBuffer).toString();
+                item.svg = new TextDecoder().decode(svgBuffer);
             }
             items.push(item);
         }
@@ -125,7 +126,7 @@ export class MediaHandler {
         const item = this.toMediaExtended(media);
         if (media.type === 'SVG' && this.client.injectSvg) {
             const svgBuffer = await this.getMediaBin(media._id, media.name);
-            item.svg = Buffer.from(svgBuffer).toString();
+            item.svg = new TextDecoder().decode(svgBuffer).toString();
         }
         if (this.client.useMemCache) {
             this.cache.set(item);
@@ -167,7 +168,7 @@ export class MediaHandler {
         const item = this.toMediaExtended(media);
         if (media.type === 'SVG' && this.client.injectSvg) {
             const svgBuffer = await this.getMediaBin(media._id, media.name);
-            item.svg = Buffer.from(svgBuffer).toString();
+            item.svg = new TextDecoder().decode(svgBuffer).toString();
         }
         if (this.client.useMemCache) {
             this.cache.set(item);
@@ -189,8 +190,44 @@ export class MediaHandler {
         name: string;
         onUploadProgress?: (event: AxiosProgressEvent) => void;
     }) {
-        const fd = new FormData();
-        fd.append('file', data.file, data.name);
+        const boundary =
+            '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
+        const body = await new Promise<Uint8Array>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = reject;
+            reader.onload = () => {
+                const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
+                const parts = [
+                    `--${boundary}\r\n`,
+                    `Content-Disposition: form-data; name="file"; filename="${data.name}"\r\n`,
+                    `Content-Type: ${data.file.type}\r\n\r\n`,
+                    uint8Array,
+                    '\r\n',
+                    `--${boundary}--\r\n`,
+                ];
+                const length = parts.reduce((sum, part) => {
+                    return (
+                        sum +
+                        (part instanceof Uint8Array ? part.length : part.length)
+                    );
+                }, 0);
+                const buffer = new Uint8Array(length);
+                let offset = 0;
+                parts.forEach((part) => {
+                    if (part instanceof Uint8Array) {
+                        buffer.set(part, offset);
+                        offset += part.length;
+                    } else {
+                        buffer.set(new TextEncoder().encode(part), offset);
+                        offset += part.length;
+                    }
+                });
+                resolve(buffer);
+            };
+            reader.readAsArrayBuffer(data.file);
+        });
+        // const fd = new FormData();
+        // fd.append('file', data.file, data.name);
         const query = [`token=${data.uploadToken}`];
         if (data.parentId) {
             query.push(`parentId=${data.parentId}`);
@@ -198,14 +235,17 @@ export class MediaHandler {
         const result = await this.client.send<ControllerItemResponse<Media>>({
             url: `${this.baseUri}/create/file?${query.join('&')}`,
             method: 'POST',
-            data: fd,
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${boundary}`,
+            },
+            data: body,
             onUploadProgress: data.onUploadProgress,
         });
         const media = result.item;
         const item = this.toMediaExtended(media);
         if (media.type === 'SVG' && this.client.injectSvg) {
             const svgBuffer = await this.getMediaBin(media._id, media.name);
-            item.svg = Buffer.from(svgBuffer).toString();
+            item.svg = new TextDecoder().decode(svgBuffer).toString();
         }
         if (this.client.useMemCache) {
             this.cache.set(item);
@@ -229,7 +269,7 @@ export class MediaHandler {
         const item = this.toMediaExtended(media);
         if (media.type === 'SVG' && this.client.injectSvg) {
             const svgBuffer = await this.getMediaBin(media._id, media.name);
-            item.svg = Buffer.from(svgBuffer).toString();
+            item.svg = new TextDecoder().decode(svgBuffer).toString();
         }
         if (this.client.useMemCache) {
             this.cache.set(item);
@@ -281,7 +321,7 @@ export class MediaHandler {
              */
             sizeTransform?: string;
         },
-    ): Promise<Buffer> {
+    ): Promise<ArrayBuffer> {
         const queries: string[] = [];
         if (options) {
             if (options.webp) {
@@ -300,7 +340,7 @@ export class MediaHandler {
         } else {
             origin = this.client.cmsOrigin;
         }
-        return await this.client.send<Buffer>({
+        return await this.client.send<ArrayBuffer>({
             url: `${origin}${this.baseUri}/${id}/bin2/${filename}${queries.length > 0 ? `?${queries.join('&')}` : ''}`,
             method: 'get',
             responseType: 'arraybuffer',

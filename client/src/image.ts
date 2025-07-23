@@ -1,6 +1,5 @@
 import type { Client } from '@thebcms/client/main';
 import type { MediaExtended } from '@thebcms/client/handlers';
-import { Buffer } from 'buffer';
 import type { Media, PropMediaDataParsed } from '@thebcms/types';
 
 export interface ImageHandlerPictureSrcSetResult {
@@ -125,7 +124,7 @@ export class ImageHandler {
             this.media._id,
             this.media.name,
         );
-        return Buffer.from(bin).toString();
+        return new TextDecoder().decode(bin).toString();
     }
 
     /**
