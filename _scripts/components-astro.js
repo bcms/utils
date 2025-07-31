@@ -9,6 +9,7 @@ async function buildComponentsAstro() {
         await localFs.deleteDir(['dist']);
     }
     await localFs.copy('src', 'dist');
+    await localFs.copy('README.md', 'dist/README.md');
     const packageJson = JSON.parse(await localFs.readString('package.json'));
     packageJson.devDependencies = undefined;
     packageJson.scripts = undefined;
