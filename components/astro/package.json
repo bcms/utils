@@ -1,9 +1,8 @@
 {
     "name": "@thebcms/components-astro",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Helper components for Astro",
     "type": "module",
-    "keywords": [],
     "author": "BCMS",
     "license": "MIT",
     "peerDependencies": {
@@ -19,5 +18,26 @@
     "dependencies": {
         "@types/uuid": "^10.0.0",
         "uuid": "^11.1.0"
-    }
+    },
+    "keywords": [
+        "css",
+        "ui",
+        "icon",
+        "icons",
+        "media",
+        "image",
+        "images",
+        "video",
+        "audio",
+        "performance",
+        "perf",
+        "seo",
+        "optimization",
+        "devtools",
+        "tooling",
+        "utils",
+        "utility",
+        "astro-component",
+        "withastro"
+    ]
 }
