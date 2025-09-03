@@ -6,7 +6,6 @@ import { ChildProcess } from '@thebcms/utils/child-process';
 import type { InstanceStarters } from '@thebcms/types';
 
 export async function createHandler(cli: Cli): Promise<void> {
-    await cli.loginIfRequired();
     let projectName = cli.args.projectName || '';
     let framework = typeof cli.args.create === 'string' ? cli.args.create : '';
     let starter: InstanceStarters =
@@ -91,6 +90,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         }
     }
     console.log('\nGetting organization information ...\n');
+    await cli.loginIfRequired();
     const orgs = await cli.sdk.org.getAll();
     const targetOrg = orgs.find((org) =>
         org.users.find(
