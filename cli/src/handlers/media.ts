@@ -42,7 +42,7 @@ export class MediaHandler {
                       });
                 await this.cli.localFs.save(
                     [...destPath, ...mediaPath.split('/')],
-                    buf,
+                    Buffer.from(buf),
                 );
             }
             process.stdout.write('Done\n');
