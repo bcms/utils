@@ -18,7 +18,7 @@ import {
 
 export interface BCMSImageProps {
     id?: string;
-    className?: string;
+    class?: string;
     style?: string;
     media: Media | MediaExtended | PropMediaDataParsed;
     client: Client | ClientConfig;

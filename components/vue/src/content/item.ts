@@ -11,7 +11,7 @@ import type {
     PropMediaDataParsed,
 } from '@thebcms/types';
 import type { Client, ClientConfig } from '@thebcms/client';
-import { BCMSImage } from '@thebcms/components-vue/image';
+import { BCMSMedia } from '@thebcms/components-vue/media';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;
@@ -52,6 +52,14 @@ export const BCMSContentItem = defineComponent({
                     );
                 }
             } else if (props.item.type === 'media') {
+                const value = props.item.value as PropMediaDataParsed;
+                if (!value) {
+                    return h(
+                        'div',
+                        { style: { display: 'none' } },
+                        `Media value is empty`,
+                    );
+                }
                 if (!props.client) {
                     return h(
                         'div',
@@ -62,7 +70,7 @@ export const BCMSContentItem = defineComponent({
                     `,
                     );
                 }
-                return h(BCMSImage, {
+                return h(BCMSMedia, {
                     class: 'media',
                     media: props.item.value as PropMediaDataParsed,
                     client: props.client,
