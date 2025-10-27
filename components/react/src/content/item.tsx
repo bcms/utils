@@ -7,8 +7,8 @@ import type {
     EntryContentParsedItem,
     PropMediaDataParsed,
 } from '@thebcms/types';
-import { BCMSImage } from '@thebcms/components-react/image';
 import type { ClientConfig } from '@thebcms/client';
+import { BCMSMedia } from '@thebcms/components-react/media';
 
 export interface BCMSContentItemProps {
     item: EntryContentParsedItem;
@@ -41,28 +41,36 @@ export const BCMSContentItem: React.FC<BCMSContentItemProps> = (props) => {
                 </div>
             );
         }
+        if (!props.item.value) {
+            return (
+                <div style={{ display: 'none' }}>
+                    Cannot mount media because there was no media value. Check
+                    if media node has selected value
+                </div>
+            );
+        }
         const media = props.item.value as PropMediaDataParsed;
         if (typeof media !== 'object') {
             return (
                 <div style={{ display: 'none' }}>Node value is not a media</div>
             );
         }
-        if (media.type !== 'IMG') {
-            if (!props.nodeParser) {
-                return (
-                    <div style={{ display: 'none' }}>
-                        Media is not of type Image and cannot be handler
-                        automatically, please provide a node parser if you want
-                        to render this node
-                    </div>
-                );
-            }
+        if (props.nodeParser) {
             return props.nodeParser(props.item);
         }
         return (
-            <BCMSImage
-                media={props.item.value as PropMediaDataParsed}
+            <BCMSMedia
+                media={media}
                 clientConfig={props.clientConfig}
+                className="bcms-media"
+                videoProps={{
+                    controls: true,
+                    playsinline: true,
+                }}
+                audioProps={{
+                    controls: true,
+                    playsinline: true,
+                }}
             />
         );
     }

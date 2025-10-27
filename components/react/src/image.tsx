@@ -91,7 +91,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
             <div
                 id={props.id}
                 style={props.style}
-                className={props.className}
+                className={`bcms-image ${props.className || ''}`}
                 dangerouslySetInnerHTML={{ __html: mediaExtended.svg }}
             />
         );
@@ -109,7 +109,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
             <img
                 id={props.id}
                 style={props.style}
-                className={props.className}
+                className={`bcms-image ${props.className || ''}`}
                 src={srcSet.original}
                 alt={
                     props.altText ||
@@ -139,7 +139,7 @@ export const BCMSImage: React.FC<BCMSImageProps> = (props) => {
                                 width: '100%',
                             }
                 }
-                className={props.className}
+                className={`bcms-image ${props.className || ''}`}
                 src={srcSet.original}
                 alt={
                     props.altText ||
