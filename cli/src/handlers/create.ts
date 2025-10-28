@@ -155,6 +155,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         data: {
             _id: apiKeyPrivate._id,
             access: {
+                mutateMedia: true,
                 templates: templates.map((template) => {
                     return {
                         name: template.name,
