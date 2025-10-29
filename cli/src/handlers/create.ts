@@ -127,6 +127,7 @@ export async function createHandler(cli: Cli): Promise<void> {
             .map((e) => e.slice(0, 1).toUpperCase() + e.slice(1).toLowerCase())
             .join(' '),
         starter,
+        framework,
     });
     console.log('\n Setting up API Keys for the project ...\n');
     const templates = await cli.sdk.template.getAll({
