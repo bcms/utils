@@ -192,39 +192,45 @@ export class MediaHandler {
     }) {
         const boundary =
             '----WebKitFormBoundary' + Math.random().toString(36).substring(2);
-        const body = await new Promise<Uint8Array>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onerror = reject;
-            reader.onload = () => {
-                const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-                const parts = [
-                    `--${boundary}\r\n`,
-                    `Content-Disposition: form-data; name="file"; filename="${data.name}"\r\n`,
-                    `Content-Type: ${data.file.type}\r\n\r\n`,
-                    uint8Array,
-                    '\r\n',
-                    `--${boundary}--\r\n`,
-                ];
-                const length = parts.reduce((sum, part) => {
-                    return (
-                        sum +
-                        (part instanceof Uint8Array ? part.length : part.length)
-                    );
-                }, 0);
-                const buffer = new Uint8Array(length);
-                let offset = 0;
-                parts.forEach((part) => {
-                    if (part instanceof Uint8Array) {
-                        buffer.set(part, offset);
-                        offset += part.length;
-                    } else {
-                        buffer.set(new TextEncoder().encode(part), offset);
-                        offset += part.length;
-                    }
-                });
-                resolve(buffer);
-            };
-            reader.readAsArrayBuffer(data.file);
+        const uint8Array = new Uint8Array(await data.file.arrayBuffer());
+        // if (typeof window === 'undefined') {
+        //     const fs = await import('fs/promises');
+        //
+        //     uint8Array = await fs.readFile(data.file.arrayBuffer());
+        // } else {
+        //     uint8Array = await new Promise<Uint8Array>((resolve, reject) => {
+        //         const reader = new FileReader();
+        //         reader.onerror = reject;
+        //         reader.onload = () => {
+        //             resolve(new Uint8Array(reader.result as ArrayBuffer));
+        //             return;
+        //         };
+        //         reader.readAsArrayBuffer(data.file);
+        //     });
+        // }
+        const parts = [
+            `--${boundary}\r\n`,
+            `Content-Disposition: form-data; name="file"; filename="${data.name}"\r\n`,
+            `Content-Type: ${data.file.type}\r\n\r\n`,
+            uint8Array,
+            '\r\n',
+            `--${boundary}--\r\n`,
+        ];
+        const length = parts.reduce((sum, part) => {
+            return (
+                sum + (part instanceof Uint8Array ? part.length : part.length)
+            );
+        }, 0);
+        const body = new Uint8Array(length);
+        let offset = 0;
+        parts.forEach((part) => {
+            if (part instanceof Uint8Array) {
+                body.set(part, offset);
+                offset += part.length;
+            } else {
+                body.set(new TextEncoder().encode(part), offset);
+                offset += part.length;
+            }
         });
         // const fd = new FormData();
         // fd.append('file', data.file, data.name);
