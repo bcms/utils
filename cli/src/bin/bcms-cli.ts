@@ -22,18 +22,15 @@ async function resolve(cli: Cli) {
         }
         let instanceInfo: {
             _id: string;
-            orgId: string;
         };
         if (cli.client) {
             instanceInfo = {
                 _id: cli.client.instanceId,
-                orgId: cli.client.orgId,
             };
         } else {
             const instance = await cli.getInstance(cli.args.instanceId);
             instanceInfo = {
                 _id: instance._id,
-                orgId: instance.orgId,
             };
         }
         for (let i = 0; i < thingsToPull.length; i++) {
@@ -41,20 +38,12 @@ async function resolve(cli: Cli) {
             switch (thingToPull) {
                 case 'entries':
                     {
-                        await cli.entry.pull(
-                            instanceInfo._id,
-                            instanceInfo.orgId,
-                            cli.args.output,
-                        );
+                        await cli.entry.pull(instanceInfo._id, cli.args.output);
                     }
                     break;
                 case 'media':
                     {
-                        await cli.media.pull(
-                            instanceInfo._id,
-                            instanceInfo.orgId,
-                            cli.args.output,
-                        );
+                        await cli.media.pull(instanceInfo._id, cli.args.output);
                     }
                     break;
                 case 'types':
@@ -71,7 +60,6 @@ async function resolve(cli: Cli) {
                         for (let j = 0; j < langsToPull.length; j++) {
                             await cli.typeGenerator.pull(
                                 instanceInfo._id,
-                                instanceInfo.orgId,
                                 langsToPull[j],
                                 cli.args.output,
                             );

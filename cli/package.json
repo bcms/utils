@@ -23,9 +23,9 @@
         "test": "jest"
     },
     "dependencies": {
-        "@thebcms/sdk": "^1.2.0",
-        "@thebcms/types": "^1.5.1",
-        "@thebcms/utils": "^1.1.0",
+        "@thebcms/sdk": "file:sdk.tgz",
+        "@thebcms/types": "file:types.tgz",
+        "@thebcms/utils": "file:utils.tgz",
         "@types/fs-extra": "^11.0.4",
         "@types/inquirer": "^9.0.7",
         "@types/uuid": "^8.3.0",

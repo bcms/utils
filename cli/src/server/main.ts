@@ -12,10 +12,10 @@ export class Server {
 
     constructor() {
         this.server = createServer((req, res) => {
-            let body = '';
-            req.on('data', (chunk) => {
-                body += chunk.toString(); // convert Buffer to string
-            });
+            // let body = '';
+            // req.on('data', (chunk) => {
+            //     body += chunk.toString(); // convert Buffer to string
+            // });
             req.on('end', async () => {
                 const url = req.url || '';
                 if (url.startsWith('/login-callback')) {

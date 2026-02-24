@@ -3,12 +3,7 @@ import type { ObjectSchema } from '@thebcms/utils/object-utility';
 export interface BCMSConfig {
     client?: {
         origin?: string;
-        orgId: string;
-        instanceId: string;
-        apiKey: {
-            id: string;
-            secret: string;
-        };
+        apiKey: string;
     };
 }
 
@@ -21,27 +16,9 @@ export const BCMSConfigSchema: ObjectSchema = {
                 __type: 'string',
                 __required: false,
             },
-            orgId: {
-                __type: 'string',
-                __required: true,
-            },
-            instanceId: {
-                __type: 'string',
-                __required: true,
-            },
             apiKey: {
-                __type: 'object',
+                __type: 'string',
                 __required: true,
-                __child: {
-                    id: {
-                        __type: 'string',
-                        __required: true,
-                    },
-                    secret: {
-                        __type: 'string',
-                        __required: true,
-                    },
-                },
             },
         },
     },
