@@ -20,7 +20,6 @@ async function main() {
      * Creating a new instance of the Client object
      */
     const client = new Client(
-        'ORG_ID',
         'PROJECT_ID',
         {
             id: 'KEY_ID',

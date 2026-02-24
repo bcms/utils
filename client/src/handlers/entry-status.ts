@@ -10,7 +10,7 @@ import type {
  * Utility call for accessing Entry Status API.
  */
 export class EntryStatusHandler {
-    private baseUri = `/api/v3/org/:orgId/instance/:instanceId/entry-status`;
+    private baseUri = `/api/v3/instance/:instanceId/entry-status`;
     private cache = new MemCache<EntryStatus>('_id');
     private latch: {
         [name: string]: boolean;

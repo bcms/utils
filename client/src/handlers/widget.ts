@@ -11,7 +11,7 @@ import type {
  * Utility class for working with BCMS Widgets.
  */
 export class WidgetHandler {
-    private baseUri = `/api/v3/org/:orgId/instance/:instanceId/widget`;
+    private baseUri = `/api/v3/instance/:instanceId/widget`;
     private cache = new MemCache<Widget>('_id');
     private latch: {
         [name: string]: boolean;

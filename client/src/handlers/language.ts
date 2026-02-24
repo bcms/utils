@@ -10,7 +10,7 @@ import type {
  * Utility class for working with BCMS Languages.
  */
 export class LanguageHandler {
-    private baseUri = `/api/v3/org/:orgId/instance/:instanceId/language`;
+    private baseUri = `/api/v3/instance/:instanceId/language`;
     private cache = new MemCache<Language>('_id');
     private latch: {
         [name: string]: boolean;

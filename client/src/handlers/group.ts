@@ -11,7 +11,7 @@ import type {
  * Utility class for working with BCMS Groups.
  */
 export class GroupHandler {
-    private baseUri = `/api/v3/org/:orgId/instance/:instanceId/group`;
+    private baseUri = `/api/v3/instance/:instanceId/group`;
     private cache = new MemCache<Group>('_id');
     private latch: {
         [name: string]: boolean;

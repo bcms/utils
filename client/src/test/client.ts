@@ -1,7 +1,6 @@
 import { Client } from '@thebcms/client/main';
 
 export const client = new Client(
-    '670533a6c2fa01de1fbd4ee7',
     '6705360c7272c161f4193ade',
     {
         id: '6706353ddd00f6509f552013',
@@ -11,6 +10,6 @@ export const client = new Client(
         cmsOrigin: 'http://localhost:8081',
         injectSvg: true,
         useMemCache: true,
-        enableSocket: true
+        enableSocket: true,
     },
 );

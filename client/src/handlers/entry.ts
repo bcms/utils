@@ -64,7 +64,7 @@ export interface EntryParsedCreateData {
 export class EntryHandler {
     private templates: Template[] | null = null;
     private baseUri(templateId: string) {
-        return `/api/v3/org/:orgId/instance/:instanceId/template/${templateId}/entry`;
+        return `/api/v3/instance/:instanceId/template/${templateId}/entry`;
     }
     private latch: {
         [name: string]: boolean;

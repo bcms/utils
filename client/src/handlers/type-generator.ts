@@ -9,7 +9,7 @@ import type {
  * Utility class for working with BCMS Type Generator.
  */
 export class TypeGeneratorHandler {
-    private baseUri = '/api/v3/org/:orgId/instance/:instanceId/type-generator';
+    private baseUri = '/api/v3/instance/:instanceId/type-generator';
 
     constructor(private client: Client) {}
 

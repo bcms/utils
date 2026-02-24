@@ -17,10 +17,6 @@ export interface ClientApiKey {
 
 export interface ClientConfig {
     /**
-     * Organization ID
-     */
-    orgId: string;
-    /**
      * Instance/Project ID
      */
     instanceId: string;
@@ -84,10 +80,6 @@ export class Client {
     socket: SocketHandler;
 
     constructor(
-        /**
-         * Organization ID
-         */
-        public orgId: string,
         /**
          * Instance/Project ID
          */
@@ -159,7 +151,6 @@ export class Client {
             enableSocket: this.enableSocket,
             injectSvg: this.injectSvg,
             instanceId: this.instanceId,
-            orgId: this.orgId,
             useMemCache: this.useMemCache,
         };
     }
@@ -173,9 +164,10 @@ export class Client {
         }
         config.headers.Authorization = `ApiKey ${this.apiKeyInfo.id}.${this.apiKeyInfo.secret}`;
         config.url =
-            `${config.url && config.url.startsWith('http') ? '' : this.cmsOrigin}${config.url}`
-                .replace(':instanceId', this.instanceId)
-                .replace(':orgId', this.orgId);
+            `${config.url && config.url.startsWith('http') ? '' : this.cmsOrigin}${config.url}`.replace(
+                ':instanceId',
+                this.instanceId,
+            );
         if (!config.timeout) {
             config.timeout = 60000;
         }

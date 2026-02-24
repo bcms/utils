@@ -12,7 +12,7 @@ import type {
  * Utility class for working with BCMS Templates.
  */
 export class TemplateHandler {
-    private baseUri = '/api/v3/org/:orgId/instance/:instanceId/template';
+    private baseUri = '/api/v3/instance/:instanceId/template';
     private latch: {
         [name: string]: boolean;
     } = {};

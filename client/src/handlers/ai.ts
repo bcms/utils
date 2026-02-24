@@ -1,7 +1,7 @@
 import type { Client } from '@thebcms/client';
 
 export class AIHandler {
-    private baseUri = `/api/v3/org/:orgId/instance/:instanceId/ai`;
+    private baseUri = `/api/v3/instance/:instanceId/ai`;
 
     constructor(private client: Client) {}
 
