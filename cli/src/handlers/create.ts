@@ -157,6 +157,7 @@ export async function createHandler(cli: Cli): Promise<void> {
     });
     const envs: string[] = [
         `BCMS_API_KEY=${apiKeyPrivate._id}.${apiKeyPrivate.secret}.${instance._id}`,
+        `# ----`,
         `BCMS_ORG_ID=_none`,
         `BCMS_INSTANCE_ID=${instance._id}`,
         `BCMS_API_KEY_ID=${apiKeyPrivate._id}`,
