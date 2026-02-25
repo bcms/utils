@@ -1,6 +1,6 @@
 {
     "name": "@thebcms/cli",
-    "version": "1.5.1",
+    "version": "2.0.0",
     "description": "Command line tool for the BCMS",
     "author": "BCMS",
     "license": "MIT",
@@ -23,9 +23,9 @@
         "test": "jest"
     },
     "dependencies": {
-        "@thebcms/sdk": "file:sdk.tgz",
-        "@thebcms/types": "file:types.tgz",
-        "@thebcms/utils": "file:utils.tgz",
+        "@thebcms/sdk": "^2.0.0",
+        "@thebcms/types": "^2.0.0",
+        "@thebcms/utils": "^2.0.0",
         "@types/fs-extra": "^11.0.4",
         "@types/inquirer": "^9.0.7",
         "@types/uuid": "^8.3.0",
