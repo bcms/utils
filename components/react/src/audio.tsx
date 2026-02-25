@@ -18,18 +18,14 @@ export interface BCMSAudioProps {
 }
 
 export const BCMSAudio: React.FC<BCMSAudioProps> = (props) => {
-    const client = new Client(
-        props.clientConfig.orgId,
-        props.clientConfig.instanceId,
-        props.clientConfig.apiKey,
-        {
-            cmsOrigin: props.clientConfig.cmsOrigin,
-            useMemCache: props.clientConfig.useMemCache,
-            injectSvg: props.clientConfig.injectSvg,
-            debug: props.clientConfig.debug,
-            enableSocket: props.clientConfig.enableSocket,
-        },
-    );
+    const client = new Client({
+        apiKey: `${props.clientConfig.apiKey.id}.${props.clientConfig.apiKey.secret}.${props.clientConfig.instanceId}`,
+        cmsOrigin: props.clientConfig.cmsOrigin,
+        useMemCache: props.clientConfig.useMemCache,
+        injectSvg: props.clientConfig.injectSvg,
+        debug: props.clientConfig.debug,
+        enableSocket: props.clientConfig.enableSocket,
+    });
 
     if (props.media.type !== 'AUDIO') {
         return (
