@@ -8,18 +8,14 @@ class BcmsImageComponent extends HTMLElement {
         const clientConfig: ClientConfig = JSON.parse(
             this.dataset.clientConfig as string,
         );
-        const client = new Client(
-            clientConfig.orgId,
-            clientConfig.instanceId,
-            clientConfig.apiKey,
-            {
-                cmsOrigin: clientConfig.cmsOrigin,
-                useMemCache: clientConfig.useMemCache,
-                injectSvg: clientConfig.injectSvg,
-                debug: clientConfig.debug,
-                enableSocket: clientConfig.enableSocket,
-            },
-        );
+        const client = new Client({
+            apiKey: `${clientConfig.apiKey.id}.${clientConfig.apiKey.secret}.${clientConfig.instanceId}`,
+            cmsOrigin: clientConfig.cmsOrigin,
+            useMemCache: clientConfig.useMemCache,
+            injectSvg: clientConfig.injectSvg,
+            debug: clientConfig.debug,
+            enableSocket: clientConfig.enableSocket,
+        });
         const media: Media = JSON.parse(this.dataset.media as string);
         const imageHandler = new ImageHandler(client, media);
         const imageElement = this.querySelector('img');
