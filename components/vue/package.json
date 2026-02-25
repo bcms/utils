@@ -23,22 +23,21 @@
         "test": "jest"
     },
     "peerDependencies": {
-        "@thebcms/types": "^1.2.0",
+        "@thebcms/types": "2.x.x",
         "vue": "3.x"
     },
     "devDependencies": {
-        "@thebcms/types": "^1.2.0",
+        "@thebcms/types": "^2.0.0",
         "@types/node": "^20.12.12",
         "@types/react": "^18.3.3",
-        "@typescript-eslint/eslint-plugin": "^7.9.0",
-        "@typescript-eslint/parser": "^7.9.0",
         "@vue/tsconfig": "^0.5.1",
-        "eslint": "^8.56.0",
-        "prettier": "^3.2.5",
+        "eslint": "^10.0.2",
+        "prettier": "^3.8.1",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.4.5",
-        "vite-node": "^1.6.0",
+        "typescript-eslint": "^8.56.1",
+        "vite-node": "^5.3.0",
         "vue": "^3.4.27"
     },
     "repository": {
