@@ -8,7 +8,7 @@ import {
     type PropType,
     ref,
 } from 'vue';
-import type { Media, MediaType, PropMediaDataParsed } from '@thebcms/types';
+import type { Media, MediaTypeName, PropMediaDataParsed } from '@thebcms/types';
 import {
     Client,
     type ClientConfig,
@@ -26,7 +26,7 @@ export interface BCMSImageProps {
     useOriginal?: boolean;
 }
 
-const allowedMediaTypes: (keyof typeof MediaType)[] = ['IMG', 'SVG'];
+const allowedMediaTypes: MediaTypeName[] = ['IMG', 'SVG'];
 
 export const BCMSImage = defineComponent({
     props: {
@@ -51,17 +51,13 @@ export const BCMSImage = defineComponent({
         const client =
             props.client instanceof Client
                 ? props.client
-                : new Client(
-                      props.client.orgId,
-                      props.client.instanceId,
-                      props.client.apiKey,
-                      {
-                          enableSocket: props.client.enableSocket,
-                          useMemCache: props.client.useMemCache,
-                          cmsOrigin: props.client.cmsOrigin,
-                          injectSvg: props.client.injectSvg,
-                      },
-                  );
+                : new Client({
+                      apiKey: `${props.client.apiKey.id}:${props.client.apiKey.secret}.${props.client.instanceId}`,
+                      enableSocket: props.client.enableSocket,
+                      useMemCache: props.client.useMemCache,
+                      cmsOrigin: props.client.cmsOrigin,
+                      injectSvg: props.client.injectSvg,
+                  });
         let idBuffer = '';
         const imageElement = ref<HTMLImageElement>();
         const imageHandler = computed(() => {
@@ -160,7 +156,9 @@ export const BCMSImage = defineComponent({
                     // class: props.class,
                     innerHTML: svg,
                 });
-            } else if (!allowedMediaTypes.includes(props.media.type)) {
+            } else if (
+                !allowedMediaTypes.includes(props.media.type as MediaTypeName)
+            ) {
                 return h('div', {
                     id: props.id,
                     style: 'display: none;' + (props.style || ''),
