@@ -157,30 +157,54 @@ export async function createHandler(cli: Cli): Promise<void> {
     });
     const envs: string[] = [
         `BCMS_API_KEY=${apiKeyPrivate._id}.${apiKeyPrivate.secret}.${instance._id}`,
+        `BCMS_ORG_ID=_none`,
+        `BCMS_INSTANCE_ID=${instance._id}`,
+        `BCMS_API_KEY_ID=${apiKeyPrivate._id}`,
+        `BCMS_API_KEY_SECRET=${apiKeyPrivate.secret}`,
     ];
     if (framework === 'next') {
         envs.push(
             '',
             `# Information about this API Key will be public`,
             `NEXT_PUBLIC_BCMS_API_KEY=${apiKeyPublic._id}.${apiKeyPublic.secret}.${instance._id}`,
+            `# ----`,
+            `NEXT_PUBLIC_BCMS_ORG_ID=_none`,
+            `NEXT_PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `NEXT_PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `NEXT_PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
         );
     } else if (framework === 'astro') {
         envs.push(
             '',
             `# Information about this API Key will be public`,
             `PUBLIC_BCMS_API_KEY=${apiKeyPublic._id}.${apiKeyPublic.secret}.${instance._id}`,
+            `# ----`,
+            `PUBLIC_BCMS_ORG_ID=_none`,
+            `PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
         );
     } else if (framework === 'nuxt') {
         envs.push(
             '',
             `# Information about this API Key will be public`,
             `NUXT_PUBLIC_BCMS_API_KEY=${apiKeyPublic._id}.${apiKeyPublic.secret}.${instance._id}`,
+            `# ----`,
+            `NUXT_PUBLIC_BCMS_ORG_ID=_none`,
+            `NUXT_PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `NUXT_PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `NUXT_PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
         );
     } else if (framework === 'svelte') {
         envs.push(
             '',
             `# Information about this API Key will be public`,
             `PUBLIC_BCMS_API_KEY=${apiKeyPublic._id}.${apiKeyPublic.secret}.${instance._id}`,
+            `# ----`,
+            `PUBLIC_BCMS_ORG_ID=_none`,
+            `PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
         );
     }
     await fs.save([projectName, '.env'], envs.join('\n'));
