@@ -16,10 +16,8 @@
 
     const allowedMediaTypes = ['IMG', 'SVG' , 'GIF'];
     const client = new Client(
-        props.clientConfig.orgId,
-        props.clientConfig.instanceId,
-        props.clientConfig.apiKey,
         {
+            apiKey: `${props.clientConfig.apiKey.id}.${props.clientConfig.apiKey.secret}.${props.clientConfig.instanceId}`,
             cmsOrigin: props.clientConfig.cmsOrigin,
             useMemCache: props.clientConfig.useMemCache,
             injectSvg: props.clientConfig.injectSvg,
