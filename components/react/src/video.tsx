@@ -17,7 +17,7 @@ export interface BCMSVideoProps {
 
 export const BCMSVideo: React.FC<BCMSVideoProps> = (props) => {
     const client = new Client({
-        apiKey: `${props.clientConfig.apiKey.id}.${props.clientConfig.apiKey.secret}.${props.clientConfig.instanceId}`,
+        apiKey: `${props.clientConfig.apiKey}`,
         cmsOrigin: props.clientConfig.cmsOrigin,
         useMemCache: props.clientConfig.useMemCache,
         injectSvg: props.clientConfig.injectSvg,
