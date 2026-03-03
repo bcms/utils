@@ -23,7 +23,7 @@ export interface ClientConfig {
     /**
      * API Key information
      */
-    apiKey: ClientApiKey;
+    apiKey: string;
     /**
      * URL of the active CMS
      */
@@ -48,6 +48,7 @@ export interface ClientConfig {
 
 export class Client {
     instanceId: string;
+    apiKey: string;
     apiKeyInfo: ClientApiKey;
     /**
      * URL of the active CMS
@@ -108,7 +109,10 @@ export class Client {
         if (options) {
             if (options.apiKey) {
                 apiKeyStr = options.apiKey;
-            } else if (process.env.BCMS_API_KEY) {
+            } else if (
+                typeof process !== 'undefined' &&
+                process.env.BCMS_API_KEY
+            ) {
                 apiKeyStr = process.env.BCMS_API_KEY;
             }
             if (options.cmsOrigin) {
@@ -138,6 +142,7 @@ export class Client {
                 'Invalid API key format. Expected format: id.secret.instanceId',
             );
         }
+        this.apiKey = apiKeyStr;
         this.apiKeyInfo = {
             id: keyId,
             secret: keySecret,
@@ -160,7 +165,7 @@ export class Client {
      */
     getConfig(): ClientConfig {
         return {
-            apiKey: this.apiKeyInfo,
+            apiKey: this.apiKey,
             cmsOrigin: this.cmsOrigin,
             debug: this.debug,
             enableSocket: this.enableSocket,
@@ -177,7 +182,7 @@ export class Client {
         if (!config.headers) {
             config.headers = {};
         }
-        config.headers.Authorization = `ApiKey ${this.apiKeyInfo.id}.${this.apiKeyInfo.secret}`;
+        config.headers.Authorization = `ApiKey ${this.apiKey}`;
         config.url =
             `${config.url && config.url.startsWith('http') ? '' : this.cmsOrigin}${config.url}`.replace(
                 ':instanceId',
