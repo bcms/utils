@@ -52,7 +52,7 @@ export const BCMSImage = defineComponent({
             props.client instanceof Client
                 ? props.client
                 : new Client({
-                      apiKey: `${props.client.apiKey.id}:${props.client.apiKey.secret}.${props.client.instanceId}`,
+                      apiKey: `${props.client.apiKey}`,
                       enableSocket: props.client.enableSocket,
                       useMemCache: props.client.useMemCache,
                       cmsOrigin: props.client.cmsOrigin,
