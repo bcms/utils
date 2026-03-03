@@ -9,7 +9,7 @@ class BcmsImageComponent extends HTMLElement {
             this.dataset.clientConfig as string,
         );
         const client = new Client({
-            apiKey: `${clientConfig.apiKey.id}.${clientConfig.apiKey.secret}.${clientConfig.instanceId}`,
+            apiKey: `${clientConfig.apiKey}`,
             cmsOrigin: clientConfig.cmsOrigin,
             useMemCache: clientConfig.useMemCache,
             injectSvg: clientConfig.injectSvg,
