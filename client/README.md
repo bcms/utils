@@ -13,7 +13,7 @@ This library provides easy access to BCMS backend REST API.
 2. Create a new Client instance and make a request to the BCMS:
 
 ```ts
-import { Client } from '@thebcms/client/main';
+import { Client } from '@thebcms/client';
 
 async function main() {
     /**
