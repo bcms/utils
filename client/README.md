@@ -2,14 +2,23 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@thebcms/client.svg)](https://npmjs.org/package/@thebcms/client)
 
-Client library for communicating with BCMS backend REST API.
+Client library for communicating with the BCMS backend REST API. Use it to fetch and manage content, media, templates, and more from your BCMS instance. TypeScript types are included.
+
+**Requirements:** Node.js 18+, a [BCMS instance](https://app.thebcms.com), and an API key in format `id.secret.instanceId`.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Client Options](#client-options)
+- [Handlers](#handlers)
+- [client.send](#clientsend)
+- [Image Handler](#image-handler-thebcmsclientimage)
 
 ## Installation
 
-Install the package from NPM:
-
 ```bash
-npm i --save @thebcms/client
+npm i @thebcms/client
 ```
 
 ## Quick Start
@@ -18,10 +27,13 @@ npm i --save @thebcms/client
 import { Client } from '@thebcms/client';
 
 const client = new Client({ apiKey: process.env.BCMS_API_KEY });
+
+// Get all entries for a template
+const entries = await client.entry.getAll('my-template-name');
+console.log(entries);
 ```
 
-If you're coming from an older version, the api keys are now in the format: `id.secret.instanceId`.
-So, your `BCMS_API_KEY` env variable should be `BCMS_API_KEY=id.secret.instanceId`.
+Set `BCMS_API_KEY` in your environment (e.g. `.env`) with your key in format `id.secret.instanceId`.
 
 ## Client Options
 
@@ -35,6 +47,12 @@ Options passed to the `Client` constructor:
 | `debug` | `boolean` | `false` | Enable debug mode. |
 | `enableSocket` | `boolean` | `false` | Enable WebSocket connection. |
 | `injectSvg` | `boolean` | `false` | Inject SVG content into media objects. |
+
+## Handlers
+
+The client exposes handlers for each BCMS resource. All methods that fetch data accept an optional `skipCache` argument to bypass in-memory cache (when `useMemCache` is enabled).
+
+---
 
 ## client.template
 
@@ -90,6 +108,8 @@ const deleted = await client.template.deleteById('template-id');
 ## client.entry
 
 Handler for content entries. Entries are the actual content items created from templates. Use template name or ID to target a specific content type.
+
+**Formats:** Use `getAll` / `getById` for parsed entries (developer-friendly). Use `*Lite` for lighter data when you only need meta/slugs. Use `*Raw` only when you need the internal BCMS format.
 
 ### getAll
 
@@ -422,21 +442,6 @@ Get type definition files for code generation. Language: `ts`, `rust`, `golang`,
 const files = await client.typeGenerator.getFiles('ts');
 ```
 
-## client.ai
-
-Handler for BCMS AI features. Send prompts and custom data to the AI endpoint for content generation or processing.
-
-### prompt
-
-Send prompt to AI endpoint.
-
-```ts
-const result = await client.ai.prompt({
-  prompt: 'Generate content...',
-  data: { /* custom data */ },
-});
-```
-
 ## client.socket
 
 Handler for WebSocket connections. Subscribe to real-time events (e.g. entry created, updated) and emit events to the BCMS backend. Requires `enableSocket: true` in client options.
@@ -528,3 +533,11 @@ Get SVG content for media file. Throws if media is not SVG.
 ```ts
 const svgString = await handler.getSvgContent();
 ```
+
+---
+
+## Links
+
+- [BCMS Dashboard](https://app.thebcms.com) — Manage templates, entries, API keys
+- [BCMS Docs](https://thebcms.com/docs) — General BCMS documentation
+- [BCMS API Documentation](https://app.thebcms.com/open-api-docs) — REST API reference
