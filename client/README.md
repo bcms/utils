@@ -20,12 +20,8 @@ async function main() {
      * Creating a new instance of the Client object
      */
     const client = new Client(
-        'PROJECT_ID',
         {
-            id: 'KEY_ID',
-            secret: 'KEY_SECRET',
-        },
-        {
+            apiKey: process.env.BCMS_API_KEY,
             injectSvg: true,
         },
     );
@@ -49,9 +45,7 @@ To get all Entries from BCMS for specified Template you can use:
 const entries = await client.entries.getAll('my-template-name-or-id');
 ```
 
-Common question that we are get is how to query entries. Currently, we do not
-have native support for querying Entries, therefore you will need to
-filter Entries on client side, for example something like this:
+A common question we get is how to query entries. You can filter them manually, for example:
 
 ```ts
 const entries = (await client.entries.getAll('my-template-name-or-id')).filter(
