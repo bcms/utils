@@ -12,8 +12,7 @@ Client library for communicating with the BCMS backend REST API. Use it to fetch
 - [Quick Start](#quick-start)
 - [Client Options](#client-options)
 - [Handlers](#handlers)
-- [client.send](#clientsend)
-- [Image Handler](#image-handler-thebcmsclientimage)
+
 
 ## Installation
 
@@ -41,7 +40,7 @@ Options passed to the `Client` constructor:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `apiKey` | `string` | — | **Required.** API key in format `id.secret.instanceId`. Can also use `BCMS_API_KEY` env variable. |
+| `apiKey` | `string` | `process.env.BCMS_API_KEY` | **Required.** API key in format `id.secret.instanceId`. Can also use `BCMS_API_KEY` env variable. |
 | `cmsOrigin` | `string` | `https://app.thebcms.com` | URL of the BCMS instance. |
 | `useMemCache` | `boolean` | `false` | Enable in-memory caching for API responses. |
 | `debug` | `boolean` | `false` | Enable debug mode. |
@@ -70,10 +69,10 @@ const templates = await client.template.getAll(true);
 
 ### getById
 
-Get template by ID.
+Get template by ID or slug
 
 ```ts
-const template = await client.template.getById('template-id');
+const template = await client.template.getById('template-id-or-slug');
 ```
 
 ### whereIsItUsed
@@ -81,7 +80,7 @@ const template = await client.template.getById('template-id');
 Find where template is used (in other templates, entries, etc.).
 
 ```ts
-const result = await client.template.whereIsItUsed('template-id');
+const result = await client.template.whereIsItUsed('template-id-or-slug');
 ```
 
 ### update
@@ -116,8 +115,8 @@ Handler for content entries. Entries are the actual content items created from t
 Get all parsed entries for a template.
 
 ```ts
-const entries = await client.entry.getAll('my-template-name');
-const entries = await client.entry.getAll('my-template-name', true); // skip cache
+const entries = await client.entry.getAll('template-id-or-slug');
+const entries = await client.entry.getAll('template-id-or-slug', true); // skip cache
 ```
 
 ### getAllLite
@@ -125,7 +124,7 @@ const entries = await client.entry.getAll('my-template-name', true); // skip cac
 Get all entries in lite format (faster, less data).
 
 ```ts
-const entries = await client.entry.getAllLite('my-template-name');
+const entries = await client.entry.getAllLite('template-id-or-slug');
 ```
 
 ### getAllRaw
@@ -133,7 +132,7 @@ const entries = await client.entry.getAllLite('my-template-name');
 Get all entries in raw format (internal BCMS format).
 
 ```ts
-const entries = await client.entry.getAllRaw('my-template-name');
+const entries = await client.entry.getAllRaw('template-id');
 ```
 
 ### getAllByStatus
@@ -141,7 +140,7 @@ const entries = await client.entry.getAllRaw('my-template-name');
 Get all parsed entries filtered by status (ID or label).
 
 ```ts
-const entries = await client.entry.getAllByStatus('my-template-name', 'published');
+const entries = await client.entry.getAllByStatus('template-id-or-slug', 'status-id-or-name');
 ```
 
 ### getAllRawByStatus
@@ -149,7 +148,7 @@ const entries = await client.entry.getAllByStatus('my-template-name', 'published
 Get all raw entries filtered by status.
 
 ```ts
-const entries = await client.entry.getAllRawByStatus('my-template-name', 'published');
+const entries = await client.entry.getAllRawByStatus('template-id-or-slug', 'status-id-or-name');
 ```
 
 ### getById
@@ -157,7 +156,7 @@ const entries = await client.entry.getAllRawByStatus('my-template-name', 'publis
 Get parsed entry by ID.
 
 ```ts
-const entry = await client.entry.getById('entry-id', 'my-template-name');
+const entry = await client.entry.getById('entry-id', 'template-id-or-slug');
 ```
 
 ### getByIdLite
@@ -165,7 +164,7 @@ const entry = await client.entry.getById('entry-id', 'my-template-name');
 Get lite entry by ID.
 
 ```ts
-const entry = await client.entry.getByIdLite('entry-id', 'my-template-name');
+const entry = await client.entry.getByIdLite('entry-id', 'template-id-or-slug');
 ```
 
 ### getByIdRaw
@@ -173,7 +172,7 @@ const entry = await client.entry.getByIdLite('entry-id', 'my-template-name');
 Get raw entry by ID.
 
 ```ts
-const entry = await client.entry.getByIdRaw('entry-id', 'my-template-name');
+const entry = await client.entry.getByIdRaw('entry-id', 'template-id-or-slug');
 ```
 
 ### getBySlug
@@ -181,7 +180,7 @@ const entry = await client.entry.getByIdRaw('entry-id', 'my-template-name');
 Get entry by slug.
 
 ```ts
-const entry = await client.entry.getBySlug('my-entry-slug', 'my-template-name');
+const entry = await client.entry.getBySlug('entry-slug', 'template-id-or-slug');
 ```
 
 ### create
@@ -189,7 +188,7 @@ const entry = await client.entry.getBySlug('my-entry-slug', 'my-template-name');
 Create new entry.
 
 ```ts
-const entry = await client.entry.create('my-template-name', {
+const entry = await client.entry.create('template-id-or-slug', {
   statuses: [{ lng: 'en', id: 'status-id' }],
   meta: [{ lng: 'en', data: { title: 'Hello', ... } }],
   content: [{ lng: 'en', nodes: [...] }],
@@ -201,7 +200,7 @@ const entry = await client.entry.create('my-template-name', {
 Create entry with raw BCMS format.
 
 ```ts
-const entry = await client.entry.createRaw('my-template-name', rawEntryData);
+const entry = await client.entry.createRaw('template-id-or-slug', rawEntryData);
 ```
 
 ### update
@@ -209,7 +208,7 @@ const entry = await client.entry.createRaw('my-template-name', rawEntryData);
 Update existing entry.
 
 ```ts
-const entry = await client.entry.update('my-template-name', 'entry-id', {
+const entry = await client.entry.update('template-id-or-slug', 'entry-id', {
   lng: 'en',
   status: 'status-id',
   meta: { title: 'Updated title', ... },
@@ -222,7 +221,7 @@ const entry = await client.entry.update('my-template-name', 'entry-id', {
 Update entry with raw BCMS format.
 
 ```ts
-const entry = await client.entry.updateRaw('my-template-name', 'entry-id', rawUpdateData);
+const entry = await client.entry.updateRaw('template-id-or-slug', 'entry-id', rawUpdateData);
 ```
 
 ### deleteById
@@ -230,7 +229,7 @@ const entry = await client.entry.updateRaw('my-template-name', 'entry-id', rawUp
 Delete entry by ID.
 
 ```ts
-const deleted = await client.entry.deleteById('entry-id', 'my-template-name');
+const deleted = await client.entry.deleteById('entry-id', 'template-id-or-slug');
 ```
 
 ## client.entryStatus
@@ -472,23 +471,13 @@ client.socket.clear();
 
 ### register
 
-Subscribe to BCMS socket events (e.g. `entry_created`, `entry_updated`).
+Subscribe to BCMS socket events (e.g. `entry`, `template`, etc.).
 
 ```ts
-const unsubscribe = client.socket.register('entry_created', async (data) => {
+const unsubscribe = client.socket.register('entry', async (data) => {
   console.log('Entry created:', data);
 });
 // later: unsubscribe();
-```
-
-### internalEventRegister
-
-Subscribe to `open` or `close` connection events.
-
-```ts
-const unsubscribe = client.socket.internalEventRegister('open', async () => {
-  console.log('Socket connected');
-});
 ```
 
 ### emit
@@ -497,41 +486,6 @@ Emit event to BCMS backend.
 
 ```ts
 client.socket.emit('event-name', eventData);
-```
-
-## client.send
-
-Low-level method to send custom HTTP requests to the CMS backend. Accepts standard Axios request config when you need to call endpoints not covered by the handlers.
-
-```ts
-const data = await client.send({
-  method: 'GET',
-  url: '/api/custom-endpoint',
-});
-```
-
-## Image Handler (`@thebcms/client/image`)
-
-Utility for media of type IMG. Use it to build responsive image src sets or retrieve SVG content. Import separately from `@thebcms/client/image`.
-
-### getPictureSrcSet
-
-Returns a source set for responsive images. Throws if media is not IMG type.
-
-```ts
-import { ImageHandler } from '@thebcms/client/image';
-
-const handler = new ImageHandler(client, media);
-const srcSet = handler.getPictureSrcSet(800);
-// { original, src1, src2, width, height }
-```
-
-### getSvgContent
-
-Get SVG content for media file. Throws if media is not SVG.
-
-```ts
-const svgString = await handler.getSvgContent();
 ```
 
 ---
