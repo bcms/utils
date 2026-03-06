@@ -4,7 +4,7 @@ import type { Media } from '@thebcms/types';
 export class MediaHandler {
     constructor(private cli: Cli) {}
 
-    async pull(instanceId: string, orgId: string, outputPath?: string) {
+    async pull(instanceId: string, outputPath?: string) {
         const destPath = outputPath ? outputPath.split('/') : ['bcms', 'media'];
         if (!this.cli.client) {
             await this.cli.loginIfRequired();
@@ -14,7 +14,6 @@ export class MediaHandler {
             ? await this.cli.client.media.getAll()
             : await this.cli.sdk.media.getAll({
                   instanceId,
-                  orgId,
               });
         process.stdout.write('Done\n');
         for (let i = 0; i < allMedia.length; i++) {
@@ -34,7 +33,6 @@ export class MediaHandler {
                       )
                     : await this.cli.sdk.media.bin({
                           media: media as Media,
-                          orgId,
                           instanceId,
                           data: {
                               thumbnail: false,

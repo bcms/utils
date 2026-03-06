@@ -12,9 +12,9 @@ export class Server {
 
     constructor() {
         this.server = createServer((req, res) => {
-            let body = '';
+            let _body = '';
             req.on('data', (chunk) => {
-                body += chunk.toString(); // convert Buffer to string
+                _body += chunk.toString(); // convert Buffer to string
             });
             req.on('end', async () => {
                 const url = req.url || '';

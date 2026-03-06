@@ -14,10 +14,9 @@ export class TypeGeneratorHandler {
 
     async pull(
         instanceId: string,
-        orgId: string,
         language: TypeGeneratorLanguage,
         outputPath?: string,
-    ) {
+    ): Promise<void> {
         if (!this.cli.client) {
             await this.cli.loginIfRequired();
         }
@@ -31,7 +30,6 @@ export class TypeGeneratorHandler {
             ? await this.cli.client.typeGenerator.getFiles(language)
             : await this.cli.sdk.typeGenerator.getTypes({
                   instanceId,
-                  orgId,
                   lang: language,
               });
         process.stdout.write('Done\n');

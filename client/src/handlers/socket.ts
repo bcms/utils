@@ -89,12 +89,12 @@ export class SocketHandler {
                                           : 'ws'
                                   }://${
                                       this.client.cmsOrigin.split('://')[1]
-                                  }/api/v3/socket?token=apikey_${this.client.apiKeyInfo.id}.${this.client.apiKeyInfo.secret}`
+                                  }/api/v3/socket?token=apikey_${this.client.apiKey}`
                                 : `${
                                       window.location.host.includes(':8081')
                                           ? 'ws'
                                           : 'wss'
-                                  }://${window.location.host}/api/v3/socket?token=apikey_${this.client.apiKeyInfo.id}.${this.client.apiKeyInfo.secret}`,
+                                  }://${window.location.host}/api/v3/socket?token=apikey_${this.client.apiKey}`,
                             {
                                 timeout: 10000,
                             },

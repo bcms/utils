@@ -11,31 +11,36 @@
      *     clientConfig?: import('@thebcms/client').ClientConfig;
      * }}
      */
-    let props = $props();
+    let {
+            item,
+            components,
+            nodeParser,
+            clientConfig,
+    } = $props();
 
     const WidgetComponent = $derived(
-        props.item.widgetName &&
-        props.item.type === 'widget' &&
-        props.components &&
-        props.components[props.item.widgetName]
-            ? props.components[props.item.widgetName]
+        item.widgetName &&
+        item.type === 'widget' &&
+        components &&
+        components[item.widgetName]
+            ? components[item.widgetName]
             : undefined,
     );
 
     const PrimitiveNodeValue = $derived(
-        props.nodeParser ? props.nodeParser(props.item) : props.item.value,
+        nodeParser ? nodeParser(item) : item.value,
     );
     /**
      * @type {import('@thebcms/types').PropMediaDataParsed | undefined}
      */
     const imageNodeValue = $derived.by(() => {
-        if (props.item.type !== 'media' || typeof props.item.value !== 'object') {
+        if (item.type !== 'media' || typeof item.value !== 'object') {
             return undefined;
         }
         /**
          * @type {import('@thebcms/types').PropMediaDataParsed}
          */
-        const media = props.item.value;
+        const media = item.value;
         if (media.type !== 'IMG' && media.type !== 'GIF' && media.type !== 'SVG') {
             return undefined;
         }
@@ -43,27 +48,27 @@
     });
 </script>
 
-{#if props.item.widgetName && props.item.type === 'widget'}
-    {#if props.components && props.components[props.item.widgetName]}
-        <WidgetComponent data={props.item.value} />
+{#if item.widgetName && item.type === 'widget'}
+    {#if components && components[item.widgetName]}
+        <WidgetComponent data={item.value} />
     {:else}
         <div
             style="display: none;"
-            data-bcms-widget-error="Widget {props.item.widgetName} is not handled"
+            data-bcms-widget-error="Widget {item.widgetName} is not handled"
         >
-            Widget {props.item.widgetName} is not handled
+            Widget {item.widgetName} is not handled
         </div>
     {/if}
-{:else if imageNodeValue && props.clientConfig}
-    <BCMSImage clientConfig={props.clientConfig} media={imageNodeValue} />
+{:else if imageNodeValue && clientConfig}
+    <BCMSImage clientConfig={clientConfig} media={imageNodeValue} />
 {:else if typeof PrimitiveNodeValue === 'function'}
     <PrimitiveNodeValue />
 {:else if typeof PrimitiveNodeValue === 'object'}
     <div style="display: none;">
-        <pre>{JSON.stringify(props.item || {}, null, 4)}</pre>
+        <pre>{JSON.stringify(item || {}, null, 4)}</pre>
     </div>
 {:else if typeof PrimitiveNodeValue === 'string'}
-    <div class="bcms-content--primitive bcms-content--{props.item.type}">
+    <div class="bcms-content--primitive bcms-content--{item.type}">
         <!--eslint-disable-next-line svelte/no-at-html-tags-->
         {@html PrimitiveNodeValue}
     </div>

@@ -5,7 +5,9 @@ import type {
     AdditionalFile,
     ApiKey,
     Dependency,
+    EntriesListColConfig,
     Entry,
+    EntryHistory,
     EntryLite,
     EntryStatus,
     Event,
@@ -17,9 +19,9 @@ import type {
     Job,
     Language,
     Media,
-    Org,
     Tag,
     Template,
+    Trash,
     UserProtected,
     UserPublic,
     Widget,
@@ -54,7 +56,6 @@ const sdkStore: SdkStore = {
             },
         };
     }),
-    org: createArrayStore<Org>('_id', []),
     instance: createArrayStore<Instance>('_id', []),
     group: createArrayStore<Group>('_id', []),
     template: createArrayStore<Template>('_id', []),
@@ -73,7 +74,9 @@ const sdkStore: SdkStore = {
     job: createArrayStore<Job>('_id', []),
     dependency: createArrayStore<Dependency>('_id', []),
     instanceEnv: createArrayStore<InstanceEnv>('_id', []),
-    entryHistory: createArrayStore('_id', []),
+    entryHistory: createArrayStore<EntryHistory>('_id', []),
+    entriesListColConfig: createArrayStore<EntriesListColConfig>('_id', []),
+    trash: createArrayStore<Trash>('_id', []),
 };
 
 async function createStorage(): Promise<Storage> {

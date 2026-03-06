@@ -394,9 +394,7 @@ export class MediaHandler {
                 queries.push(`tmb=t`);
             }
         }
-        queries.push(
-            `apiKey=${this.client.apiKeyInfo.id}.${this.client.apiKeyInfo.secret}`,
-        );
+        queries.push(`apiKey=${this.client.apiKey}`);
         let uri = this.baseUri.replace(':instanceId', this.client.instanceId);
         uri += `/${id}/bin2/${encodeURIComponent(filename)}`;
         if (queries.length > 0) {

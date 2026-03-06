@@ -106,7 +106,7 @@ export class Cli {
             await this.login();
         } else {
             try {
-                await this.sdk.org.getAll();
+                await this.sdk.instance.getAll();
             } catch (err) {
                 await this.login();
             }
@@ -223,22 +223,28 @@ export async function createCli() {
         if (checkConfig instanceof ObjectUtilityError) {
             throw Error(checkConfig.message);
         }
+        let apiKeyStr = '';
+        let origin = 'https://app.thebcms.com';
         if (config.client) {
-            client = new Client(
-                config.client.orgId,
-                config.client.instanceId,
-                {
-                    id: config.client.apiKey.id,
-                    secret: config.client.apiKey.secret,
-                },
-                {
-                    cmsOrigin:
-                        config.client.origin || 'https://app.thebcms.com',
-                    useMemCache: true,
-                    injectSvg: true,
-                },
-            );
+            apiKeyStr = config.client.apiKey;
+            origin = config.client.origin || origin;
+        } else if (process.env.BCMS_API_KEY) {
+            apiKeyStr = process.env.BCMS_API_KEY;
         }
+        if (apiKeyStr) {
+            client = new Client({
+                apiKey: apiKeyStr,
+                cmsOrigin: origin,
+                useMemCache: true,
+                injectSvg: true,
+            });
+        }
+    } else if (process.env.BCMS_API_KEY) {
+        client = new Client({
+            apiKey: process.env.BCMS_API_KEY,
+            useMemCache: true,
+            injectSvg: true,
+        });
     }
     const args = getArgs();
     const sdk = await sdkCreate(

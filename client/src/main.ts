@@ -23,7 +23,7 @@ export interface ClientConfig {
     /**
      * API Key information
      */
-    apiKey: ClientApiKey;
+    apiKey: string;
     /**
      * URL of the active CMS
      */
@@ -47,6 +47,9 @@ export interface ClientConfig {
 }
 
 export class Client {
+    instanceId: string;
+    apiKey: string;
+    apiKeyInfo: ClientApiKey;
     /**
      * URL of the active CMS
      */
@@ -79,39 +82,39 @@ export class Client {
     ai: AIHandler;
     socket: SocketHandler;
 
-    constructor(
+    constructor(options?: {
+        apiKey?: string;
         /**
-         * Instance/Project ID
+         * URL of the active CMS
          */
-        public instanceId: string,
+        cmsOrigin?: string;
         /**
-         * API Key information
+         * Is memory caching active
          */
-        public apiKeyInfo: ClientApiKey,
-        options?: {
-            /**
-             * URL of the active CMS
-             */
-            cmsOrigin?: string;
-            /**
-             * Is memory caching active
-             */
-            useMemCache?: boolean;
-            /**
-             * Is in debug mode
-             */
-            debug?: boolean;
-            /**
-             * Is web socket enabled
-             */
-            enableSocket?: boolean;
-            /**
-             * Should SVG data be injected info media object
-             */
-            injectSvg?: boolean;
-        },
-    ) {
+        useMemCache?: boolean;
+        /**
+         * Is in debug mode
+         */
+        debug?: boolean;
+        /**
+         * Is web socket enabled
+         */
+        enableSocket?: boolean;
+        /**
+         * Should SVG data be injected info media object
+         */
+        injectSvg?: boolean;
+    }) {
+        let apiKeyStr = '';
         if (options) {
+            if (options.apiKey) {
+                apiKeyStr = options.apiKey;
+            } else if (
+                typeof process !== 'undefined' &&
+                process.env.BCMS_API_KEY
+            ) {
+                apiKeyStr = process.env.BCMS_API_KEY;
+            }
             if (options.cmsOrigin) {
                 this.cmsOrigin = options.cmsOrigin;
             }
@@ -128,6 +131,23 @@ export class Client {
                 this.injectSvg = options.injectSvg;
             }
         }
+        if (!apiKeyStr) {
+            throw new Error(
+                'API key is required. Please provide it in the constructor or set the BCMS_API_KEY environment variable.',
+            );
+        }
+        const [keyId, keySecret, instanceId] = apiKeyStr.split('.');
+        if (!keyId || !keySecret || !instanceId) {
+            throw new Error(
+                'Invalid API key format. Expected format: id.secret.instanceId',
+            );
+        }
+        this.apiKey = apiKeyStr;
+        this.apiKeyInfo = {
+            id: keyId,
+            secret: keySecret,
+        };
+        this.instanceId = instanceId;
         this.socket = new SocketHandler(this);
         this.template = new TemplateHandler(this);
         this.typeGenerator = new TypeGeneratorHandler(this);
@@ -145,7 +165,7 @@ export class Client {
      */
     getConfig(): ClientConfig {
         return {
-            apiKey: this.apiKeyInfo,
+            apiKey: this.apiKey,
             cmsOrigin: this.cmsOrigin,
             debug: this.debug,
             enableSocket: this.enableSocket,
@@ -162,7 +182,7 @@ export class Client {
         if (!config.headers) {
             config.headers = {};
         }
-        config.headers.Authorization = `ApiKey ${this.apiKeyInfo.id}.${this.apiKeyInfo.secret}`;
+        config.headers.Authorization = `ApiKey ${this.apiKey}`;
         config.url =
             `${config.url && config.url.startsWith('http') ? '' : this.cmsOrigin}${config.url}`.replace(
                 ':instanceId',

@@ -21,7 +21,8 @@
             "@thebcms/cli": ["./src"],
             "@thebcms/cli/*": ["./src/*"],
             "@thebcms/client": ["../client/src"],
-            "@thebcms/client/*": ["../client/src/*"]
+            "@thebcms/client/*": ["../client/src/*"],
+            "@thebcms/proto/*": ["../proto_gen/*"]
         }
     },
     "include": ["src"]

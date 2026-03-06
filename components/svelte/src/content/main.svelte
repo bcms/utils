@@ -15,16 +15,24 @@
      *     clientConfig?: import('@thebcms/client').ClientConfig;
      * }}
      */
-    let props = $props();
+    let {
+        id,
+        class: className,
+        style,
+        items,
+        widgetComponents,
+        nodeParser,
+        clientConfig,
+    } = $props();
 </script>
 
-<div id={props.id} class="bcms-content {props.class || ''}" style={props.style}>
-    {#each props.items as item}
+<div {id} class="bcms-content {className || ''}" {style}>
+    {#each items as item}
         <BCMSContentManagerItem
             {item}
-            components={props.widgetComponents}
-            nodeParser={props.nodeParser}
-            clientConfig={props.clientConfig}
+            components={widgetComponents}
+            nodeParser={nodeParser}
+            clientConfig={clientConfig}
         />
     {/each}
 </div>

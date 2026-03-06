@@ -1,6 +1,6 @@
 {
     "name": "@thebcms/components-react",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "description": "Helper components for React",
     "author": "BCMS",
     "license": "MIT",
@@ -24,11 +24,11 @@
         "test": "jest"
     },
     "peerDependencies": {
-        "@thebcms/types": "^1",
+        "@thebcms/types": "^2",
         "react": "^19"
     },
     "devDependencies": {
-        "@thebcms/types": "^1.4.0",
+        "@thebcms/types": "^2.0.0",
         "@types/node": "^20.12.12",
         "@types/react": "^19.1.2",
         "eslint": "^9.37.0",
