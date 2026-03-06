@@ -29,7 +29,6 @@ npm i @thebcms/components-react @thebcms/client @thebcms/types
 | BCMSAudio         | `@thebcms/components-react/audio`  | Render BCMS audio media                      |
 | BCMSMedia         | `@thebcms/components-react/media`  | Auto-select component by media type         |
 | BCMSContentManager| `@thebcms/components-react/content`| Render entry content (rich text, widgets, media) |
-| BCMSContentItem   | `@thebcms/components-react/content/item` | Low-level item renderer                 |
 
 ---
 
@@ -210,21 +209,6 @@ const widgetComponents: BCMSWidgetComponents = {
   className="prose max-w-none"
 />
 ```
-
----
-
-## BCMSContentItem
-
-Low-level component that renders a single content node. Used internally by BCMSContentManager. Use directly for fine-grained control.
-
-### Props
-
-| Prop           | Type                         | Required | Description                        |
-|----------------|------------------------------|----------|------------------------------------|
-| `item`         | `EntryContentParsedItem`     | Yes      | Single content node                |
-| `components`   | `BCMSWidgetComponents`       | No       | Map of widget name → React component |
-| `nodeParser`   | `(item) => string \| JSX.Element` | No  | Custom renderer                    |
-| `clientConfig` | `ClientConfig`               | No       | Required for media nodes           |
 
 ---
 
