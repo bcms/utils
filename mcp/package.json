@@ -4,30 +4,24 @@
     "description": "MCP server and client for BCMS",
     "author": "BCMS",
     "license": "MIT",
-    "main": "./index.cjs",
-    "module": "./index.mjs",
-    "types": "./index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./index.mjs",
-            "require": "./index.cjs",
-            "types": "./index.d.ts"
-        }
-    },
     "scripts": {
+        "dev": "env-cmd -- nodemon --watch 'src/**/*.ts' --exec 'ts-node -r tsconfig-paths/register' src/main.ts",
         "build:ts:mjs": "tsc --project tsconfig.json",
         "build:ts:cjs": "tsc --project tsconfig.commonjs.json",
         "_test": "ts-node --project ./tsconfig.commonjs.json -r tsconfig-paths/register src/_test.ts"
     },
     "dependencies": {
         "@fastify/cors": "^11.2.0",
-        "@thebcms/types": "^1.5.1",
-        "@thebcms/utils": "^1.1.0",
+        "@thebcms/types": "^2.0.0",
+        "@thebcms/utils": "^2.0.0",
+        "axios": "^1.13.6",
         "fastify": "^5.7.4",
-        "fastify-mcp-server": "^0.7.2"
+        "fastify-mcp-server": "^0.7.2",
+        "zod": "^4.3.6"
     },
     "devDependencies": {
         "@types/node": "^22.5.5",
+        "env-cmd": "^11.0.0",
         "eslint": "^10.0.2",
         "nodemon": "^3.1.14",
         "prettier": "^3.8.1",

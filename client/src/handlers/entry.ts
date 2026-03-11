@@ -500,6 +500,7 @@ export class EntryHandler {
          */
         entryParsedData: EntryParsedCreateData,
     ) {
+        console.log(1, entryParsedData)
         const data: EntryCreateBody = {
             meta: [],
             content: entryParsedData.content.map((content) => {
@@ -516,8 +517,11 @@ export class EntryHandler {
                 };
             }),
         };
+        console.log(2)
         const template = await this.findTemplateByName(templateIdOrName);
+        console.log(3)
         const groups = await this.client.group.getAll();
+        console.log(4)
         for (let i = 0; i < entryParsedData.meta.length; i++) {
             const meta = entryParsedData.meta[i];
             data.meta.push({
@@ -531,17 +535,20 @@ export class EntryHandler {
                 ),
             });
         }
+        console.log(5)
         const res = await this.client.send<ControllerItemResponse<Entry>>({
             url: `${this.baseUri(template._id)}/create`,
             method: 'POST',
             data,
         });
+        console.log(6)
         if (this.client.useMemCache) {
             this.cacheRaw.set(res.item);
             this.cacheParse.set(
                 await this.getById(res.item._id, res.item.templateId, true),
             );
         }
+        console.log(7)
         return res.item;
     }
 
