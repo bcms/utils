@@ -15,7 +15,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         while (!answer.name) {
             answer = await inquirer.prompt<{ name: string }>([
                 {
-                    message: 'What will your project be called:',
+                    message: 'Project name:',
                     name: 'name',
                     type: 'input',
                 },
@@ -29,7 +29,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         !startersInfo.saas.frameworks.find((e) => e.id === framework)
     ) {
         console.log(
-            `Framework "${framework}" is not supported. Please select a framework from the list bellow.`,
+            `Framework "${framework}" is not supported. Please choose a framework from the list below.`,
         );
         framework = '';
     }
@@ -58,7 +58,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         !startersInfo.saas.starters.find((e) => e.slug === starter)
     ) {
         console.log(
-            `Starter "${starter}" is not available. Please select a framework from the list bellow.`,
+            `Starter "${starter}" is not available. Please choose a starter from the list below.`,
         );
         starter = '' as never;
     }
@@ -90,7 +90,7 @@ export async function createHandler(cli: Cli): Promise<void> {
         }
     }
     await cli.loginIfRequired();
-    console.log('\nCloning starter github repository ...\n');
+    console.log('\nCloning starter repository from GitHub...\n');
     const fs = new FS(process.cwd());
     await ChildProcess.spawn(
         `git`,
@@ -103,10 +103,10 @@ export async function createHandler(cli: Cli): Promise<void> {
         ],
         { stdio: 'inherit' },
     );
-    console.log(`\nCopying project files ...\n`);
+    console.log(`\nCopying starter files...\n`);
     await fs.move([`${projectName}-tmp`, framework, starter], projectName);
     await fs.deleteDir(`${projectName}-tmp`);
-    console.log(`\nCreating BCMS Project ...\n`);
+    console.log(`\nCreating BCMS project...\n`);
     const instance = await cli.sdk.instance.create({
         name: projectName
             .replace(/-/g, ' ')
@@ -117,22 +117,22 @@ export async function createHandler(cli: Cli): Promise<void> {
         starter,
         framework,
     });
-    console.log('\n Setting up API Keys for the project ...\n');
+    console.log('\nSetting up API keys for the project...\n');
     const templates = await cli.sdk.template.getAll({
         instanceId: instance._id,
     });
     let apiKeyPrivate = await cli.sdk.apiKey.create({
         instanceId: instance._id,
         data: {
-            name: `${projectName} Auto Generated Key - Private`,
-            desc: 'Auto generated key from BCMS CLI',
+            name: `${projectName} Auto-generated Key - Private`,
+            desc: 'Auto-generated key from BCMS CLI',
         },
     });
     const apiKeyPublic = await cli.sdk.apiKey.create({
         instanceId: instance._id,
         data: {
-            name: `${projectName} Auto Generated Key - Public`,
-            desc: 'Auto generated key from BCMS CLI',
+            name: `${projectName} Auto-generated Key - Public`,
+            desc: 'Auto-generated key from BCMS CLI',
         },
     });
     apiKeyPrivate = await cli.sdk.apiKey.update({
@@ -174,7 +174,7 @@ export async function createHandler(cli: Cli): Promise<void> {
     }
     await fs.save([projectName, '.env'], envs.join('\n'));
     console.log(
-        `\n\nYour BCMS project is available at https://app.thebcms.com/d/i/${instance._id}/bcms`,
+        `\n\nYour BCMS project is ready at https://app.thebcms.com/d/i/${instance._id}/bcms`,
     );
     console.log(`\nHappy coding!\n`);
     console.log(`cd ${projectName}`);
