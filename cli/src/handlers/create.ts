@@ -207,6 +207,17 @@ export async function createHandler(cli: Cli): Promise<void> {
             `PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
             `PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
         );
+    } else if (framework === 'gatsby') {
+        envs.push(
+            '',
+            `# Information about this API Key will be public`,
+            `GATSBY_PUBLIC_BCMS_API_KEY=${apiKeyPublic._id}.${apiKeyPublic.secret}.${instance._id}`,
+            `# ----`,
+            `GATSBY_PUBLIC_BCMS_ORG_ID=_none`,
+            `GATSBY_PUBLIC_BCMS_INSTANCE_ID=${instance._id}`,
+            `GATSBY_PUBLIC_BCMS_API_KEY_ID=${apiKeyPublic._id}`,
+            `GATSBY_PUBLIC_BCMS_API_KEY_SECRET=${apiKeyPublic.secret}`,
+        );
     }
     await fs.save([projectName, '.env'], envs.join('\n'));
     console.log(
