@@ -1,6 +1,6 @@
 {
     "name": "@thebcms/client",
-    "version": "2.0.1",
+    "version": "2.0.3",
     "description": "Make external communication with BCMS easy.",
     "author": "BCMS",
     "license": "MIT",
