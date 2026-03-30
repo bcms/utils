@@ -7,6 +7,7 @@ import {
 } from '@thebcms/client';
 import type { Media, MediaType, PropMediaDataParsed } from '@thebcms/types';
 import { v4 as uuid } from 'uuid';
+import imageModuleUrl from './image.ts?url';
 
 interface Props {
     id?: string;
@@ -87,42 +88,45 @@ const mediaExtended = props.media as MediaExtended;
             );
         }
         return (
-            <bcms-image
-                data-element-id={elementId}
-                data-client-config={JSON.stringify(props.clientConfig)}
-                data-media={JSON.stringify(props.media)}
-                data-alt-text={props.altText}
-                data-use-original={props.useOriginal}
-            >
-                <picture>
-                    <source srcset={srcSet.src1} type={'image/webp'} />
-                    <source srcset={srcSet.src2} type={props.media.mimetype} />
-                    <img
-                        id={elementId}
-                        style={
-                            props.style
-                                ? props.style
-                                : props.class
-                                  ? {}
-                                  : {
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                    }
-                        }
-                        class={props.class}
-                        src={srcSet.original}
-                        alt={
-                            props.altText ||
-                            (props.media as PropMediaDataParsed).alt_text ||
-                            (props.media as Media).altText ||
-                            props.media.name
-                        }
-                        width={srcSet.width}
-                        height={srcSet.height}
-                    />
-                </picture>
-            </bcms-image>
+            <>
+                <script type="module" src={imageModuleUrl}></script>
+                <bcms-image
+                    data-element-id={elementId}
+                    data-client-config={JSON.stringify(props.clientConfig)}
+                    data-media={JSON.stringify(props.media)}
+                    data-alt-text={props.altText}
+                    data-use-original={props.useOriginal}
+                >
+                    <picture>
+                        <source srcset={srcSet.src1} type={'image/webp'} />
+                        <source srcset={srcSet.src2} type={props.media.mimetype} />
+                        <img
+                            id={elementId}
+                            style={
+                                props.style
+                                    ? props.style
+                                    : props.class
+                                    ? {}
+                                    : {
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                        }
+                            }
+                            class={props.class}
+                            src={srcSet.original}
+                            alt={
+                                props.altText ||
+                                (props.media as PropMediaDataParsed).alt_text ||
+                                (props.media as Media).altText ||
+                                props.media.name
+                            }
+                            width={srcSet.width}
+                            height={srcSet.height}
+                        />
+                    </picture>
+                </bcms-image>
+            </>
         );
     })()
 }
