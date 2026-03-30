@@ -89,7 +89,10 @@ const mediaExtended = props.media as MediaExtended;
         }
         return (
             <>
-                <script type="module" src={imageModuleUrl}></script>
+                <script
+                    type="module"
+                    set:html={`if (typeof window !== 'undefined' && 'customElements' in window && !customElements.get('bcms-image')) { import('${imageModuleUrl}'); }`}
+                />
                 <bcms-image
                     data-element-id={elementId}
                     data-client-config={JSON.stringify(props.clientConfig)}
