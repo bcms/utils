@@ -7,11 +7,11 @@
     "license": "MIT",
     "peerDependencies": {
         "@thebcms/types": "^2",
-        "astro": "^5"
+        "astro": "^6"
     },
     "devDependencies": {
         "@thebcms/types": "^2.0.0",
-        "astro": "^5.10.1",
+        "astro": "^6.1.2",
         "prettier": "^3.6.0",
         "prettier-plugin-astro": "^0.14.1"
     },
