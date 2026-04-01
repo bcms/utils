@@ -91,7 +91,7 @@ const mediaExtended = props.media as MediaExtended;
             <>
                 <script
                     type="module"
-                    set:html={`if (typeof window !== 'undefined' && 'customElements' in window && !customElements.get('bcms-image')) { import('${imageModuleUrl}'); }`}
+                    src={imageModuleUrl}
                 />
                 <bcms-image
                     data-element-id={elementId}
