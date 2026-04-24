@@ -16,6 +16,8 @@ export interface Args {
     version?: string;
     output?: string;
     instanceId?: string;
+
+    lexington?: string | boolean;
 }
 
 export interface ArgInfo {
@@ -203,6 +205,20 @@ export const argsMap: {
                 return argv[idx + 1];
             }
             return false;
+        },
+    },
+
+    lexington: {
+        flags: ['--lexington', 'lexington'],
+        description: 'Create lexington project of specified type',
+        values: ['phanatik', 'semplice', 'dusk', 'kotei'],
+        type: 'string',
+        parse(argv, idx, self) {
+            const values = self.values as string[];
+            if (values.includes(argv[idx + 1])) {
+                return argv[idx + 1];
+            }
+            return true;
         },
     },
 };

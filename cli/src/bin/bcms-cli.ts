@@ -5,6 +5,7 @@ config();
 import { type Cli, createCli } from '@thebcms/cli/main';
 import type { TypeGeneratorLanguage } from '@thebcms/types';
 import { createHandler } from '@thebcms/cli/handlers/create';
+import { lexington } from '@thebcms/cli/handlers/lexington';
 
 async function resolve(cli: Cli) {
     if (cli.args.help) {
@@ -75,6 +76,8 @@ async function resolve(cli: Cli) {
         }
     } else if (cli.args.create) {
         await createHandler(cli);
+    } else if (cli.args.lexington) {
+        await lexington(cli);
     } else {
         throw Error('Unknown command or combination of arguments');
     }
